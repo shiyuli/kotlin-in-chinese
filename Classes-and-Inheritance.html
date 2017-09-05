@@ -1,0 +1,204 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh" xml:lang="zh">
+  <head>
+    <title>类和继承</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta content="" name="description"/>
+    <meta content="GitBook 3.2.2" name="generator"/>
+    <meta content="huanglizhuo" name="author"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        
+<div class="page">
+    
+        <h1 class="book-chapter" id="calibre_toc_12">类和继承</h1>
+        <div class="section">
+            <h2 id="类和继承" class="calibre10">类和继承</h2>
+<h3 id="类" class="calibre16">类</h3>
+<p class="calibre6">在 Kotlin 中类用 class 声明：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">Invoice</span></span>{
+}
+</code></pre>
+<p class="calibre6">类的声明包含类名，类头(指定类型参数，主构造函数等等)，以及类主体，用大括号包裹。类头和类体是可选的；如果没有类体可以省略大括号。</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">Empty</span></span>
+</code></pre>
+<h3 id="构造函数" class="calibre16">构造函数</h3>
+<p class="calibre6">在 Kotlin 中类可以有一个主构造函数以及多个二级构造函数。主构造函数是类头的一部分：跟在类名后面(可以有可选的类型参数)。</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">Person</span> <span class="hljs-comment">constructor</span></span>(firstName: String){
+}
+</code></pre>
+<p class="calibre6">如果主构造函数没有注解或可见性说明，则 constructor 关键字是可以省略：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">class Person(firstName: String){
+}
+</code></pre>
+<p class="calibre6">主构造函数不能包含任意代码。初始化代码可以放在以 init 做前缀的初始化块内</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">Customer</span></span>(name: String){
+    init {
+        logger,info(<span class="hljs-string">"Customer initialized with value ${name}"</span>)
+    }
+}
+</code></pre>
+<p class="calibre6">注意主构造函数的参数可以用在初始化块内，也可以用在类的属性初始化声明处：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">Customer</span></span>(name: String) {
+    <span class="hljs-variable"><span class="hljs-keyword">val</span> customerKry</span> = name.toUpperCase()
+}
+</code></pre>
+<p class="calibre6">事实上，声明属性并在主构造函数中初始化,在 Kotlin 中有更简单的语法：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">Person</span></span>(<span class="hljs-variable"><span class="hljs-keyword">val</span> firstName</span>: String, <span class="hljs-variable"><span class="hljs-keyword">val</span> lastName</span>: String, <span class="hljs-variable"><span class="hljs-keyword">var</span> age</span>: <span class="hljs-keyword">Int</span>){
+}
+</code></pre>
+<p class="calibre6">像普通的属性，在主构造函数中的属性可以是可变或只读。</p>
+<p class="calibre6">如果构造函数有注解或可见性声明，则 constructor 关键字是不可少的，并且可见性应该在前：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">Customer</span> <span class="hljs-comment">public</span> @<span class="hljs-comment">inject</span> <span class="hljs-comment">constructor</span> </span>(name: String) {...}
+</code></pre>
+<p class="calibre6">参看<a href="http://kotlinlang.org/docs/reference/visibility-modifiers.html#constructors" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">可见性</a></p>
+<h3 id="二级构造函数" class="calibre16">二级构造函数</h3>
+<p class="calibre6">类也可以有二级构造函数，需要加前缀 constructor:</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">Person</span> </span>{ 
+    constructor(parent: Person) {
+        parent.children.add(this) 
+    }
+}
+</code></pre>
+<p class="calibre6">如果类有主构造函数，每个二级构造函数都要，或直接或间接通过另一个二级构造函数代理主构造函数。在同一个类中代理另一个构造函数使用 this 关键字：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">Person</span></span>(<span class="hljs-variable"><span class="hljs-keyword">val</span> name</span>: String) {
+    constructor (name: String, paret: Person) : this(name) {
+        parent.children.add(this)
+    }
+}
+</code></pre>
+<p class="calibre6">如果一个非抽象类没有声明构造函数(主构造函数或二级构造函数)，它会产生一个没有参数的构造函数。构造函数是 public 。如果你不想你的类有公共的构造函数，你就得声明一个空的主构造函数：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">DontCreateMe</span> <span class="hljs-comment">private</span> <span class="hljs-comment">constructor</span> </span>() {
+}
+</code></pre>
+<blockquote class="calibre18">
+<p class="calibre6">注意：在 JVM 虚拟机中，如果主构造函数的所有参数都有默认值，编译器会生成一个附加的无参的构造函数，这个构造函数会直接使用默认值。这使得 Kotlin 可以更简单的使用像 Jackson 或者 JPA 这样使用无参构造函数来创建类实例的库。</p>
+</blockquote>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">Customer</span></span>(<span class="hljs-variable"><span class="hljs-keyword">val</span> customerName</span>: String = <span class="hljs-string">""</span>)
+</code></pre>
+<h3 id="创建类的实例" class="calibre16">创建类的实例</h3>
+<p class="calibre6">我们可以像使用普通函数那样使用构造函数创建类实例：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-variable"><span class="hljs-keyword">val</span> invoice</span> = Invoice()
+<span class="hljs-variable"><span class="hljs-keyword">val</span> customer</span> = Customer(<span class="hljs-string">"Joe Smith"</span>)
+</code></pre>
+<p class="calibre6">注意 Kotlin 没有 new 关键字。</p>
+<h3 id="类成员" class="calibre16">类成员</h3>
+<p class="calibre6">类可以包含：</p>
+<blockquote class="calibre18">
+<p class="calibre6">构造函数和初始化代码块</p>
+<p class="calibre6"><a href="FunctionsAndLambdas/Functions.md" class="calibre7 pcalibre2 pcalibre pcalibre1">函数</a> </p>
+<p class="calibre6"><a href="ClassesAndObjects/Properties-and-Filds.md" class="calibre7 pcalibre2 pcalibre pcalibre1">属性</a>　</p>
+<p class="calibre6"><a href="ClassesAndObjects/NestedClasses.md" class="calibre7 pcalibre2 pcalibre pcalibre1">内部类</a> </p>
+<p class="calibre6"><a href="ClassesAndObjects/ObjectExpressicAndDeclarations.md" class="calibre7 pcalibre2 pcalibre pcalibre1">对象声明</a> </p>
+</blockquote>
+<h3 id="继承" class="calibre16">继承</h3>
+<p class="calibre6">Kotin 中所有的类都有共同的父类 Any ，下面是一个没有父类声明的类：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">Example</span> //　隐式继承于 <span class="hljs-comment">Any</span></span>
+</code></pre>
+<p class="calibre6"><code class="calibre19 pcalibre6 pcalibre5">Any</code> 不是 <code class="calibre19 pcalibre6 pcalibre5">java.lang.Object</code>；事实上它除了 <code class="calibre19 pcalibre6 pcalibre5">equals()</code>,<code class="calibre19 pcalibre6 pcalibre5">hashCode()</code>以及<code class="calibre19 pcalibre6 pcalibre5">toString()</code>外没有任何成员了。参看<a href="Java%20interoperability" class="calibre7 pcalibre2 pcalibre pcalibre1"> Java interoperability</a>了解更多详情。</p>
+<p class="calibre6">声明一个明确的父类，需要在类头后加冒号再加父类：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">open</span> <span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">Base</span></span>(p: <span class="hljs-keyword">Int</span>)
+
+<span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">Derived</span></span>(p: <span class="hljs-keyword">Int</span>) : Base(p)
+</code></pre>
+<p class="calibre6">如果类有主构造函数，则基类可以而且是必须在主构造函数中立即初始化。</p>
+<p class="calibre6">如果类没有主构造函数，则必须在每一个构造函数中用 super 关键字初始化基类，或者在代理另一个构造函数做这件事。注意在这种情形中不同的二级构造函数可以调用基类不同的构造方法：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">MyView</span> : <span class="hljs-type">View {</span></span>
+    constructor(ctx: Context) : super(ctx) {
+    }
+    constructor(ctx: Context, attrs: AttributeSet) : super(ctx,attrs) {
+    }
+}
+</code></pre>
+<p class="calibre6">open 注解与java 中的 final相反:它允许别的类继承这个类。默认情形下，kotlin 中所有的类都是 final ,对应 <a href="http://www.oracle.com/technetwork/java/effectivejava-136174.html" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">Effective Java</a> ：Design and document for inheritance or else prohibit it.</p>
+<h3 id="复写成员" class="calibre16">复写成员</h3>
+<p class="calibre6">像之前提到的，我们在 kotlin 中坚持做明确的事。不像 java ，kotlin 需要把可以复写的成员都明确注解出来，并且重写它们：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">open</span> <span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">Base</span> </span>{
+    <span class="hljs-keyword">open</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">v</span><span class="hljs-params">()</span> {}</span>
+    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">nv</span><span class="hljs-params">()</span> {}</span>
+}
+
+<span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">Derived</span></span>() : Base() {
+    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">v</span><span class="hljs-params">()</span> {}</span>
+}
+</code></pre>
+<p class="calibre6">对于 <code class="calibre19 pcalibre6 pcalibre5">Derived.v()</code> 来说 override 注解是必须的。如果没有加的话，编译器会提示。如果没有 open 注解，像 <code class="calibre19 pcalibre6 pcalibre5">Base.nv()</code> ,在子类中声明一个同样的函数是不合法的，要么加 override 要么不要复写。在 final 类(就是没有open注解的类)中，open 类型的成员是不允许的。</p>
+<p class="calibre6">标记为 override 的成员是 open的，它可以在子类中被复写。如果你不想被重写就要加 final:</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">open</span> <span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">AnotherDerived</span></span>() : Base() {
+    <span class="hljs-keyword">final</span> <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">v</span><span class="hljs-params">()</span> {}</span>
+}
+</code></pre>
+<p class="calibre6"><strong class="calibre25">等等！我现在怎么hack我的库？！</strong></p>
+<p class="calibre6">有个问题就是如何复写子类中那些作者不想被重写的类，下面介绍一些令人讨厌的方案。</p>
+<p class="calibre6">我们认为这是不好的，原因如下：</p>
+<blockquote class="calibre18">
+<p class="calibre6">最好的实践建议你不应给做这些 hack</p>
+<p class="calibre6">人们可以用其他的语言成功做到类似的事情</p>
+<p class="calibre6">如果你真的想 hack 那么你可以在 java 中写好 hack 方案，然后在 kotlin 中调用 (参看<a href="http://kotlinlang.org/docs/reference/java-interop.html" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">java调用</a>)，专业的构架可以很好的做到这一点</p>
+</blockquote>
+<h3 id="复写规则" class="calibre16">复写规则</h3>
+<p class="calibre6">在 kotlin 中，实现继承通常遵循如下规则：如果一个类从它的直接父类继承了同一个成员的多个实现，那么它必须复写这个成员并且提供自己的实现(或许只是直接用了继承来的实现)。为表示使用父类中提供的方法我们用 <code class="calibre19 pcalibre6 pcalibre5">super&lt;Base&gt;</code>表示:</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">open</span> <span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">A</span> </span>{
+    <span class="hljs-keyword">open</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">f</span> <span class="hljs-params">()</span> { <span class="hljs-comment">print</span><span class="hljs-params">("A")</span> }</span>
+    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">a</span><span class="hljs-params">()</span> { <span class="hljs-comment">print</span><span class="hljs-params">("a")</span> }</span>
+}
+
+interface B {
+    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">f</span><span class="hljs-params">()</span> { <span class="hljs-comment">print</span><span class="hljs-params">("B")</span> } <span class="hljs-comment">//接口的成员变量默认是 open 的</span></span>
+    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">b</span><span class="hljs-params">()</span> { <span class="hljs-comment">print</span><span class="hljs-params">("b")</span> }</span>
+}
+
+<span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">C</span></span>() : A() , B{
+    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">f</span><span class="hljs-params">()</span> {</span>
+        super<span class="hljs-type">&lt;A&gt;</span>.f()<span class="hljs-comment">//调用 A.f()</span>
+        super<span class="hljs-type">&lt;B&gt;</span>.f()<span class="hljs-comment">//调用 B.f()</span>
+    }
+}
+</code></pre>
+<p class="calibre6">可以同时从 A B 中继承方法，而且 C 继承 a() 或 b() 的实现没有任何问题，因为它们都只有一个实现。但是 f() 有俩个实现，因此我们在 C 中必须复写 f() 并且提供自己的实现来消除歧义。</p>
+<h3 id="抽象类" class="calibre16">抽象类</h3>
+<p class="calibre6">一个类或一些成员可能被声明成 abstract 。一个抽象方法在它的类中没有实现方法。记住我们不用给一个抽象类或函数添加 open 注解，它默认是带着的。</p>
+<p class="calibre6">我们可以用一个抽象成员去复写一个带 open 注解的非抽象方法。</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">open</span> <span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">Base</span> </span>{
+    <span class="hljs-keyword">open</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">f</span><span class="hljs-params">()</span> {}</span>
+}
+
+abstract <span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">Derived</span> : <span class="hljs-type">Base</span></span>() {
+    <span class="hljs-keyword">override</span> abstract <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">f</span><span class="hljs-params">()</span></span>
+}
+</code></pre>
+<h3 id="伴随对象" class="calibre16">伴随对象</h3>
+<p class="calibre6">在 kotlin 中不像 java 或者 C# 它没有静态方法。在大多数情形下，我们建议只用包级别的函数。</p>
+<p class="calibre6">如果你要写一个没有实例类就可以调用的方法，但需要访问到类内部(比如说一个工厂方法)，你可以把它写成它所在类的一个成员(you can write it as a member of an object declaration inside that class)</p>
+<p class="calibre6">更高效的方法是，你可以在你的类中声明一个<a href="http://kotlinlang.org/docs/reference/object-declarations.html#companion-objects" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">伴随对象</a>，这样你就可以像 java/c# 那样把它当做静态方法调用，只需要它的类名做一个识别就好了</p>
+<h3 id="密封类" class="calibre16">密封类</h3>
+<p class="calibre6">密封类用于代表严格的类结构，值只能是有限集合中的某中类型，不可以是任何其它类型。这就相当于一个枚举类的扩展：枚举值集合的类型是严格限制的，但每个枚举常量只有一个实例，而密封类的子类可以有包含不同状态的多个实例。</p>
+<p class="calibre6">声明密封类需要在 class 前加一个 sealed 修饰符。密封类可以有子类但必须全部嵌套在密封类声明内部、</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">sealed <span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">Expr</span> </span>{
+    <span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">Const</span></span>(<span class="hljs-variable"><span class="hljs-keyword">val</span> number</span>: <span class="hljs-keyword">Double</span>) : Expr() 
+    <span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">Sum</span></span>(<span class="hljs-variable"><span class="hljs-keyword">val</span> e1</span>: Expr, <span class="hljs-variable"><span class="hljs-keyword">val</span> e2</span>: Expr) : Expr() 
+    <span class="hljs-keyword">object</span> NotANumber : Expr()
+}
+</code></pre>
+<p class="calibre6">注意密封类子类的扩展可以在任何地方，不必在密封类声明内部进行。</p>
+<p class="calibre6">使用密封类的最主要的的好处体现在你使用 <a href="" class="calibre7 pcalibre2 pcalibre pcalibre1">when 表达式</a>。可以确保声明可以覆盖到所有的情形，不需要再使用 else 情形。</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">eval</span><span class="hljs-params">(expr: <span class="hljs-type">Expr</span>)</span>: <span class="hljs-keyword">Double</span> = <span class="hljs-comment">when</span><span class="hljs-params">(expr)</span> { </span>
+    <span class="hljs-keyword">is</span> Const -&gt; expr.number
+    <span class="hljs-keyword">is</span> Sum -&gt; eval(expr.e1) + eval(expr.e2) 
+    NotANumber -&gt; <span class="hljs-keyword">Double</span>.NaN
+    <span class="hljs-comment">// the `else` clause is not required because we've covered all the cases</span>
+}
+</code></pre>
+
+        </div>
+    
+</div>
+
+        
+    
+
+
+</body></html>

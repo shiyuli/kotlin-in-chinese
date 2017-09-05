@@ -1,0 +1,58 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh" xml:lang="zh">
+  <head>
+    <title>协程</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta content="" name="description"/>
+    <meta content="GitBook 3.2.2" name="generator"/>
+    <meta content="huanglizhuo" name="author"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        
+<div class="page">
+    
+        <h1 class="book-chapter" id="calibre_toc_28">协程</h1>
+        <div class="section">
+            <h2 id="协程coroutines有些-apis-是需要长时间运行，并且需要调用者阻塞直到这些调用完成（比如网络-io-，文件-io-，cpu-或者-gpu-比较集中的工作）。协程提供了一种避免线程阻塞并且用一种更轻量级，更易操控到操作：协程暂停。" class="calibre10">协程(Coroutines)有些 APIs 是需要长时间运行，并且需要调用者阻塞直到这些调用完成（比如网络 IO ，文件 IO ，CPU 或者 GPU 比较集中的工作）。协程提供了一种避免线程阻塞并且用一种更轻量级，更易操控到操作：协程暂停。</h2>
+<p class="calibre6">协程把异步编程放入库中来简化这类操作。程序逻辑在协程中顺序表述，而底层的库会将其转换为异步操作。库会将相关的用户代码打包成回调，订阅相关事件，调度其执行到不同的线程（甚至不同的机器），而代码依然想顺序执行那么简单。</p>
+<p class="calibre6">很多其它语言中的异步模型都可以用 Kotlin 协程实现为库。比如 C# ECMAScipt  中的　<a href="https://github.com/Kotlin/kotlinx.coroutines/blob/master/coroutines-guide.md#composing-suspending-functions" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">async/wait</a> ，Go 语言中的  <a href="https://github.com/Kotlin/kotlinx.coroutines/blob/master/coroutines-guide.md#channels" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">channels</a> 和 <a href="https://github.com/Kotlin/kotlinx.coroutines/blob/master/coroutines-guide.md#select-expression" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1"><code class="calibre19 pcalibre6 pcalibre5">select</code></a> ，以及 C# 和 Python 的 <a href="http://kotlinlang.org/docs/reference/coroutines.html##generators-api-in-kotlincoroutines" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">generators/<code class="calibre19 pcalibre6 pcalibre5">yield</code></a>  模型。下面的描述会详细解释提供这些结构的库。</p>
+<h3 id="阻塞和挂起" class="calibre16">阻塞和挂起</h3>
+<p class="calibre6">一般来说，协程是一种可以不阻塞线程但却可以被挂起的计算过程。线程阻塞总是昂贵的，尤其是在高负载的情形下，因为只有小部分的线程是实际运行的，因此阻塞它们会导致一些重要的任务被延迟。</p>
+<p class="calibre6">而协程的挂起基本没有什么开销。没有上下文切换或者任何的操作系统的介入。最重要的是，挂起是可以背用户库控制的，库的作者可以决定在挂起时根据需要进行一些优化／日志记录／拦截等操作。</p>
+<p class="calibre6">另一个不同就是协程不能被任意的操作挂起，而仅仅可以在被标记为 <em class="calibre31">挂起点</em>  的地方进行挂起。</p>
+<h3 id="挂起函数" class="calibre16">挂起函数</h3>
+<p class="calibre6">当一个函数被 <code class="calibre19 pcalibre6 pcalibre5">suspend</code> 修饰时表示可以背挂起。</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">suspend <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">doSomething</span><span class="hljs-params">(foo: <span class="hljs-type">Foo</span>)</span>: Bar{</span>
+ ... 
+}
+</code></pre>
+<p class="calibre6">这样的函数被称为 <em class="calibre31">挂起函数</em>，因为调用它可能导致挂起协程（库可以在调用结果已经存在的情形下决定取消挂起）。挂起函数可以想正常函数那样接受参数返回结果，但只能在协程中调用或着被其他挂起函数调用。事实上启动一个协程至少需要一个挂起函数，而且常常时匿名的（比如lambda）。下面这个例子是一个简单的<code class="calibre19 pcalibre6 pcalibre5">async()</code> 函数（来自<a href="http://kotlinlang.org/docs/reference/coroutines.html#generators-api-in-kotlincoroutines" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1"><code class="calibre19 pcalibre6 pcalibre5">kotlinx.coroutines</code></a>  库）：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-type">&lt;T&gt;</span> <span class="hljs-comment">async</span><span class="hljs-params">(block: <span class="hljs-type">suspend(</span>)</span> -&gt; T)</span>
+</code></pre>
+<p class="calibre6">这里的 <code class="calibre19 pcalibre6 pcalibre5">async()</code>只是一个普通的函数（不是挂起函数），但 <code class="calibre19 pcalibre6 pcalibre5">block</code> 参数是一个带有 <code class="calibre19 pcalibre6 pcalibre5">suspend</code> 修饰的函数类型，所以当传递一个 lambda 给<code class="calibre19 pcalibre6 pcalibre5">async()</code>时，这会是一个挂起 lambda ，这样我们就可以在这里调用一个挂起函数了。</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">async{
+  doSomething(foo)
+}
+</code></pre>
+<p class="calibre6">继续类比，<code class="calibre19 pcalibre6 pcalibre5">await()</code> 函数可以是一个挂起函数(因此在 <code class="calibre19 pcalibre6 pcalibre5">await(){}</code> 语句块内仍然可以调用)，该函数会挂起协程直至指定操作完成并返回结果：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">async {
+    ...
+    <span class="hljs-variable"><span class="hljs-keyword">val</span> result</span> = computation.await()
+    ...
+}
+</code></pre>
+<p class="calibre6">更多关于 <code class="calibre19 pcalibre6 pcalibre5">async/await</code> 原理的内容请看<a href="https://github.com/Kotlin/kotlinx.coroutines/blob/master/coroutines-guide.md#composing-suspending-functions" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">这里</a></p>
+<p class="calibre6">注意 <code class="calibre19 pcalibre6 pcalibre5">await</code> </p>
+
+        </div>
+    
+</div>
+
+        
+    
+
+
+</body></html>

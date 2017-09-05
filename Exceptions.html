@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh" xml:lang="zh">
+  <head>
+    <title>异常</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta content="" name="description"/>
+    <meta content="GitBook 3.2.2" name="generator"/>
+    <meta content="huanglizhuo" name="author"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        
+<div class="page">
+    
+        <h1 class="book-chapter" id="calibre_toc_37">异常</h1>
+        <div class="section">
+            <h2 id="异常" class="calibre10">异常</h2>
+<h3 id="异常类" class="calibre16">异常类</h3>
+<p class="calibre6">所有的异常类都是 <code class="calibre19 pcalibre6 pcalibre5">Exception</code> 的子类。每个异常都有一个消息，栈踪迹和可选的原因。</p>
+<p class="calibre6">使用 throw 表达式，抛出异常</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">throw</span> MyException(<span class="hljs-string">"Hi There!"</span>)
+</code></pre>
+<p class="calibre6">使用 try 捕获异常</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">try</span> {
+  <span class="hljs-comment">// some code</span>
+}
+<span class="hljs-keyword">catch</span> (e: SomeException) {
+  <span class="hljs-comment">// handler</span>
+}
+<span class="hljs-keyword">finally</span> {
+  <span class="hljs-comment">// optional finally block</span>
+}
+</code></pre>
+<p class="calibre6">有可能有不止一个的 catch 块。finally 块可以省略。</p>
+<h3 id="try-是一个表达式" class="calibre16">try 是一个表达式</h3>
+<p class="calibre6">try 可以有返回值：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-variable"><span class="hljs-keyword">val</span> a</span>: <span class="hljs-keyword">Int</span>? = <span class="hljs-keyword">try</span> { parseInt(input) } <span class="hljs-keyword">catch</span> (e: NumberFormatException) { <span class="hljs-params">null</span> }
+</code></pre>
+<p class="calibre6">try 返回值要么是 try 块的最后一个表达式，要么是 catch 块的最后一个表达式。finally 块的内容不会对表达式有任何影响。</p>
+<h3 id="检查异常" class="calibre16">检查异常</h3>
+<p class="calibre6">Kotlin 中没有异常检查。这是由多种原因造成的，我们这里举个简单的例子</p>
+<p class="calibre6">下面是 JDK <code class="calibre19 pcalibre6 pcalibre5">StringBuilder</code> 类实现的一个接口</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function">Appendable <span class="hljs-comment">append</span><span class="hljs-params">(CharSequence csq)</span> <span class="hljs-keyword">throws</span> IOException</span>;
+</code></pre>
+<p class="calibre6">这个签名说了什么？　它说每次我把 string 添加到什么东西(StringBuilder 或者 log console 等等)上时都会捕获 <code class="calibre19 pcalibre6 pcalibre5">IOExceptions</code> 为什么呢？因为可能涉及到 IO 操作(Writer 也实现了 Appendable)...　所以导致所有实现 Appendable 的接口都得捕获异常</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">try</span> {
+  log.append(message)
+}
+<span class="hljs-keyword">catch</span> (IOException e) {
+  <span class="hljs-comment">// Must be safe</span>
+}
+</code></pre>
+<p class="calibre6">这样是不利的，参看<a href="http://www.oracle.com/technetwork/java/effectivejava-136174.html" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">Effective java </a></p>
+<p class="calibre6">Bruce Eckel 在<a href="http://www.mindview.net/Etc/Discussions/CheckedExceptions" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">java 需要异常检查吗?</a>说到：</p>
+<blockquote class="calibre18">
+<p class="calibre6">Examination of small programs leads to the conclusion that requiring exception specifications could both enhance developer productivity and enhance code quality, but experience with large software projects suggests a different result – decreased productivity and little or no increase in code quality.</p>
+</blockquote>
+<h3 id="java-互动" class="calibre16">java 互动</h3>
+<p class="calibre6">参看 <a href="http://kotlinlang.org/docs/reference/java-interop.html" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">Java Interoperability section</a></p>
+
+        </div>
+    
+</div>
+
+        
+    
+
+
+</body></html>

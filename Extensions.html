@@ -1,0 +1,144 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh" xml:lang="zh">
+  <head>
+    <title>扩展</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta content="" name="description"/>
+    <meta content="GitBook 3.2.2" name="generator"/>
+    <meta content="huanglizhuo" name="author"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        
+<div class="page">
+    
+        <h1 class="book-chapter" id="calibre_toc_16">扩展</h1>
+        <div class="section">
+            <h2 id="扩展" class="calibre10">扩展</h2>
+<p class="calibre6">与 C# 和 Gosu 类似, Kotlin 也提供了一种,可以在不继承父类，也不使用类似装饰器这样的设计模式的情况下对指定类进行扩展。我们可以通过一种叫做扩展的特殊声明来实现他。Kotlin 支持函数扩展和属性扩展。</p>
+<h3 id="函数扩展" class="calibre16">函数扩展</h3>
+<p class="calibre6">为了声明一个函数扩展，我们需要在函数前加一个接收者类型作为前缀。下面我们会为 <code class="calibre19 pcalibre6 pcalibre5">MutableList&lt;Int&gt;</code> 添加一个 <code class="calibre19 pcalibre6 pcalibre5">swap</code> 函数：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> MutableList<span class="hljs-type">&lt;Int&gt;</span>.<span class="hljs-comment">swap</span><span class="hljs-params">(x: <span class="hljs-type">Int, y: Int</span>)</span> {</span>
+    <span class="hljs-variable"><span class="hljs-keyword">val</span> temp</span> = this[x] <span class="hljs-comment">// this 对应 list</span>
+    this[x] = this[y]
+    this[y] = tmp
+}
+</code></pre>
+<p class="calibre6">在扩展函数中的 this 关键字对应接收者对象。现在我们可以在任何 <code class="calibre19 pcalibre6 pcalibre5">MutableList&lt;Int&gt;</code> 实例中使用这个函数了：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-variable"><span class="hljs-keyword">val</span> l</span> = mutableListOf(<span class="hljs-params">1</span>, <span class="hljs-params">2</span>, <span class="hljs-params">3</span>)
+l.swap(<span class="hljs-params">0</span>, <span class="hljs-params">2</span>)<span class="hljs-comment">// 在 `swap()` 函数中 `this` 持有的值是 `l`</span>
+</code></pre>
+<p class="calibre6">当然，这个函数对任意的 <code class="calibre19 pcalibre6 pcalibre5">MutableList&lt;T&gt;</code> 都是适用的，而且我们可以把它变的通用：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-type">&lt;T&gt;</span> MutableList<span class="hljs-type">&lt;T&gt;</span>.<span class="hljs-comment">swap</span><span class="hljs-params">(x: <span class="hljs-type">Int, y: Int</span>)</span> {</span>
+  <span class="hljs-variable"><span class="hljs-keyword">val</span> tmp</span> = this[x] <span class="hljs-comment">// 'this' corresponds to the list</span>
+  this[x] = this[y]
+  this[y] = tmp
+}
+</code></pre>
+<p class="calibre6">我们在函数名前声明了通用类型，从而使它可以接受任何参数。参看<a href="http://kotlinlang.org/docs/reference/generics.html" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">泛型函数</a>。</p>
+<h3 id="扩展是被静态解析的" class="calibre16">扩展是被<strong class="calibre32">静态</strong>解析的</h3>
+<p class="calibre6">扩展实际上并没有修改它所扩展的类。定义一个扩展，你并没有在类中插入一个新的成员，只是让这个类的实例对象能够通过<code class="calibre19 pcalibre6 pcalibre5">.</code>调用新的函数。</p>
+<p class="calibre6">需要强调的是扩展函数是静态分发的，举个例子,它们并不是接受者类型的虚拟方法。这意味着扩展函数的调用时由发起函数调用的表达式的类型决定的，而不是在运行时动态获得的表达式的类型决定。比如</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">open</span> <span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">C</span> </span>
+
+<span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">D</span>: <span class="hljs-type">C</span></span>()
+
+<span class="hljs-function"><span class="hljs-keyword">fun</span> C.<span class="hljs-comment">foo</span><span class="hljs-params">()</span> = "c" </span>
+
+<span class="hljs-function"><span class="hljs-keyword">fun</span> D.<span class="hljs-comment">foo</span><span class="hljs-params">()</span> = "d"</span>
+
+<span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">printFoo</span><span class="hljs-params">(c: <span class="hljs-type">C</span>)</span> { </span>
+    println(c.foo())
+} 
+
+printFoo(D())
+</code></pre>
+<p class="calibre6">这个例子会输出 <code class="calibre19 pcalibre6 pcalibre5">c</code>，因为这里扩展函数的调用决定于声明的参数 <code class="calibre19 pcalibre6 pcalibre5">c</code> 的类型，也就是 <code class="calibre19 pcalibre6 pcalibre5">C</code>。</p>
+<p class="calibre6">如果有同名同参数的成员函数和扩展函数，调用的时候必然会使用成员函数，比如：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">
+<span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">C</span> </span>{
+    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">foo</span><span class="hljs-params">()</span> { <span class="hljs-comment">println</span><span class="hljs-params">("member")</span> }</span>
+
+}
+<span class="hljs-function"><span class="hljs-keyword">fun</span> C.<span class="hljs-comment">foo</span><span class="hljs-params">()</span> { <span class="hljs-comment">println</span><span class="hljs-params">("extension")</span> }</span>
+</code></pre>
+<p class="calibre6">当我们对C的实例c调用<code class="calibre19 pcalibre6 pcalibre5">c.foo()</code>的时候,他会输出"member",而不是"extension"</p>
+<p class="calibre6">但你可以用不同的函数签名通过扩展函数的方式重载函数的成员函数，比如下面这样：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">C</span> </span>{
+    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">foo</span><span class="hljs-params">()</span> { <span class="hljs-comment">println</span><span class="hljs-params">("number")</span> }</span>
+}
+
+<span class="hljs-function"><span class="hljs-keyword">fun</span> C.<span class="hljs-comment">foo</span><span class="hljs-params">(i:<span class="hljs-type">Int</span>)</span> { <span class="hljs-comment">println</span><span class="hljs-params">("extention")</span> }</span>
+</code></pre>
+<p class="calibre6"><code class="calibre19 pcalibre6 pcalibre5">C().foo(1)</code> 的调用会打印 “extentions”。</p>
+<h3 id="可空的接收者" class="calibre16">可空的接收者</h3>
+<p class="calibre6">注意扩展可以使用空接收者类型进行定义。这样的扩展使得，即使是一个空对象仍然可以调用该扩展，然后在扩展的内部进行 <code class="calibre19 pcalibre6 pcalibre5">this == null</code> 的判断。这样你就可以在 Kotlin 中任意调用 toString() 方法而不进行空指针检查：空指针检查延后到扩展函数中完成。</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> Any?.<span class="hljs-comment">toString</span><span class="hljs-params">()</span>: String {</span>
+    <span class="hljs-keyword">if</span> (this == <span class="hljs-params">null</span>) <span class="hljs-keyword">return</span> <span class="hljs-string">"null"</span>
+    <span class="hljs-comment">// 在空检查之后，`this` 被自动转为非空类型，因此 toString() 可以被解析到任何类的成员函数中</span>
+    <span class="hljs-keyword">return</span> toString()
+}
+</code></pre>
+<h3 id="属性扩展" class="calibre16">属性扩展</h3>
+<p class="calibre6">和函数类似， Kotlin 也支持属性扩展：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-variable"><span class="hljs-keyword">val</span> &lt;T&gt; List&lt;T&gt;.lastIndex</span>:  <span class="hljs-keyword">Int</span>
+    <span class="hljs-keyword">get</span>() = size<span class="hljs-params">-1</span>
+</code></pre>
+<p class="calibre6">注意，由于扩展并不会真正给类添加了成员属性，因此也没有办法让扩展属性拥有一个备份字段.这也是为什么<strong class="calibre25">初始化函数不允许有扩展属性</strong>。扩展属性只能够通过明确提供 getter 和 setter方法来进行定义.</p>
+<p class="calibre6">例子：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-variable"><span class="hljs-keyword">val</span> Foo.bar</span> = <span class="hljs-params">1</span> <span class="hljs-comment">//error: initializers are not allowed for extension properties</span>
+</code></pre>
+<h3 id="伴随对象扩展" class="calibre16">伴随对象扩展</h3>
+<p class="calibre6">如果一个对象定义了伴随对象，你也可以给伴随对象添加扩展函数或扩展属性：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">MyClass</span> </span>{
+    <span class="hljs-keyword">companion</span> <span class="hljs-keyword">object</span> {} 
+}
+<span class="hljs-function"><span class="hljs-keyword">fun</span> MyClass.Companion.<span class="hljs-comment">foo</span><span class="hljs-params">()</span>{</span>
+
+}
+</code></pre>
+<p class="calibre6">和普通伴随对象的成员一样，它们可以只用类的名字就调用：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">MyClass.foo()
+</code></pre>
+<h3 id="扩展的域" class="calibre16">扩展的域</h3>
+<p class="calibre6">大多数时候我们在 top level 定义扩展，就在包下面直接定义：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">package</span> foo.bar
+<span class="hljs-function"><span class="hljs-keyword">fun</span> Baz.<span class="hljs-comment">goo</span><span class="hljs-params">()</span> { ... }</span>
+</code></pre>
+<p class="calibre6">为了在除声明的包外使用这个扩展，我们需要在 import 时导入：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">package</span> com.example,usage
+
+<span class="hljs-keyword">import</span> foo.bar.goo <span class="hljs-comment">// 导入所有名字叫 "goo" 的扩展</span>
+
+                    <span class="hljs-comment">// 或者</span>
+
+<span class="hljs-keyword">import</span> foo.bar.* <span class="hljs-comment">// 导入foo.bar包下得所有数据</span>
+
+<span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">usage</span><span class="hljs-params">(baz: <span class="hljs-type">Baz</span>)</span> {</span>
+    baz.goo()
+}
+</code></pre>
+<h3 id="动机" class="calibre16">动机</h3>
+<p class="calibre6">在 java 中，我们通常使用一系列名字为 "*Utils" 的类: <code class="calibre19 pcalibre6 pcalibre5">FileUtils</code>,<code class="calibre19 pcalibre6 pcalibre5">StringUtils</code>等等。很有名的 <code class="calibre19 pcalibre6 pcalibre5">java.util.Collections</code> 也是其中一员的，但我们不得不像下面这样使用他们：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-comment">//java</span>
+Collections.swap(list, Collections.binarySearch(list, Collections.max(otherList)), Collections.max(list))
+</code></pre>
+<p class="calibre6">由于这些类名总是不变的。我们可以使用静态导入并这样使用：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">swap(list, binarySearch(list, max(otherList)), max(list))
+</code></pre>
+<p class="calibre6">这样就好很多了，但这样我们就只能从 IDE 自动完成代码那里获得很少或得不到帮助信息。如果我们可以像下面这样那么就好多了</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">list.swap(list.binarySearch(otherList.max()), list.max())
+</code></pre>
+<p class="calibre6">但我们又不想在 List 类中实现所有可能的方法。这就是扩展带来的好处。</p>
+
+        </div>
+    
+</div>
+
+        
+    
+
+
+</body></html>

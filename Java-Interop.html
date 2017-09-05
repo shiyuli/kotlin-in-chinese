@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh" xml:lang="zh">
+  <head>
+    <title>动态类型</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta content="" name="description"/>
+    <meta content="GitBook 3.2.2" name="generator"/>
+    <meta content="huanglizhuo" name="author"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        
+<div class="page">
+    
+        <h1 class="book-chapter" id="calibre_toc_43">动态类型</h1>
+        <div class="section">
+            <h2 id="交互" class="calibre10">交互</h2>
+<h3 id="java-交互" class="calibre16">java 交互</h3>
+<p class="calibre6">Kotlin 在设计时就是以与 java 交互为中心的。现存的 java 代码可以在 kotlin 中使用，并且 Kotlin 代码也可以在 java 中流畅运行。这节我们会讨论在 kotlin 中调用 java 代码。</p>
+<h4 id="在-kotlin-中调用-java-代码" class="calibre34">在 kotlin 中调用 java 代码</h4>
+<p class="calibre6">基本所有的 Java 代码都可以运行</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">import</span> java.util.*
+<span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">demo</span><span class="hljs-params">(source: <span class="hljs-type">List&lt;Int&gt;</span>)</span> {</span>
+    <span class="hljs-variable"><span class="hljs-keyword">val</span> list</span> = ArrayList<span class="hljs-type">&lt;Int&gt;</span>()
+    <span class="hljs-keyword">for</span> (item <span class="hljs-keyword">in</span> source )
+        list.add(item)
+    <span class="hljs-keyword">for</span> (i <span class="hljs-keyword">in</span> <span class="hljs-params">0.</span>.source.size() - <span class="hljs-params">1</span>)
+        list[i] = source[i]
+}
+</code></pre>
+<p class="calibre6"><strong class="calibre25">空的返回</strong></p>
+<p class="calibre6">如果 Java 方法返回空，则在 Kotlin 调用中返回 <code class="calibre19 pcalibre6 pcalibre5">Unit</code>。如果</p>
+
+        </div>
+    
+</div>
+
+        
+    
+
+
+</body></html>

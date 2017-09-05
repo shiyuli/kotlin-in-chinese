@@ -1,0 +1,70 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh" xml:lang="zh">
+  <head>
+    <title>与Scala对比</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta content="" name="description"/>
+    <meta content="GitBook 3.2.2" name="generator"/>
+    <meta content="huanglizhuo" name="author"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        
+<div class="page">
+    
+        <h1 class="book-chapter" id="calibre_toc_52">与Scala对比</h1>
+        <div class="section">
+            <h2 id="与-scala-对比" class="calibre10">与 Scala 对比</h2>
+<p class="calibre6">Kotlin 设计时的俩个主要目标是：</p>
+<blockquote class="calibre18">
+<p class="calibre6">至少和 java 运行速度一样快</p>
+<p class="calibre6">在保证语言尽量简单的情况下在易用性上提高</p>
+</blockquote>
+<p class="calibre6">考虑到这俩点，如果你喜欢 Scala ，你可能不需要 Kotlin</p>
+<h3 id="scala-有而-kotlin-没有的" class="calibre16">Scala 有而 Kotlin 没有的</h3>
+<blockquote class="calibre18">
+<p class="calibre6">隐式转换，隐式参数
+    --在 Scala 中，在不适用 debugger 的时候很难知道代码发生了什么，因为太多的东西是隐式的
+    --通过函数增加类型在 kotlin 中需要使用<a href="http://kotlinlang.org/docs/reference/extensions.html" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">扩展函数</a></p>
+<p class="calibre6">可重载和类型成员</p>
+<p class="calibre6">路径依赖的类型</p>
+<p class="calibre6">宏</p>
+<p class="calibre6">Existential types
+    --类型推断是很特殊的情形</p>
+<p class="calibre6">特征的初始化逻辑很复杂
+    --参看<a href="http://kotlinlang.org/docs/reference/classes.html" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">类和继承</a></p>
+<p class="calibre6">自定义象征操作
+    --参看<a href="http://kotlinlang.org/docs/reference/operator-overloading.html" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">操作符重载</a></p>
+<p class="calibre6">内建 xml
+    --参看<a href="http://kotlinlang.org/docs/reference/type-safe-builders.html" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">Type-safe Groovy-style builders</a></p>
+</blockquote>
+<p class="calibre6">以后 kotlin可能会添加的特性：</p>
+<blockquote class="calibre18">
+<p class="calibre6">结构类型</p>
+<p class="calibre6">值类型</p>
+<p class="calibre6">Yield 操作符</p>
+<p class="calibre6">Actors</p>
+<p class="calibre6">并行集合(Parallel collections)</p>
+</blockquote>
+<h3 id="kotlin-有而-scala-没有的" class="calibre16">Kotlin 有而 Scala 没有的</h3>
+<blockquote class="calibre20">
+<p class="calibre6">零开销的null安全</p>
+<ul class="calibre11">
+<li class="calibre12">Scala的是Option，是在句法和运行时的包装</li>
+</ul>
+<p class="calibre6"><a href="http://kotlinlang.org/docs/reference/typecasts.html" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1"> Smart casts</a></p>
+<p class="calibre6"><a href="http://kotlinlang.org/docs/reference/inline-functions.html#inline-functions" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">Kotlin 的内联函数非局部的跳转</a></p>
+<p class="calibre6"><a href="http://kotlinlang.org/docs/reference/delegation.html" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">First-class delegation</a>。也通过第三方插件：Autoproxy实现</p>
+</blockquote>
+
+        </div>
+    
+</div>
+
+        
+    
+
+
+</body></html>

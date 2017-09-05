@@ -1,0 +1,131 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh" xml:lang="zh">
+  <head>
+    <title>注解</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta content="" name="description"/>
+    <meta content="GitBook 3.2.2" name="generator"/>
+    <meta content="huanglizhuo" name="author"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        
+<div class="page">
+    
+        <h1 class="book-chapter" id="calibre_toc_38">注解</h1>
+        <div class="section">
+            <h2 id="注解" class="calibre10">注解</h2>
+<h3 id="注解声明" class="calibre16">注解声明</h3>
+<p class="calibre6">注解是一种将元数据附加到代码中的方法。声明注解需要在类前面使用 annotation 关键字：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">annotation <span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">fancy</span></span>
+</code></pre>
+<h3 id="用法" class="calibre16">用法</h3>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">@fancy <span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">Foo</span> </span>{
+    @fancy <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">baz</span><span class="hljs-params">(@fancy foo: <span class="hljs-type">Int</span>)</span>: <span class="hljs-keyword">Int</span> {</span>
+        <span class="hljs-keyword">return</span> (@fancy <span class="hljs-params">1</span>)
+    }
+}
+</code></pre>
+<p class="calibre6">在多数情形中 @ 标识是可选的。只有在注解表达式或本地声明中才必须：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">fancy <span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">Foo</span> </span>{
+    fancy <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">baz</span><span class="hljs-params">(fancy foo: <span class="hljs-type">Int</span>)</span>: <span class="hljs-keyword">Int</span> {</span>
+        @fancy <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">bar</span><span class="hljs-params">()</span> { ... }</span>
+        <span class="hljs-keyword">return</span> (@fancy <span class="hljs-params">1</span>)
+    }
+}
+</code></pre>
+<p class="calibre6">如果要给构造函数注解，就需要在构造函数声明时添加 constructor 关键字，并且需要在前面添加注解：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">Foo</span> @<span class="hljs-comment">inject</span> <span class="hljs-comment">constructor</span> </span>(dependency: MyDependency)
+    <span class="hljs-comment">//...</span>
+</code></pre>
+<p class="calibre6">也可以注解属性访问者：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">Foo</span> </span>{
+    <span class="hljs-variable"><span class="hljs-keyword">var</span> x</span>: MyDependency?=<span class="hljs-params">null</span>
+        @inject <span class="hljs-keyword">set</span>
+}
+</code></pre>
+<h3 id="构造函数" class="calibre16">构造函数</h3>
+<p class="calibre6">注解可以有带参数的构造函数。</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">annotation <span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">special</span></span>(<span class="hljs-variable"><span class="hljs-keyword">val</span> why</span>: String)
+special(<span class="hljs-string">"example"</span>) <span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">Foo</span> </span>{}
+</code></pre>
+<h3 id="lambdas" class="calibre16">Lambdas</h3>
+<p class="calibre6">注解也可以用在 Lambda 中。这将会应用到 lambda 生成的 invoke() 方法。这对 <a href="http://www.paralleluniverse.co/quasar/" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">Quasar</a>框架很有用，在这个框架中注解被用来并发控制</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">annotation <span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">Suspendable</span></span>
+<span class="hljs-variable"><span class="hljs-keyword">val</span> f</span> = @Suspendable { Fiber.sleep(<span class="hljs-params">10</span>) }
+</code></pre>
+<h3 id="java-注解" class="calibre16">java 注解</h3>
+<p class="calibre6">java 注解在 kotlin 中是完全兼容的：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">import</span> org.junit.Test
+<span class="hljs-keyword">import</span> org.junit.Assert.*
+
+<span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">Tests</span> </span>{
+  Test <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">simple</span><span class="hljs-params">()</span> {</span>
+    assertEquals(<span class="hljs-params">42</span>, getTheAnswer())
+  }
+}
+</code></pre>
+<p class="calibre6">java 注解也可以通过在导入是重命名实现像修改者那样：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">import</span> org.junit.Test <span class="hljs-keyword">as</span> test
+
+<span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">Tests</span> </span>{
+  test <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">simple</span><span class="hljs-params">()</span> {</span>
+    ...
+  }
+}
+</code></pre>
+<p class="calibre6">因为 java 中注解参数顺序是没定义的，你不能通过传入参数的方法调用普通函数。相反，你需要使用命名参数语法：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-comment">//Java</span>
+<span class="hljs-keyword">public</span> <span class="hljs-type">@interface</span> Ann {
+    <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-comment">intValue</span><span class="hljs-params">()</span></span>;
+    <span class="hljs-function">String <span class="hljs-comment">stringValue</span><span class="hljs-params">(<span class="hljs-params">0</span>;
+}
+
+//kotlin
+Ann(intValue = <span class="hljs-params">1</span>, stringValue = <span class="hljs-string">"abc"</span>)</span> class C
+</span></code></pre>
+<p class="calibre6">像 java 中那样，值参数是特殊的情形；它的值可以不用明确的名字。</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">public</span> <span class="hljs-type">@interface</span> AnnWithValue {
+    <span class="hljs-function">String <span class="hljs-comment">value</span><span class="hljs-params">()</span></span>;
+}
+
+<span class="hljs-comment">//kotlin</span>
+AnnWithValue(<span class="hljs-string">"abc"</span>) <span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">C</span>
+</span></code></pre>
+<p class="calibre6">如果java 中的 value 参数有数组类型，则在 kotlin 中变成 vararg 参数：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-comment">// Java</span>
+<span class="hljs-keyword">public</span> @interface AnnWithArrayValue {
+    String[] value();
+}
+<span class="hljs-comment">// Kotlin</span>
+AnnWithArrayValue(<span class="hljs-string">"abc"</span>, <span class="hljs-string">"foo"</span>, <span class="hljs-string">"bar"</span>) <span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">C</span></span>
+</code></pre>
+<p class="calibre6">如果你需要明确一个类作为一个注解参数，使用 Kotlin 类<a href="http://kotlinlang.org/api/latest/jvm/stdlib/kotlin.reflect/-k-class/index.html" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">KClass</a>。Kotlin 编译器会自动把它转为 java 类，因此 java 代码就可以正常看到注解和参数了。</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">import</span> kotlin.reflect.KClass
+
+annotation <span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">Ann</span></span>(<span class="hljs-variable"><span class="hljs-keyword">val</span> arg1</span>: KClass<span class="hljs-type">&lt;*&gt;</span>, <span class="hljs-variable"><span class="hljs-keyword">val</span> arg2</span>: KClass<span class="hljs-type">&lt;out Any?&gt;</span>)
+
+Ann(String::<span class="hljs-type"><span class="hljs-keyword">class</span>, <span class="hljs-type">Int::class) class MyClass</span></span>
+</code></pre>
+<p class="calibre6">注解实例的值在 kotlin 代码中是暴露属性。</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-comment">// Java</span>
+<span class="hljs-keyword">public</span> @interface Ann {
+    int value();
+}
+<span class="hljs-comment">// Kotlin</span>
+<span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">foo</span><span class="hljs-params">(ann: <span class="hljs-type">Ann</span>)</span> {</span>
+    <span class="hljs-variable"><span class="hljs-keyword">val</span> i</span> = ann.value
+}
+</code></pre>
+
+        </div>
+    
+</div>
+
+        
+    
+
+
+</body></html>

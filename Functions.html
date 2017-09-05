@@ -1,0 +1,218 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh" xml:lang="zh">
+  <head>
+    <title>函数</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta content="" name="description"/>
+    <meta content="GitBook 3.2.2" name="generator"/>
+    <meta content="huanglizhuo" name="author"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        
+<div class="page">
+    
+        <h1 class="book-chapter" id="calibre_toc_25">函数</h1>
+        <div class="section">
+            <h2 id="函数" class="calibre10">函数</h2>
+<h3 id="函数声明" class="calibre16">函数声明</h3>
+<p class="calibre6">在 kotlin 中用关键字 <code class="calibre19 pcalibre6 pcalibre5">fun</code> 声明函数：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">double</span><span class="hljs-params">(x: <span class="hljs-type">Int</span>)</span>: <span class="hljs-keyword">Int</span> {</span>
+
+}
+</code></pre>
+<h3 id="函数用法" class="calibre16">函数用法</h3>
+<p class="calibre6">通过传统的方法调用函数</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-variable"><span class="hljs-keyword">val</span> result</span> = double(<span class="hljs-params">2</span>)
+</code></pre>
+<p class="calibre6">通过<code class="calibre19 pcalibre6 pcalibre5">.</code>调用成员函数 </p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">Sample().foo() <span class="hljs-comment">// 创建Sample类的实例,调用foo方法</span>
+</code></pre>
+<h3 id="中缀符号" class="calibre16">中缀符号</h3>
+<p class="calibre6">在满足以下条件时,函数也可以通过中缀符号进行调用:</p>
+<blockquote class="calibre18">
+<p class="calibre6">　它们是成员函数或者是<a href="http://kotlinlang.org/docs/reference/extensions.html" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">扩展函数</a>
+　只有一个参数
+ 使用<code class="calibre19 pcalibre6 pcalibre5">infix</code>关键词进行标记</p>
+</blockquote>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-comment">//给 Int 定义一个扩展方法</span>
+infix <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-keyword">Int</span>.<span class="hljs-comment">shl</span><span class="hljs-params">(x: <span class="hljs-type">Int</span>)</span>: <span class="hljs-keyword">Int</span> {</span>
+...
+}
+
+<span class="hljs-params">1</span> shl <span class="hljs-params">2</span> <span class="hljs-comment">//用中缀注解调用扩展函数</span>
+
+<span class="hljs-params">1.</span>shl(<span class="hljs-params">2</span>)
+</code></pre>
+<h3 id="参数" class="calibre16">参数</h3>
+<p class="calibre6">函数参数是用 Pascal 符号定义的　name:type。参数之间用逗号隔开，每个参数必须指明类型。</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">powerOf</span><span class="hljs-params">(number: <span class="hljs-type">Int, exponent: Int</span>)</span> {</span>
+...
+}
+</code></pre>
+<h3 id="默认参数" class="calibre16">默认参数</h3>
+<p class="calibre6">函数参数可以设置默认值,当参数被忽略时会使用默认值。这样相比其他语言可以减少重载。</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">read</span><span class="hljs-params">(b: <span class="hljs-type">Array&lt;Byte&gt;, off: Int</span> = 0, len: <span class="hljs-type">Int</span> = b.size()</span> ) {</span>
+...
+}
+</code></pre>
+<p class="calibre6">默认值可以通过在type类型后使用<code class="calibre19 pcalibre6 pcalibre5">=</code>号进行赋值</p>
+<h3 id="命名参数" class="calibre16">命名参数</h3>
+<p class="calibre6">在调用函数时可以参数可以命名。这对于那种有大量参数的函数是很方便的.</p>
+<p class="calibre6">下面是一个例子：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">reformat</span><span class="hljs-params">(str: <span class="hljs-type">String, normalizeCase: Boolean</span> = true,upperCaseFirstLetter: <span class="hljs-type">Boolean</span> = true,
+             divideByCamelHumps: <span class="hljs-type">Boolean</span> = false,
+             wordSeparator: <span class="hljs-type">Char</span> = ' ')</span> {</span>
+...
+}
+</code></pre>
+<p class="calibre6">我们可以使用默认参数</p>
+<blockquote class="calibre18">
+<p class="calibre6">reformat(str)</p>
+</blockquote>
+<p class="calibre6">然而当调用非默认参数是就需要像下面这样：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">reformat(str, <span class="hljs-params">true</span>, <span class="hljs-params">true</span>, <span class="hljs-params">false</span>, '_')
+</code></pre>
+<p class="calibre6">使用命名参数我们可以让代码可读性更强：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">reformat(str,
+    normalizeCase = <span class="hljs-params">true</span>,
+    uppercaseFirstLetter = <span class="hljs-params">true</span>,
+    divideByCamelHumps = <span class="hljs-params">false</span>,
+    wordSeparator = '_'
+  )
+</code></pre>
+<p class="calibre6">如果不需要全部参数的话可以这样：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">reformat(str, wordSeparator = '_')
+</code></pre>
+<p class="calibre6">注意,命名参数语法不能够被用于调用Java函数中,因为Java的字节码不能确保方法参数命名的不变性</p>
+<h3 id="不带返回值的参数" class="calibre16">不带返回值的参数</h3>
+<p class="calibre6">如果函数不会返回任何有用值，那么他的返回类型就是 <code class="calibre19 pcalibre6 pcalibre5">Unit</code> .<code class="calibre19 pcalibre6 pcalibre5">Unit</code> 是一个只有唯一值<code class="calibre19 pcalibre6 pcalibre5">Unit</code>的类型.这个值并不需要被直接返回:</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">printHello</span><span class="hljs-params">(name: <span class="hljs-type">String?</span>)</span>: <span class="hljs-keyword">Unit</span> {</span>
+    <span class="hljs-keyword">if</span> (name != <span class="hljs-params">null</span>)
+        println(<span class="hljs-string">"Hello ${name}"</span>)
+    <span class="hljs-keyword">else</span>
+        println(<span class="hljs-string">"Hi there!"</span>)
+    <span class="hljs-comment">// `return Unit` or `return` is optional</span>
+}
+</code></pre>
+<p class="calibre6"><code class="calibre19 pcalibre6 pcalibre5">Unit</code> 返回值也可以省略，比如下面这样：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">printHello</span><span class="hljs-params">(name: <span class="hljs-type">String?</span>)</span> {</span>
+    ...
+}
+</code></pre>
+<h3 id="单表达式函数" class="calibre16">单表达式函数</h3>
+<p class="calibre6">当函数只返回单个表达式时，大括号可以省略并在 = 后面定义函数体</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">double</span><span class="hljs-params">(x: <span class="hljs-type">Int</span>)</span>: <span class="hljs-keyword">Int</span> = x*2</span>
+</code></pre>
+<p class="calibre6">在编译器可以推断出返回值类型的时候,返回值的类型可以省略:</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">double</span><span class="hljs-params">(x: <span class="hljs-type">Int</span>)</span> = x * 2</span>
+</code></pre>
+<h3 id="明确返回类型" class="calibre16">明确返回类型</h3>
+<p class="calibre6">下面的例子中必须有明确返回类型,除非他是返回 <code class="calibre19 pcalibre6 pcalibre5">Unit</code>类型的值,Kotlin 并不会对函数体重的返回类型进行推断,因为函数体中可能有复杂的控制流,他的返回类型未必对读者可见(甚至对编译器而言也有可能是不可见的)：</p>
+<h3 id="变长参数" class="calibre16">变长参数</h3>
+<p class="calibre6">函数的参数(通常是最后一个参数)可以用 vararg 修饰符进行标记：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> asList<span class="hljs-type">&lt;T&gt;</span><span class="hljs-params">(vararg ts: <span class="hljs-type">T</span>)</span>: List<span class="hljs-type">&lt;T&gt;</span> {</span>
+    <span class="hljs-variable"><span class="hljs-keyword">val</span> result</span> = ArrayList<span class="hljs-type">&lt;T&gt;</span>()
+    <span class="hljs-keyword">for</span> (t <span class="hljs-keyword">in</span> ts)
+        result.add(t)
+    <span class="hljs-keyword">return</span> result
+}
+</code></pre>
+<p class="calibre6">标记后,允许给函数传递可变长度的参数：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-variable"><span class="hljs-keyword">val</span> list</span> = asList(<span class="hljs-params">1</span>, <span class="hljs-params">2</span>, <span class="hljs-params">3</span>)
+</code></pre>
+<p class="calibre6">只有一个参数可以被标注为 <code class="calibre19 pcalibre6 pcalibre5">vararg</code> 。加入<code class="calibre19 pcalibre6 pcalibre5">vararg</code>并不是列表中的最后一个参数,那么后面的参数需要通过命名参数语法进行传值,再或者如果这个参数是函数类型,就需要通过lambda法则.</p>
+<p class="calibre6">当调用变长参数的函数时，我们可以一个一个的传递参数，比如 <code class="calibre19 pcalibre6 pcalibre5">asList(1, 2, 3)</code>，或者我们要传递一个 array 的内容给函数，我们就可以使用 * 前缀操作符：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-variable"><span class="hljs-keyword">val</span> a</span> = array(<span class="hljs-params">1</span>, <span class="hljs-params">2</span>, <span class="hljs-params">3</span>)
+<span class="hljs-variable"><span class="hljs-keyword">val</span> list</span> = asList(<span class="hljs-params">-1</span>, <span class="hljs-params">0</span>, *a, <span class="hljs-params">4</span>)
+</code></pre>
+<h3 id="函数范围" class="calibre16">函数范围</h3>
+<p class="calibre6">Kotlin 中可以在文件顶级声明函数，这就意味者你不用像在Java,C#或是Scala一样创建一个类来持有函数。除了顶级函数，Kotlin 函数可以声明为局部的，作为成员函数或扩展函数。</p>
+<h4 id="局部函数" class="calibre34">局部函数</h4>
+<p class="calibre6">Kotlin 支持局部函数，比如在一个函数包含另一函数。</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">dfs</span><span class="hljs-params">(graph: <span class="hljs-type">Graph</span>)</span> {</span>
+  <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">dfs</span><span class="hljs-params">(current: <span class="hljs-type">Vertex, visited: Set&lt;Vertex&gt;</span>)</span> {</span>
+    <span class="hljs-keyword">if</span> (!visited.add(current)) <span class="hljs-keyword">return</span>
+    <span class="hljs-keyword">for</span> (v <span class="hljs-keyword">in</span> current.neighbors)
+      dfs(v, visited)
+  }
+
+  dfs(graph.vertices[<span class="hljs-params">0</span>], HashSet())
+}
+</code></pre>
+<p class="calibre6">局部函数可以访问外部函数的局部变量(比如闭包)</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">dfs</span><span class="hljs-params">(graph: <span class="hljs-type">Graph</span>)</span> {</span>
+    <span class="hljs-variable"><span class="hljs-keyword">val</span> visited</span> = HashSet<span class="hljs-type">&lt;Vertex&gt;</span>()
+    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">dfs</span><span class="hljs-params">(current: <span class="hljs-type">Vertex</span>)</span> {</span>
+        <span class="hljs-keyword">if</span> (!visited.add(current)) <span class="hljs-keyword">return</span> 
+        <span class="hljs-keyword">for</span> (v <span class="hljs-keyword">in</span> current.neighbors)
+            dfs(v)
+    }
+    dfs(graph.vertices[<span class="hljs-params">0</span>])
+}
+</code></pre>
+<p class="calibre6">局部函数甚至可以返回到外部函数 <a href="http://kotlinlang.org/docs/reference/returns.html" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">qualified return expressions</a></p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">reachable</span><span class="hljs-params">(from: <span class="hljs-type">Vertex, to: Vertex</span>)</span>: <span class="hljs-keyword">Boolean</span> {</span>
+    <span class="hljs-variable"><span class="hljs-keyword">val</span> visited</span> = HashSet<span class="hljs-type">&lt;Vertex&gt;</span>()
+    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">dfs</span><span class="hljs-params">(current: <span class="hljs-type">Vertex</span>)</span> {</span>
+        <span class="hljs-keyword">if</span> (current == to) <span class="hljs-keyword">return</span>@reachable <span class="hljs-params">true</span>
+        <span class="hljs-keyword">if</span> (!visited.add(current)) <span class="hljs-keyword">return</span>
+        <span class="hljs-keyword">for</span> (v  <span class="hljs-keyword">in</span> current.neighbors)
+            dfs(v)
+    }
+    dfs(from)
+    <span class="hljs-keyword">return</span> <span class="hljs-params">false</span>
+}
+</code></pre>
+<h3 id="成员函数" class="calibre16">成员函数</h3>
+<p class="calibre6">成员函数是定义在一个类或对象里边的</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">Sample</span></span>() {
+    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">foo</span><span class="hljs-params">()</span> { <span class="hljs-comment">print</span><span class="hljs-params">("Foo")</span> }</span>
+}
+</code></pre>
+<p class="calibre6">成员函数可以用 . 的方式调用</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">Sample.foo()
+</code></pre>
+<p class="calibre6">更多请参看<a href="http://kotlinlang.org/docs/reference/classes.html" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">类</a>和<a href="http://kotlinlang.org/docs/reference/classes.html#inheritance" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">继承</a></p>
+<h3 id="泛型函数" class="calibre16">泛型函数</h3>
+<p class="calibre6">函数可以有泛型参数，样式是在函数后跟上尖括号。</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> sigletonArray<span class="hljs-type">&lt;T&gt;</span><span class="hljs-params">(item: <span class="hljs-type">T</span>)</span>: Array<span class="hljs-type">&lt;T&gt;</span> {</span>
+    <span class="hljs-keyword">return</span> Array<span class="hljs-type">&lt;T&gt;</span>(<span class="hljs-params">1</span>, {item})
+}
+</code></pre>
+<p class="calibre6">更多请参看<a href="http://kotlinlang.org/docs/reference/generics.html" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">泛型</a></p>
+<h3 id="内联函数" class="calibre16">内联函数</h3>
+<p class="calibre6">参看<a href="http://kotlinlang.org/docs/reference/inline-functions.html" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">这里</a></p>
+<h3 id="扩展函数" class="calibre16">扩展函数</h3>
+<p class="calibre6">参看<a href="http://kotlinlang.org/docs/reference/extensions.html" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">这里</a></p>
+<h3 id="高阶函数和-lambda-表达式" class="calibre16">高阶函数和 lambda 表达式</h3>
+<p class="calibre6">参看<a href="http://kotlinlang.org/docs/reference/lambdas.html" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">这里</a></p>
+<h3 id="尾递归函数" class="calibre16">尾递归函数</h3>
+<p class="calibre6">Kotlin 支持函数式编程的尾递归。这个允许一些算法可以通过循环而不是递归解决问题，从而避免了栈溢出。当函数被标记为 <code class="calibre19 pcalibre6 pcalibre5">tailrec</code> 时，编译器会优化递归，并用高效迅速的循环代替它。</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">tailrec <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">findFixPoint</span><span class="hljs-params">(x: <span class="hljs-type">Double</span> = 1.0)</span>: <span class="hljs-keyword">Double</span> </span>
+    = <span class="hljs-keyword">if</span> (x == Math.cos(x)) x <span class="hljs-keyword">else</span> findFixPoint(Math.cos(x))
+</code></pre>
+<p class="calibre6">这段代码计算的是数学上的余弦不动点。Math.cos 从 1.0  开始不断重复，直到值不变为止，结果是 0.7390851332151607 
+这段代码和下面的是等效的：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">findFixPoint</span><span class="hljs-params">()</span>: <span class="hljs-keyword">Double</span> {</span>
+    <span class="hljs-variable"><span class="hljs-keyword">var</span> x</span> = <span class="hljs-params">1.0</span>
+    <span class="hljs-keyword">while</span> (<span class="hljs-params">true</span>) {
+        <span class="hljs-variable"><span class="hljs-keyword">val</span> y</span> = Math.cos(x)
+        <span class="hljs-keyword">if</span> ( x == y ) <span class="hljs-keyword">return</span> y
+        x = y
+    }
+}
+</code></pre>
+<p class="calibre6">使用 <code class="calibre19 pcalibre6 pcalibre5">tailrec</code> 修饰符必须在最后一个操作中调用自己。在递归调用代码后面是不允许有其它代码的，并且也不可以在 try/catch/finall 块中进行使用。当前的尾递归只在 JVM 的后端中可以用</p>
+
+        </div>
+    
+</div>
+
+        
+    
+
+
+</body></html>

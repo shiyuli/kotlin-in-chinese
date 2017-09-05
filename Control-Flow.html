@@ -1,0 +1,138 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh" xml:lang="zh">
+  <head>
+    <title>控制流</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta content="" name="description"/>
+    <meta content="GitBook 3.2.2" name="generator"/>
+    <meta content="huanglizhuo" name="author"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        
+<div class="page">
+    
+        <h1 class="book-chapter" id="calibre_toc_9">控制流</h1>
+        <div class="section">
+            <h2 id="流程控制" class="calibre10">流程控制</h2>
+<h3 id="if-表达式" class="calibre16">if 表达式</h3>
+<p class="calibre6">在 Kotlin 中，if 是表达式，比如它可以返回一个值。是除了condition ? then : else)之外的唯一一个三元表达式</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-comment">//传统用法</span>
+<span class="hljs-variable"><span class="hljs-keyword">var</span> max</span> = a
+<span class="hljs-keyword">if</span> (a <span class="hljs-type">&lt; b)
+    max = b
+
+//带 else 
+var max: Int
+if (a &gt;</span> b)
+    max = a
+<span class="hljs-keyword">else</span>
+    max = b
+
+<span class="hljs-comment">//作为表达式</span>
+<span class="hljs-variable"><span class="hljs-keyword">val</span> max</span> = <span class="hljs-keyword">if</span> (a &gt; b) a <span class="hljs-keyword">else</span> b
+</code></pre>
+<p class="calibre6">if  分支可以作为块，最后一个表达是是该块的值：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-variable"><span class="hljs-keyword">val</span> max</span> = <span class="hljs-keyword">if</span> (a &gt; b){
+    print(<span class="hljs-string">"Choose a"</span>)
+    a
+}
+<span class="hljs-keyword">else</span>{
+    print(<span class="hljs-string">"Choose b"</span>)
+    b
+}
+</code></pre>
+<p class="calibre6">如果 if 表达式只有一个分支，或者分支的结果是 <code class="calibre19 pcalibre6 pcalibre5">Unit</code> , 它的值就是 <code class="calibre19 pcalibre6 pcalibre5">Unit</code> 。</p>
+<p class="calibre6">参看<a href="http://kotlinlang.org/docs/reference/grammar.html#if" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">if语法</a></p>
+<h3 id="when-表达式" class="calibre16">When 表达式</h3>
+<p class="calibre6">when 取代了 C 风格语言的 switch 。最简单的用法像下面这样</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">when</span> (x) {
+    <span class="hljs-params">1</span> -&gt; print(<span class="hljs-string">"x == 1"</span>)
+    <span class="hljs-params">2</span> -&gt; print(<span class="hljs-string">"x == 2"</span>)
+    <span class="hljs-keyword">else</span> -&gt; { <span class="hljs-comment">//Note the block</span>
+        print(<span class="hljs-string">"x is neither 1 nor 2"</span>)
+    }
+}
+</code></pre>
+<p class="calibre6">when会对所有的分支进行检查直到有一个条件满足。when 可以用做表达式或声明。如果用作表达式的话，那么满足条件的分支就是总表达式。如果用做声明，那么分支的的的值会被忽略。(像 if 表达式一样，每个分支是一个语句块，而且它的值就是最后一个表达式的值)</p>
+<p class="calibre6">在其它分支都不匹配的时候默认匹配 else 分支。如果把 when 做为表达式的话 else 分支是强制的，除非编译器可以提供所有覆盖所有可能的分支条件。</p>
+<p class="calibre6">如果有分支可以用同样的方式处理的话，分支条件可以连在一起：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">when</span> (x) {
+    <span class="hljs-params">0</span>,<span class="hljs-params">1</span> -&gt; print(<span class="hljs-string">"x == 0 or x == 1"</span>)
+    <span class="hljs-keyword">else</span> -&gt; print(<span class="hljs-string">"otherwise"</span>)
+}
+</code></pre>
+<p class="calibre6">可以用任意表达式作为分支的条件</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">when</span> (x) {
+    parseInt(s) -&gt; print(<span class="hljs-string">"s encode x"</span>)
+    <span class="hljs-keyword">else</span> -&gt; print(<span class="hljs-string">"s does not encode x"</span>)
+}
+</code></pre>
+<p class="calibre6">甚至可以用 in 或者 !in 检查值是否值在一个集合中：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">when</span> (x) {
+    <span class="hljs-keyword">in</span> <span class="hljs-params">1.</span><span class="hljs-params">.10</span> -&gt; print(<span class="hljs-string">"x is in the range"</span>)
+    <span class="hljs-keyword">in</span> validNumbers -&gt; print(<span class="hljs-string">"x is valid"</span>)
+    !<span class="hljs-keyword">in</span> <span class="hljs-params">10.</span><span class="hljs-params">.20</span> -&gt; print(<span class="hljs-string">"x is outside the range"</span>)
+    <span class="hljs-keyword">else</span> -&gt; print(<span class="hljs-string">"none of the above"</span>)
+}
+</code></pre>
+<p class="calibre6">也可以用 is 或者 !is 来判断值是否是某个类型。注意，由于 <a href="http://kotlinlang.org/docs/reference/typecasts.html#smart-casts" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">smart casts</a> ，你可以不用另外的检查就可以使用相应的属性或方法。</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-variable"><span class="hljs-keyword">val</span> hasPrefix</span> = <span class="hljs-keyword">when</span> (x) {
+    <span class="hljs-keyword">is</span> String -&gt; x.startsWith(<span class="hljs-string">"prefix"</span>)
+    <span class="hljs-keyword">else</span> -&gt; <span class="hljs-params">false</span>
+}
+</code></pre>
+<p class="calibre6">when 也可以用来代替 if-else if 。如果没有任何参数提供，那么分支的条件就是简单的布尔表达式，当条件为真时执行相应的分支：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">when</span> {
+    x.isOdd() -&gt; print(<span class="hljs-string">"x is odd"</span>)
+    x.isEven() -&gt; print(<span class="hljs-string">"x is even"</span>)
+    <span class="hljs-keyword">else</span> -&gt; print(<span class="hljs-string">"x is funny"</span>)
+}
+</code></pre>
+<p class="calibre6">参看<a href="http://kotlinlang.org/docs/reference/grammar.html#when" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">when语法</a></p>
+<h3 id="for-循环" class="calibre16">for 循环</h3>
+<p class="calibre6">for 循环通过任何提供的迭代器进行迭代。语法是下面这样的：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">for</span> (item <span class="hljs-keyword">in</span> collection)
+    print(item)
+</code></pre>
+<p class="calibre6">内容可以是一个语句块</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">for</span> (item: <span class="hljs-keyword">Int</span> <span class="hljs-keyword">in</span> ints){
+    <span class="hljs-comment">//...</span>
+}
+</code></pre>
+<p class="calibre6">像之前提到的， for 可以对任何提供的迭代器进行迭代，比如：</p>
+<blockquote class="calibre18">
+<p class="calibre6">has an instance- or extension-function iterator(), whose return type</p>
+<p class="calibre6">has an instance- or extension-function next(), and</p>
+<p class="calibre6">has an instance- or extension-function hasNext() that returns Boolean.</p>
+</blockquote>
+<p class="calibre6">如果你想通过 list 或者 array 的索引进行迭代，你可以这样做：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">for</span> (i <span class="hljs-keyword">in</span> array.indices)
+    print(array[i])
+</code></pre>
+<p class="calibre6">在没有其它对象创建的时候 "iteration through a range " 会被自动编译成最优的实现。</p>
+<h3 id="while-循环" class="calibre16">while 循环</h3>
+<p class="calibre6">while 和 do...while 像往常那样</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">while</span> (x &gt; <span class="hljs-params">0</span>) {
+    x--
+}
+
+<span class="hljs-keyword">do</span> {
+    <span class="hljs-variable"><span class="hljs-keyword">val</span> y</span> = retrieveData()
+} <span class="hljs-keyword">while</span> (y != <span class="hljs-params">null</span>) <span class="hljs-comment">// y 在这是可见的</span>
+</code></pre>
+<p class="calibre6">参看<a href="has%20an%20instance-%20or%20extension-function%20hasNext(" class="calibre7 pcalibre2 pcalibre pcalibre1">while 语法</a> that returns Boolean.)</p>
+<h3 id="在循环中使用-break-和-continue" class="calibre16">在循环中使用 break 和 continue</h3>
+<p class="calibre6">kotlin 支持传统的 break 和 continue 操作符。参看<a href="http://kotlinlang.org/docs/reference/returns.html" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">返回和跳转</a></p>
+
+        </div>
+    
+</div>
+
+        
+    
+
+
+</body></html>

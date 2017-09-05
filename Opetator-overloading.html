@@ -1,0 +1,298 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh" xml:lang="zh">
+  <head>
+    <title>运算符重载</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta content="" name="description"/>
+    <meta content="GitBook 3.2.2" name="generator"/>
+    <meta content="huanglizhuo" name="author"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        
+<div class="page">
+    
+        <h1 class="book-chapter" id="calibre_toc_35">运算符重载</h1>
+        <div class="section">
+            <h2 id="运算符重载" class="calibre10">运算符重载</h2>
+<p class="calibre6">Kotlin 允许我们实现一些我们自定义类型的运算符实现。这些运算符有固定的表示，和固定的优先级。为实现这样的运算符，我们提供了固定名字的数字函数和扩展函数，比如二元运算符的左值和一元运算符的参数类型。</p>
+<h3 id="转换" class="calibre16">转换</h3>
+<p class="calibre6">这里我们描述了一些常用运算符的重载</p>
+<h4 id="一元运算符" class="calibre34">一元运算符</h4>
+<table class="calibre21">
+<thead class="calibre22">
+<tr class="calibre23">
+<th class="calibre24"><strong class="calibre25">表达式</strong></th>
+<th class="calibre24"><strong class="calibre25">转换</strong></th>
+</tr>
+</thead>
+<tbody class="calibre27">
+<tr class="calibre23">
+<td class="calibre28">+a</td>
+<td class="calibre28">a.plus()</td>
+</tr>
+<tr class="calibre30">
+<td class="calibre28">-a</td>
+<td class="calibre28">a.minus()</td>
+</tr>
+<tr class="calibre23">
+<td class="calibre28">!a</td>
+<td class="calibre28">a.not()</td>
+</tr>
+</tbody>
+</table>
+<p class="calibre6">这张表解释了当编译器运行时，比如，表达式 <code class="calibre19 pcalibre6 pcalibre5">+a</code> ，是这样运行的：</p>
+<blockquote class="calibre18">
+<p class="calibre6">决定 a 的类型，假设是 T
+寻找接收者是 T 的无参函数 <code class="calibre19 pcalibre6 pcalibre5">plus()</code> ，比如数字函数或者扩展函数
+如果这样的函数缺失或不明确，则返回错误。
+如果函数是当前函数或返回类型是 <code class="calibre19 pcalibre6 pcalibre5">R</code> 则表达式 <code class="calibre19 pcalibre6 pcalibre5">+a</code> 是 <code class="calibre19 pcalibre6 pcalibre5">R</code> 类型。</p>
+</blockquote>
+<p class="calibre6">注意这些操作符和其它的一样，都被优化为基本类型并且不会产生多余的开销。</p>
+<table class="calibre21">
+<thead class="calibre22">
+<tr class="calibre23">
+<th class="calibre24"><strong class="calibre25">表达式</strong></th>
+<th class="calibre24"><strong class="calibre25">转换</strong></th>
+</tr>
+</thead>
+<tbody class="calibre27">
+<tr class="calibre23">
+<td class="calibre28">a++</td>
+<td class="calibre28">a.inc() + see below</td>
+</tr>
+<tr class="calibre30">
+<td class="calibre28">a--</td>
+<td class="calibre28">a.dec() + see below</td>
+</tr>
+</tbody>
+</table>
+<p class="calibre6">这些操作符允许修改接收者和返回类型。</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">inc()/dec() shouldn’t mutate the receiver <span class="hljs-keyword">object</span>.
+By “changing the receiver” we mean the receiver-variable, not the receiver <span class="hljs-keyword">object</span>.
+</code></pre>
+<p class="calibre6">编译器是这样解决有后缀的操作符的比如 <code class="calibre19 pcalibre6 pcalibre5">a++</code> :</p>
+<blockquote class="calibre18">
+<p class="calibre6">决定 a 的类型，假设是 T
+寻找无参函数 <code class="calibre19 pcalibre6 pcalibre5">inc()</code> ，作用在接收者T 
+如果返回类型是 R ，则必须是 T 的子类</p>
+</blockquote>
+<p class="calibre6">计算表达式的效果是：</p>
+<blockquote class="calibre18">
+<p class="calibre6">把 a 的初始值存储在 a0 中
+把 a.inc() 的结果作用在 a 上
+把 a0 作为表达式的返回值</p>
+</blockquote>
+<p class="calibre6">a-- 的步骤也是一样的</p>
+<p class="calibre6">++a  --a 的解决方式也是一样的</p>
+<h4 id="二元操作符" class="calibre34">二元操作符</h4>
+<table class="calibre21">
+<thead class="calibre22">
+<tr class="calibre23">
+<th class="calibre24"><strong class="calibre25">表达式</strong></th>
+<th class="calibre24"><strong class="calibre25">转换</strong></th>
+</tr>
+</thead>
+<tbody class="calibre27">
+<tr class="calibre23">
+<td class="calibre28">a + b</td>
+<td class="calibre28">a.plus(b)</td>
+</tr>
+<tr class="calibre30">
+<td class="calibre28">a - b</td>
+<td class="calibre28">a.minus(b)</td>
+</tr>
+<tr class="calibre23">
+<td class="calibre28">a * b</td>
+<td class="calibre28">a.times(b)</td>
+</tr>
+<tr class="calibre30">
+<td class="calibre28">a / b</td>
+<td class="calibre28">a.div(b)</td>
+</tr>
+<tr class="calibre23">
+<td class="calibre28">a % b</td>
+<td class="calibre28">a.mod(b)</td>
+</tr>
+<tr class="calibre30">
+<td class="calibre28">a..b</td>
+<td class="calibre28">a.rangeTo(b)</td>
+</tr>
+</tbody>
+</table>
+<p class="calibre6">编译器只是解决了该表中翻译为列的表达式</p>
+<table class="calibre21">
+<thead class="calibre22">
+<tr class="calibre23">
+<th class="calibre24"><strong class="calibre25">表达式</strong></th>
+<th class="calibre24"><strong class="calibre25">转换</strong></th>
+</tr>
+</thead>
+<tbody class="calibre27">
+<tr class="calibre23">
+<td class="calibre28">a in b</td>
+<td class="calibre28">b.contains(a)</td>
+</tr>
+<tr class="calibre30">
+<td class="calibre28">a !in b</td>
+<td class="calibre28">!b.contains(a)</td>
+</tr>
+</tbody>
+</table>
+<p class="calibre6">in 和 !in 的产生步骤是一样的，但参数顺序是相反的。</p>
+<table class="calibre21">
+<thead class="calibre22">
+<tr class="calibre23">
+<th class="calibre24"><strong class="calibre25">标志</strong></th>
+<th class="calibre24"><strong class="calibre25">转换</strong></th>
+</tr>
+</thead>
+<tbody class="calibre27">
+<tr class="calibre23">
+<td class="calibre28">a[i]</td>
+<td class="calibre28">a.get(i)</td>
+</tr>
+<tr class="calibre30">
+<td class="calibre28">a[i, j]</td>
+<td class="calibre28">a.get(i, j)</td>
+</tr>
+<tr class="calibre23">
+<td class="calibre28">a[i_1, ..., i_n]</td>
+<td class="calibre28">a.get(i_1, ... , i_n)</td>
+</tr>
+<tr class="calibre30">
+<td class="calibre28">a[i] = b</td>
+<td class="calibre28">a.set(i, b)</td>
+</tr>
+<tr class="calibre23">
+<td class="calibre28">a[i,j] =b</td>
+<td class="calibre28">a.set(i, j, b)</td>
+</tr>
+<tr class="calibre30">
+<td class="calibre28">a[i_1, ... , i_n] = b</td>
+<td class="calibre28">a.set(i_1,... ,o_n,b)</td>
+</tr>
+</tbody>
+</table>
+<p class="calibre6">方括号被转换为 get set 函数</p>
+<table class="calibre21">
+<thead class="calibre22">
+<tr class="calibre23">
+<th class="calibre24"><strong class="calibre25">标志</strong></th>
+<th class="calibre24"><strong class="calibre25">转换</strong></th>
+</tr>
+</thead>
+<tbody class="calibre27">
+<tr class="calibre23">
+<td class="calibre28">a(i)</td>
+<td class="calibre28">a.invoke(i)</td>
+</tr>
+<tr class="calibre30">
+<td class="calibre28">a(i, j)</td>
+<td class="calibre28">a.invoke(i, j)</td>
+</tr>
+<tr class="calibre23">
+<td class="calibre28">a(i_1, ... , i_n)</td>
+<td class="calibre28">a.invoke(i_1, ..., i_n)</td>
+</tr>
+</tbody>
+</table>
+<p class="calibre6">括号被转换为带有正确参数的 invoke 参数</p>
+<table class="calibre21">
+<thead class="calibre22">
+<tr class="calibre23">
+<th class="calibre24"><strong class="calibre25">表达式</strong></th>
+<th class="calibre24"><strong class="calibre25">转换</strong></th>
+</tr>
+</thead>
+<tbody class="calibre27">
+<tr class="calibre23">
+<td class="calibre28">a += b</td>
+<td class="calibre28">a.plusAssign(b)</td>
+</tr>
+<tr class="calibre30">
+<td class="calibre28">a -= b</td>
+<td class="calibre28">a.minusAssign(b)</td>
+</tr>
+<tr class="calibre23">
+<td class="calibre28">a *= b</td>
+<td class="calibre28">a.timesAssign(b)</td>
+</tr>
+<tr class="calibre30">
+<td class="calibre28">a /= b</td>
+<td class="calibre28">a.divAssign(b)</td>
+</tr>
+<tr class="calibre23">
+<td class="calibre28">a %= b</td>
+<td class="calibre28">a.modAssign(b)</td>
+</tr>
+</tbody>
+</table>
+<p class="calibre6">在分配 a+= b时编译器是下面这样实现的：</p>
+<blockquote class="calibre18">
+<p class="calibre6">右边列的函数是否可用
+ 对应的二元函数(比如 plus() )是否也可用,不可用在报告错误
+确定它的返回值是 <code class="calibre19 pcalibre6 pcalibre5">Unit</code> 否则报告错误
+生成 <code class="calibre19 pcalibre6 pcalibre5">a.plusAssign(b)</code> 
+否则试着生成 a=a+b 代码</p>
+</blockquote>
+<p class="calibre6">Note: assignments are NOT expressions in Kotlin.</p>
+<table class="calibre21">
+<thead class="calibre22">
+<tr class="calibre23">
+<th class="calibre24"><strong class="calibre25">表达式</strong></th>
+<th class="calibre24"><strong class="calibre25">转换</strong></th>
+</tr>
+</thead>
+<tbody class="calibre27">
+<tr class="calibre23">
+<td class="calibre28">a == b</td>
+<td class="calibre28">a?.equals(b) ?: b.identityEquals(null)</td>
+</tr>
+<tr class="calibre30">
+<td class="calibre28">a != b</td>
+<td class="calibre28">!(a?.equals(b) ?: b.identityEquals(null))</td>
+</tr>
+</tbody>
+</table>
+<p class="calibre6">注意 ===   !== 是不允许重载的</p>
+<p class="calibre6">== 操作符有俩点特别：</p>
+<blockquote class="calibre18">
+<p class="calibre6">它被翻译成一个复杂的表达式，用于筛选空值，而且 null == null 是真</p>
+<p class="calibre6">它需要带有特定签名的函数，而不仅仅是特定名称的函数，下面这样：</p>
+</blockquote>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">equals</span><span class="hljs-params">(other: <span class="hljs-type">Any?</span>)</span>: <span class="hljs-keyword">Boolean</span></span>
+</code></pre>
+<p class="calibre6">或者用相同的参数列表和返回类型的扩展功能</p>
+<table class="calibre21">
+<thead class="calibre22">
+<tr class="calibre23">
+<th class="calibre24"><strong class="calibre25">标志</strong></th>
+<th class="calibre24"><strong class="calibre25">转换</strong></th>
+</tr>
+</thead>
+<tbody class="calibre27">
+<tr class="calibre23">
+<td class="calibre28"/>
+</tr>
+</tbody>
+</table>
+<p class="calibre6">a &gt; b    ｜a.compareTo(b) &gt; 0
+a &lt; b    ｜a.compareTo(b) &lt; 0
+a &gt;= b    ｜a.compareTo(b) &gt;= 0
+a &lt;= b    ｜a.compareTo(b) &lt;= 0</p>
+<p class="calibre6">所有的比较都转换为 <code class="calibre19 pcalibre6 pcalibre5">compareTo</code> 的调用，这个函数需要返回 <code class="calibre19 pcalibre6 pcalibre5">Int</code> 值</p>
+<h3 id="命名函数的中缀调用" class="calibre16">命名函数的中缀调用</h3>
+<p class="calibre6">我们可以通过 <a href="http://kotlinlang.org/docs/reference/functions.html#infix-notation" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">中缀函数的调用</a> 来模拟自定义中缀操作符</p>
+
+        </div>
+    
+</div>
+
+        
+    
+
+
+</body></html>

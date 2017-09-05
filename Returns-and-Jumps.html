@@ -1,0 +1,92 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh" xml:lang="zh">
+  <head>
+    <title>返回与跳转</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta content="" name="description"/>
+    <meta content="GitBook 3.2.2" name="generator"/>
+    <meta content="huanglizhuo" name="author"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        
+<div class="page">
+    
+        <h1 class="book-chapter" id="calibre_toc_10">返回与跳转</h1>
+        <div class="section">
+            <h2 id="返回与跳转" class="calibre10">返回与跳转</h2>
+<p class="calibre6">Kotlin 有三种机构跳转操作符</p>
+<blockquote class="calibre18">
+<p class="calibre6">return 
+break 结束最近的闭合循环
+continue 跳到最近的闭合循环的下一次循环</p>
+</blockquote>
+<h3 id="break-和-continue-标签" class="calibre16">break 和 continue 标签</h3>
+<p class="calibre6">在 Kotlin 中表达式可以添加标签。标签通过 @ 结尾来表示，比如：<code class="calibre19 pcalibre6 pcalibre5">abc@</code>，<code class="calibre19 pcalibre6 pcalibre5">fooBar@</code> 都是有效的(参看<a href="http://kotlinlang.org/docs/reference/grammar.html#label" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">语法</a>)。使用标签语法只需像这样：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">loop@ <span class="hljs-keyword">for</span> (i <span class="hljs-keyword">in</span> <span class="hljs-params">1.</span><span class="hljs-params">.100</span>){
+    <span class="hljs-comment">//...</span>
+}
+</code></pre>
+<p class="calibre6">现在我们可以用标签实现 break 或者 continue 的快速跳转：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">loop@ <span class="hljs-keyword">for</span> (i <span class="hljs-keyword">in</span> <span class="hljs-params">1.</span><span class="hljs-params">.100</span>) {
+    <span class="hljs-keyword">for</span> (j <span class="hljs-keyword">in</span> i.<span class="hljs-params">.100</span>) {
+        <span class="hljs-keyword">if</span> (...)
+            <span class="hljs-keyword">break</span>@loop
+    }
+}
+</code></pre>
+<p class="calibre6">break 是跳转标签后面的表达式，continue 是跳转到循环的下一次迭代。</p>
+<h3 id="返回到标签处在字面函数，局部函数，以及对象表达式中，函数可以在-kotlin-中被包裹。return-允许我们返回到外层函数。最重要的例子就是从字面函数中返回，还记得我们之前的写法吗：" class="calibre16">返回到标签处在字面函数，局部函数，以及对象表达式中，函数可以在 Kotlin 中被包裹。return 允许我们返回到外层函数。最重要的例子就是从字面函数中返回，还记得我们之前的写法吗：</h3>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">foo</span><span class="hljs-params">()</span> {</span>
+    ints.forEach {
+        <span class="hljs-keyword">if</span> (it  == <span class="hljs-params">0</span>) <span class="hljs-keyword">return</span>
+        print(it)
+    }
+}
+</code></pre>
+<p class="calibre6">return 表达式返回到最近的闭合函数，比如 <code class="calibre19 pcalibre6 pcalibre5">foo</code> (注意这样非局部返回仅仅可以在<a href="http://kotlinlang.org/docs/reference/inline-functions.html" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">内联函数</a>中使用)。如果我们需要从一个字面函数返回可以使用标签修饰 return :</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">foo</span><span class="hljs-params">()</span> {</span>
+    ints.forEach lit@ {
+        <span class="hljs-keyword">if</span> (it ==<span class="hljs-params">0</span>) <span class="hljs-keyword">return</span>＠lit
+        print(it)
+    }
+}
+</code></pre>
+<p class="calibre6">现在它仅仅从字面函数中返回。经常用一种更方便的含蓄的标签：比如用和传入的 lambda 表达式名字相同的标签。</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">foo</span><span class="hljs-params">()</span> {</span>
+    ints.forEach {
+        <span class="hljs-keyword">if</span> (it == <span class="hljs-params">0</span>) <span class="hljs-keyword">return</span>@forEach
+        print(it)
+    }
+}
+</code></pre>
+<p class="calibre6">另外，我们可以用函数表达式替代字面函数。在函数表达式中使用 return 语句可以从函数表达式中返回。</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">foo</span><span class="hljs-params">()</span> {</span>
+    ints.forEach(<span class="hljs-function"><span class="hljs-comment">fun</span><span class="hljs-params">(value:  <span class="hljs-type">Int</span>)</span>{</span>
+        <span class="hljs-keyword">if</span> (value == <span class="hljs-params">0</span>) <span class="hljs-keyword">return</span>
+        print(value)
+    })
+}
+</code></pre>
+<p class="calibre6">当返回一个值时，解析器给了一个参考，比如(原文When returning a value, the parser gives preference to the qualified return, i.e.)：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">return</span>@a <span class="hljs-params">1</span>
+</code></pre>
+<p class="calibre6">命名函数自动定义标签：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">foo outer() {
+    foo inner() {
+        <span class="hljs-keyword">return</span>@outer
+    }
+}
+</code></pre>
+
+        </div>
+    
+</div>
+
+        
+    
+
+
+</body></html>

@@ -1,0 +1,152 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh" xml:lang="zh">
+  <head>
+    <title>高阶函数和lambda表达式</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta content="" name="description"/>
+    <meta content="GitBook 3.2.2" name="generator"/>
+    <meta content="huanglizhuo" name="author"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        
+<div class="page">
+    
+        <h1 class="book-chapter" id="calibre_toc_26">高阶函数和lambda表达式</h1>
+        <div class="section">
+            <h2 id="高阶函数与-lambda-表达式" class="calibre10">高阶函数与 lambda 表达式</h2>
+<h3 id="高阶函数" class="calibre16">高阶函数</h3>
+<p class="calibre6">高阶函数就是可以接受函数作为参数并返回一个函数的函数。比如 <code class="calibre19 pcalibre6 pcalibre5">lock()</code> 就是一个很好的例子，它接收一个 lock 对象和一个函数，运行函数并释放 lock;</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> lock<span class="hljs-type">&lt;T&gt;</span><span class="hljs-params">(lock: <span class="hljs-type">Lock, body: (</span>)</span> -&gt; T ) : T {</span>
+    lock.lock()
+    <span class="hljs-keyword">try</span> {
+        <span class="hljs-keyword">return</span> body()
+    }
+    <span class="hljs-keyword">finally</span> {
+        lock.unlock()
+    }
+}
+</code></pre>
+<p class="calibre6">现在解释一下上面的代码吧：<code class="calibre19 pcalibre6 pcalibre5">body</code> 有一个函数类型 <code class="calibre19 pcalibre6 pcalibre5">() -&gt; T</code>,把它设想为没有参数并返回 T 类型的函数。它引发了内部的 try 函数块，并被 <code class="calibre19 pcalibre6 pcalibre5">lock</code> 保护，结果是通过 <code class="calibre19 pcalibre6 pcalibre5">lock()</code> 函数返回的。</p>
+<p class="calibre6">如果我们想调用 <code class="calibre19 pcalibre6 pcalibre5">lock()</code> ，函数，我们可以传给它另一个函数做参数，参看<a href="http://kotlinlang.org/docs/reference/reflection.html#function-references" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">函数参考</a>：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">toBeSynchroized</span><span class="hljs-params">()</span> = sharedResource.<span class="hljs-comment">operation</span><span class="hljs-params">()</span></span>
+
+<span class="hljs-variable"><span class="hljs-keyword">val</span> result</span> = lock(lock, ::toBeSynchroized)
+</code></pre>
+<p class="calibre6">其实最方便的办法是传递一个字面函数(通常是 lambda 表达式)：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-variable"><span class="hljs-keyword">val</span> result</span> = lock(lock, {
+sharedResource.operation() })
+</code></pre>
+<p class="calibre6">字面函数经常描述有更多<a href="http://kotlinlang.org/docs/reference/lambdas.html#function-literals-and-function-expressions" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">细节</a>，但为了继续本节，我们看一下更简单的预览吧：</p>
+<blockquote class="calibre18">
+<p class="calibre6">字面函数被包在大括号里</p>
+<p class="calibre6">参数在 <code class="calibre19 pcalibre6 pcalibre5">-&gt;</code> 前面声明(参数类型可以省略)</p>
+<p class="calibre6">函数体在 <code class="calibre19 pcalibre6 pcalibre5">-&gt;</code> 之后</p>
+</blockquote>
+<p class="calibre6">在 kotlin 中有一个约定，如果最后一个参数是函数，可以省略括号：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">lock (lock) {
+    sharedResource.operation()
+}
+</code></pre>
+<p class="calibre6">最后一个高阶函数的例子是 <code class="calibre19 pcalibre6 pcalibre5">map()</code> (of MapReduce):</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-type">&lt;T, R&gt;</span> List<span class="hljs-type">&lt;T&gt;</span>.<span class="hljs-comment">map</span><span class="hljs-params">(transform: <span class="hljs-type">(T</span>)</span> -&gt; R):</span>
+List<span class="hljs-type">&lt;R&gt;</span> {
+    <span class="hljs-variable"><span class="hljs-keyword">val</span> result</span> = arrayListOf<span class="hljs-type">&lt;R&gt;</span>()
+    <span class="hljs-keyword">for</span> (item <span class="hljs-keyword">in</span> this)
+        result.add(transform(item))
+    <span class="hljs-keyword">return</span> result
+}
+</code></pre>
+<p class="calibre6">函数可以通过下面的方式调用</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-variable"><span class="hljs-keyword">val</span> doubled</span> = ints.map {it -&gt; it * <span class="hljs-params">2</span>}
+</code></pre>
+<p class="calibre6">如果字面函数只有一个参数，则声明可以省略，名字就是 <code class="calibre19 pcalibre6 pcalibre5">it</code> :</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">ints map {it * <span class="hljs-params">2</span>}
+</code></pre>
+<p class="calibre6">这样就可以写<a href="http://msdn.microsoft.com/en-us/library/bb308959.aspx" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">LINQ-风格</a>的代码了：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">strings filter {it.length == <span class="hljs-params">5</span>} sortBy {it} map {it.toUpperCase()}
+</code></pre>
+<h3 id="内联函数" class="calibre16">内联函数</h3>
+<p class="calibre6">有些时候可以用 <a href="http://kotlinlang.org/docs/reference/inline-functions.html" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">内联函数</a> 提高高阶函数的性能。</p>
+<h3 id="字面函数和函数表达式" class="calibre16">字面函数和函数表达式</h3>
+<p class="calibre6">字面函数或函数表达式就是一个 "匿名函数"，也就是没有声明的函数，但立即作为表达式传递下去。想想下面的例子：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">max(strings, {a, b -&gt; a.length <span class="hljs-type">&lt; b.length })
+</span></code></pre>
+<p class="calibre6"><code class="calibre19 pcalibre6 pcalibre5">max</code> 函数就是一个高阶函数,它接受函数作为第二个参数。第二个参数是一个表达式所以本生就是一个函数，即字面函数。作为一个函数，相当于：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">compare</span><span class="hljs-params">(a: <span class="hljs-type">String, b: String</span>)</span> : <span class="hljs-keyword">Boolean</span> = a.length <span class="hljs-type">&lt; b.length
+</span></span></code></pre>
+<h3 id="函数类型" class="calibre16">函数类型</h3>
+<p class="calibre6">一个函数要接受另一个函数作为参数，我们得给它指定一个类型。比如上面的 <code class="calibre19 pcalibre6 pcalibre5">max</code> 定义是这样的：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> max<span class="hljs-type">&lt;T&gt;</span><span class="hljs-params">(collection: <span class="hljs-type">Collection&lt;out T&gt;, less: (T, T</span>)</span> -&gt; <span class="hljs-keyword">Boolean</span>): T? {</span>
+    <span class="hljs-variable"><span class="hljs-keyword">var</span> max</span>: T? = <span class="hljs-params">null</span>
+    <span class="hljs-keyword">for</span> (it <span class="hljs-keyword">in</span> collection)
+        <span class="hljs-keyword">if</span> (max == <span class="hljs-params">null</span> || less(max!!, it))
+            max = it
+    <span class="hljs-keyword">return</span> max
+}
+</code></pre>
+<p class="calibre6">参数 <code class="calibre19 pcalibre6 pcalibre5">less</code> 是 <code class="calibre19 pcalibre6 pcalibre5">(T, T) -&gt; Boolean</code>类型，也就是接受俩个 <code class="calibre19 pcalibre6 pcalibre5">T</code> 类型参数返回一个 <code class="calibre19 pcalibre6 pcalibre5">Boolean</code>:如果第一个参数小于第二个则返回真。</p>
+<p class="calibre6">在函数体第四行， <code class="calibre19 pcalibre6 pcalibre5">less</code> 是用作函数</p>
+<p class="calibre6">一个函数类型可以像上面那样写，也可有命名参数，更多参看<a href="http://kotlinlang.org/docs/reference/functions.html#named-arguments" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">命名参数</a></p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-variable"><span class="hljs-keyword">val</span> compare</span>: (x: T,y: T) -&gt; <span class="hljs-keyword">Int</span> = ...
+</code></pre>
+<h3 id="函数文本语法" class="calibre16">函数文本语法</h3>
+<p class="calibre6">函数文本的完全写法是下面这样的：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-variable"><span class="hljs-keyword">val</span> sum</span> = {x: <span class="hljs-keyword">Int</span>,y: <span class="hljs-keyword">Int</span> -&gt; x + y}
+</code></pre>
+<p class="calibre6">函数文本总是在大括号里包裹着，在完全语法中参数声明是在括号内，类型注解是可选的，函数体是在　<code class="calibre19 pcalibre6 pcalibre5">-&gt;</code> 之后，像下面这样：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-variable"><span class="hljs-keyword">val</span> sum</span>: (<span class="hljs-keyword">Int</span>, <span class="hljs-keyword">Int</span>) -&gt; <span class="hljs-keyword">Int</span> = {x, y -&gt; x+y }
+</code></pre>
+<p class="calibre6">函数文本有时只有一个参数。如果 kotlin 可以从它本生计算出签名，那么可以省略这个唯一的参数，并会通过 <code class="calibre19 pcalibre6 pcalibre5">it</code> 隐式的声明它：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">ints.filter {it &gt; <span class="hljs-params">0</span>}<span class="hljs-comment">//这是 (it: Int) -&gt; Boolean  的字面意思</span>
+</code></pre>
+<p class="calibre6">注意如果一个函数接受另一个函数做为最后一个参数，该函数文本参数可以在括号内的参数列表外的传递。参看 <a href="http://kotlinlang.org/docs/reference/grammar.html#call-suffix" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">callSuffix</a></p>
+<h3 id="函数表达式" class="calibre16">函数表达式</h3>
+<p class="calibre6">上面没有讲到可以指定返回值的函数。在大多数情形中，这是不必要的，因为返回值是可以自动推断的。然而，如果你需要自己指定，可以用函数表达式来做：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-comment">fun</span><span class="hljs-params">(x: <span class="hljs-type">Int, y: Int</span> )</span>: <span class="hljs-keyword">Int</span> = x + y</span>
+</code></pre>
+<p class="calibre6">函数表达式很像普通的函数声明，除了省略了函数名。它的函数体可以是一个表达式(像上面那样)或者是一个块：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-comment">fun</span><span class="hljs-params">(x: <span class="hljs-type">Int, y: Int</span>)</span>: <span class="hljs-keyword">Int</span> {</span>
+    <span class="hljs-keyword">return</span> x + y
+}
+</code></pre>
+<p class="calibre6">参数以及返回值和普通函数是一样的，如果它们可以从上下文推断出参数类型，则参数可以省略：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">ints.filter(<span class="hljs-function"><span class="hljs-comment">fun</span><span class="hljs-params">(item)</span> = item &gt; 0)</span>
+</code></pre>
+<p class="calibre6">返回值类型的推导和普通函数一样：函数返回值是通过表达式自动推断并被明确声明</p>
+<p class="calibre6">注意函数表达式的参数总是在括号里传递的。 The shorthand syntax allowing to leave the function outside the parentheses works only for function literals.</p>
+<p class="calibre6">字面函数和表达式函数的另一个区别是没有本地返回。没有 lable 的返回总是返回到 fun 关键字所声明的地方。这意味着字面函数内的返回会返回到一个闭合函数，而表达式函数会返回到函数表达式自身。</p>
+<h3 id="闭包" class="calibre16">闭包</h3>
+<p class="calibre6">一个字面函数或者表达式函数可以访问闭包，即访问自身范围外的声明的变量。不像 java 那样在闭包中的变量可以被捕获修改：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-variable"><span class="hljs-keyword">var</span> sum</span> = <span class="hljs-params">0</span>
+
+ins filter {it &gt; <span class="hljs-params">0</span>} forEach {
+    sum += it
+}
+print(sum)
+</code></pre>
+<h3 id="函数表达式扩展" class="calibre16">函数表达式扩展</h3>
+<p class="calibre6">除了普通的功能，kotlin 支持扩展函数。这种方式对于字面函数和表达式函数都是适用的。它们最重要的使用是在 <a href="http://kotlinlang.org/docs/reference/type-safe-builders.html" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">Type-safe Groovy-style builders</a>。</p>
+<p class="calibre6">表达式函数的扩展和普通的区别是它有接收类型的规范。</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-variable"><span class="hljs-keyword">val</span> sum</span> = <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-keyword">Int</span>.<span class="hljs-params">(other: <span class="hljs-type">Int</span>)</span>: <span class="hljs-keyword">Int</span> = this + other</span>
+</code></pre>
+<p class="calibre6">接收类型必须在表达式函数中明确指定，但字面函数不用。字面函数可以作为扩展函数表达式，但只有接收类型可以通过上下文推断出来。</p>
+<p class="calibre6">表达式函数的扩展类型是一个带接收者的函数：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">sum : <span class="hljs-keyword">Int</span>.(other: <span class="hljs-keyword">Int</span>) -&gt; <span class="hljs-keyword">Int</span>
+</code></pre>
+<p class="calibre6">可以用 . 或前缀来使用这样的函数：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-params">1.</span>sum(<span class="hljs-params">2</span>)
+<span class="hljs-params">1</span> sum <span class="hljs-params">2</span>
+</code></pre>
+
+        </div>
+    
+</div>
+
+        
+    
+
+
+</body></html>

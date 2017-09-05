@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh" xml:lang="zh">
+  <head>
+    <title>等式</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta content="" name="description"/>
+    <meta content="GitBook 3.2.2" name="generator"/>
+    <meta content="huanglizhuo" name="author"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        
+<div class="page">
+    
+        <h1 class="book-chapter" id="calibre_toc_34">等式</h1>
+        <div class="section">
+            <h2 id="相等" class="calibre10">相等</h2>
+<p class="calibre6">在 kotlin 中有俩中相等：</p>
+<blockquote class="calibre18">
+<p class="calibre6">参照相等(指向相同的对象)
+结构相等</p>
+</blockquote>
+<h3 id="参照相等" class="calibre16">参照相等</h3>
+<p class="calibre6">参照相等是通过 <code class="calibre19 pcalibre6 pcalibre5">===</code> 操作符判断的(不等是<code class="calibre19 pcalibre6 pcalibre5">!==</code> ) a===b 只有 a b 指向同一个对象是判别才成立。</p>
+<p class="calibre6">另外，你可以使用内联函数 <code class="calibre19 pcalibre6 pcalibre5">identityEquals()</code> 判断参照相等：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">a.identityEquals(b)
+a identityEquals b
+</code></pre>
+<h3 id="结构相等" class="calibre16">结构相等</h3>
+<p class="calibre6">结构相等是通过 <code class="calibre19 pcalibre6 pcalibre5">==</code> 判断的。像 <code class="calibre19 pcalibre6 pcalibre5">a == b</code> 将会翻译成：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">a?.equals(b) ?: b === <span class="hljs-params">null</span>
+</code></pre>
+<p class="calibre6">如果 a 不是 null 则调用 <code class="calibre19 pcalibre6 pcalibre5">equals(Any?)</code> 函数，否则检查 b 是否参照等于 null</p>
+<p class="calibre6">注意完全没有必要为优化你的代码而将 <code class="calibre19 pcalibre6 pcalibre5">a == null</code> 写成 <code class="calibre19 pcalibre6 pcalibre5">a === null</code> 编译器会自动帮你做的。</p>
+
+        </div>
+    
+</div>
+
+        
+    
+
+
+</body></html>

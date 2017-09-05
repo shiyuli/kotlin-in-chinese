@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh" xml:lang="zh">
+  <head>
+    <title>数据对象</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta content="" name="description"/>
+    <meta content="GitBook 3.2.2" name="generator"/>
+    <meta content="huanglizhuo" name="author"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        
+<div class="page">
+    
+        <h1 class="book-chapter" id="calibre_toc_17">数据对象</h1>
+        <div class="section">
+            <h2 id="数据类" class="calibre10">数据类</h2>
+<p class="calibre6">我们经常创建一个只保存数据的类。在这样的类中一些函数只是机械的对它们持有的数据进行一些推导。在 kotlin 中这样的类称之为 data 类，用 <code class="calibre19 pcalibre6 pcalibre5">data</code> 标注:</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">data <span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">User</span></span>(<span class="hljs-variable"><span class="hljs-keyword">val</span> name</span>: String, <span class="hljs-variable"><span class="hljs-keyword">val</span> age</span>: <span class="hljs-keyword">Int</span>)
+</code></pre>
+<p class="calibre6">编译器会自动根据主构造函数中声明的所有属性添加如下方法：</p>
+<blockquote class="calibre18">
+<p class="calibre6"><code class="calibre19 pcalibre6 pcalibre5">equals()</code>/<code class="calibre19 pcalibre6 pcalibre5">hashCode</code> 函数</p>
+<p class="calibre6"><code class="calibre19 pcalibre6 pcalibre5">toString</code> 格式是 "User(name=john, age=42)"</p>
+<p class="calibre6">[compontN()functions] (<a href="http://kotlinlang.org/docs/reference/multi-declarations.html" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">http://kotlinlang.org/docs/reference/multi-declarations.html</a>) 对应按声明顺序出现的所有属性</p>
+<p class="calibre6"><code class="calibre19 pcalibre6 pcalibre5">copy()</code> 函数</p>
+</blockquote>
+<p class="calibre6">如果在类中明确声明或从基类继承了这些方法，编译器不会自动生成。</p>
+<p class="calibre6">为确保这些生成代码的一致性，并实现有意义的行为，数据类要满足下面的要求：</p>
+<p class="calibre6">注意如果构造函数参数中没有 <code class="calibre19 pcalibre6 pcalibre5">val</code> 或者 <code class="calibre19 pcalibre6 pcalibre5">var</code> ，就不会在这些函数中出现；</p>
+<blockquote class="calibre18">
+<p class="calibre6">主构造函数应该至少有一个参数；</p>
+<p class="calibre6">主构造函数的所有参数必须标注为 <code class="calibre19 pcalibre6 pcalibre5">val</code> 或者 <code class="calibre19 pcalibre6 pcalibre5">var</code> ；</p>
+<p class="calibre6">数据类不能是 abstract，open，sealed，或者 inner ；</p>
+<p class="calibre6">数据类不能继承其它的类（但可以实现接口）。</p>
+<p class="calibre6">在 JVM 中如果构造函数是无参的，则所有的属性必须有默认的值，(参看<a href="http://kotlinlang.org/docs/reference/classes.html#constructors" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">Constructors</a>);</p>
+<p class="calibre6">data class User(val name: String = "", val age: Int = 0)</p>
+</blockquote>
+<h3 id="复制" class="calibre16">复制</h3>
+<p class="calibre6">我们经常会对一些属性做修改但想要其他部分不变。这就是 <code class="calibre19 pcalibre6 pcalibre5">copy()</code> 函数的由来。在上面的 User 类中，实现起来应该是这样：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">copy</span><span class="hljs-params">(name: <span class="hljs-type">String</span> = this.name, age: <span class="hljs-type">Int</span> = this.age)</span> = <span class="hljs-comment">User</span><span class="hljs-params">(name, age)</span></span>
+</code></pre>
+<p class="calibre6">有了 copy 我们就可以像下面这样写了：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-variable"><span class="hljs-keyword">val</span> jack</span> = User(name = <span class="hljs-string">"jack"</span>, age = <span class="hljs-params">1</span>)
+<span class="hljs-variable"><span class="hljs-keyword">val</span> olderJack</span> = jack.copy(age = <span class="hljs-params">2</span>)
+</code></pre>
+<h3 id="数据类和多重声明" class="calibre16">数据类和多重声明</h3>
+<p class="calibre6">组件函数允许数据类在<a href="http://kotlinlang.org/docs/reference/multi-declarations.html" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">多重声明</a>中使用：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-variable"><span class="hljs-keyword">val</span> jane</span> = User(<span class="hljs-string">"jane"</span>, <span class="hljs-params">35</span>)
+<span class="hljs-variable"><span class="hljs-keyword">val</span> (name, age)</span> = jane
+println(<span class="hljs-string">"$name, $age years of age"</span>) <span class="hljs-comment">//打印出 "Jane, 35 years of age"</span>
+</code></pre>
+<h3 id="标准数据类" class="calibre16">标准数据类</h3>
+<p class="calibre6">标准库提供了 <code class="calibre19 pcalibre6 pcalibre5">Pair</code> 和 <code class="calibre19 pcalibre6 pcalibre5">Triple</code>。在大多数情形中，命名数据类是更好的设计选择，因为这样代码可读性更强而且提供了有意义的名字和属性。</p>
+
+        </div>
+    
+</div>
+
+        
+    
+
+
+</body></html>

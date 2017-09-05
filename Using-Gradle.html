@@ -1,0 +1,199 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh" xml:lang="zh">
+  <head>
+    <title>使用Gradle</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta content="" name="description"/>
+    <meta content="GitBook 3.2.2" name="generator"/>
+    <meta content="huanglizhuo" name="author"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        
+<div class="page">
+    
+        <h1 class="book-chapter" id="calibre_toc_49">使用Gradle</h1>
+        <div class="section">
+            <h2 id="使用-gradle" class="calibre10">使用 Gradle</h2>
+<h3 id="插件和版本" class="calibre16">插件和版本</h3>
+<p class="calibre6">kotlin-gradle-plugin 可以编译 Kotlin 文件和模块</p>
+<blockquote class="calibre18">
+<p class="calibre6">X.Y.SNAPSHOT:对应版本 X.Y 的快照，在 CI 服务器上的每次成功构建的版本。这些版本不是真正的稳定版，只是推荐用来测试新编辑器的功能的。现在所有的构建都是作为 0.1-SNAPSHOT 发表的。你可以参看<a href="" class="calibre7 pcalibre2 pcalibre pcalibre1">configure a snapshot repository in the pom file</a></p>
+<p class="calibre6">X.Y.X: 对应版本 X.Y.Z 的 release 或 milestone ，自动升级。它们是文件构建。Release 版本发布在 Maven Central 仓库。在 pom 文件里不需要多余的配置。</p>
+</blockquote>
+<p class="calibre6">milestone 和 版本的对应关系如下：</p>
+<table class="calibre21">
+<thead class="calibre22">
+<tr class="calibre23">
+<th class="calibre24"><strong class="calibre25">Milestone</strong></th>
+<th class="calibre24"><strong class="calibre25">Version</strong></th>
+</tr>
+</thead>
+<tbody class="calibre27">
+<tr class="calibre23">
+<td class="calibre28">M12.1</td>
+<td class="calibre28">0.12.613</td>
+</tr>
+<tr class="calibre30">
+<td class="calibre28">M12</td>
+<td class="calibre28">0.12.200</td>
+</tr>
+<tr class="calibre23">
+<td class="calibre28">M11.1</td>
+<td class="calibre28">0.11.91.1</td>
+</tr>
+<tr class="calibre30">
+<td class="calibre28">M11</td>
+<td class="calibre28">0.11.91</td>
+</tr>
+<tr class="calibre23">
+<td class="calibre28">M10.1</td>
+<td class="calibre28">0.10.195</td>
+</tr>
+<tr class="calibre30">
+<td class="calibre28">M10</td>
+<td class="calibre28">0.10.4</td>
+</tr>
+<tr class="calibre23">
+<td class="calibre28">M9</td>
+<td class="calibre28">0.9.66</td>
+</tr>
+<tr class="calibre30">
+<td class="calibre28">M8</td>
+<td class="calibre28">0.8.11</td>
+</tr>
+<tr class="calibre23">
+<td class="calibre28">M7</td>
+<td class="calibre28">0.7.270</td>
+</tr>
+<tr class="calibre30">
+<td class="calibre28">M6.2</td>
+<td class="calibre28">0.6.1673</td>
+</tr>
+<tr class="calibre23">
+<td class="calibre28">M6.1</td>
+<td class="calibre28">0.6.602</td>
+</tr>
+<tr class="calibre30">
+<td class="calibre28">M6</td>
+<td class="calibre28">0.6.69</td>
+</tr>
+<tr class="calibre23">
+<td class="calibre28">M5.3</td>
+<td class="calibre28">0.5.998</td>
+</tr>
+</tbody>
+</table>
+<h3 id="面向-jvm" class="calibre16">面向 Jvm</h3>
+<p class="calibre6">对于 jvm，需要应用 kotlin 插件</p>
+<blockquote class="calibre18">
+<p class="calibre6">apply plugin: "kotlin"</p>
+</blockquote>
+<p class="calibre6">至于 M11 ，kotlin 文件可以与 java 混用。默认使用不同文件夹：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">project
+    - src
+        - main (root)
+            - kotlin
+            - java
+</code></pre><p class="calibre6">如果不使用默认的设置则对应的文件属性要修改：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">sourceSets</span> {
+    main.kotlin.srcDirs += <span class="hljs-string">'src/main/myKotlin'</span>
+    main.java.srcDirs += <span class="hljs-string">'src/main/myJava'</span>
+}
+</code></pre>
+<h3 id="面向javascript" class="calibre16">面向JavaScript</h3>
+<p class="calibre6">但目标是 JavaScript 时：</p>
+<blockquote class="calibre18">
+<p class="calibre6">apply plugin: "kotln2js"</p>
+</blockquote>
+<p class="calibre6">这个插件只对 kotlin 文件起作用，因此建议把 kotlin 和 java 文件分开。对于 jvm 如果不用默认的值则需要修改源文件夹：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">sourceSets {
+    main.kotlin.srcDirs += 'src/main/myKotlin'
+}
+</code></pre><p class="calibre6">如果你想建立一个复用的库，使用 <code class="calibre19 pcalibre6 pcalibre5">kotlinOptions.metaInfo</code> 生成附加的带附加二进制描述的 js 文件</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">compileKotlin2Js {
+    kotlinOptions.metaInfo = true
+}
+</code></pre><h3 id="目标是-android" class="calibre16">目标是 android</h3>
+<p class="calibre6">Android Gradle 模块与普通的 Gradle 模块有些不同，所以如果你想建立 kotlin 写的android 项目，则需要下面这样：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">buildscript {
+    ...
+}
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+</code></pre><h4 id="android-studio" class="calibre34">Android Studio</h4>
+<p class="calibre6">如果使用 Android Studio,需要添加下面的代码：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">android {
+  ...
+
+  sourceSets {
+    main.java.srcDirs += 'src/main/kotlin'
+  }
+}
+</code></pre><p class="calibre6">这是告诉 android studio kotlin 文件的目录位置方便 IDE 识别</p>
+<h3 id="配置依赖" class="calibre16">配置依赖</h3>
+<p class="calibre6">我们需要添加 kotlin-gradle-plugin 和 kotlin 标准库依赖</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">buildscript {
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+    classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:&lt;version&gt;'
+  }
+}
+
+apply plugin: "kotlin" // or apply plugin: "kotlin2js" if targeting JavaScript
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  compile 'org.jetbrains.kotlin:kotlin-stdlib:&lt;version&gt;'
+}
+</code></pre><h3 id="使用快照版本" class="calibre16">使用快照版本</h3>
+<p class="calibre6">如果使用快照版本则如下所示：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">buildscript {
+  repositories {
+    mavenCentral()
+    maven {
+      url 'http://oss.sonatype.org/content/repositories/snapshots'
+    }
+  }
+  dependencies {
+    classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:0.1-SNAPSHOT'
+  }
+}
+
+apply plugin: "kotlin" // or apply plugin: "kotlin2js" if targeting JavaScript
+
+repositories {
+  mavenCentral()
+  maven {
+    url 'http://oss.sonatype.org/content/repositories/snapshots'
+  }
+}
+
+dependencies {
+  compile 'org.jetbrains.kotlin:kotlin-stdlib:0.1-SNAPSHOT'
+}
+</code></pre><h3 id="例子" class="calibre16">例子</h3>
+<p class="calibre6"><a href="https://github.com/jetbrains/kotlin" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">Kotlin</a>仓库有如下例子：</p>
+<blockquote class="calibre20">
+<p class="calibre6"><a href="https://github.com/JetBrains/kotlin-examples/tree/master/gradle/hello-world" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">Kotlin</a>
+<a href="https://github.com/JetBrains/kotlin-examples/tree/master/gradle/mixed-java-kotlin-hello-world" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">Mixed java and Kotlin</a>
+<a href="https://github.com/JetBrains/kotlin-examples/tree/master/gradle/android-mixed-java-kotlin-project" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">Android</a>
+<a href="https://github.com/JetBrains/kotlin/tree/master/libraries/tools/kotlin-gradle-plugin/src/test/resources/testProject/kotlin2JsProject" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">javaScript</a></p>
+</blockquote>
+
+        </div>
+    
+</div>
+
+        
+    
+
+
+</body></html>

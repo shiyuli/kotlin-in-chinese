@@ -1,0 +1,178 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh" xml:lang="zh">
+  <head>
+    <title>使用Ant</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta content="" name="description"/>
+    <meta content="GitBook 3.2.2" name="generator"/>
+    <meta content="huanglizhuo" name="author"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        
+<div class="page">
+    
+        <h1 class="book-chapter" id="calibre_toc_47">使用Ant</h1>
+        <div class="section">
+            <h2 id="使用-ant" class="calibre10">使用 Ant</h2>
+<h3 id="获得-ant-任务" class="calibre16">获得 Ant 任务</h3>
+<p class="calibre6">Kotlin 提供了 Ant 三个任务:</p>
+<blockquote class="calibre18">
+<p class="calibre6">kotlinc : Kotlin 面向 JVM 的编译器</p>
+<p class="calibre6">kotlin2js: 面向 javaScript 的编译器</p>
+<p class="calibre6">withKotlin: 使用标准 javac Ant 任务时编译 Kotlin 文件的任务</p>
+</blockquote>
+<p class="calibre6">这些任务定义学在 kotlin-ant.jar 标准库中，位与 <a href="https://github.com/JetBrains/kotlin/releases/tag/build-0.12.613" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">kotlin compiler</a> 的 lib 文件夹下</p>
+<h3 id="面向-jvm-的只有-kotlin-源文件任务" class="calibre16">面向 JVM 的只有 kotlin 源文件任务</h3>
+<p class="calibre6">当项目只有 kotlin 源文件时，最简单的方法就是使用 kotlinc 任务：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">&lt;project name="Ant Task Test" default="build"&gt;
+    &lt;typedef resource="org/jetbrains/kotlin/ant/antlib.xml" classpath="${kotlin.lib}/kotlin-ant.jar"/&gt;
+
+    &lt;target name="build"&gt;
+        &lt;kotlinc src="hello.kt" output="hello.jar"/&gt;
+    &lt;/target&gt;
+&lt;/project&gt;
+</code></pre>
+<p class="calibre6">${kotlin.lib} 指向 kotlin 单独编译器解压的文件夹</p>
+<h3 id="面向-jvm-的只有-kotlin-源文件但有多个根的任务" class="calibre16">面向 JVM 的只有 kotlin 源文件但有多个根的任务</h3>
+<p class="calibre6">如果一个项目包含多个根源文件，使用 src 定义路径：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">&lt;project name="Ant Task Test" default="build"&gt;
+    &lt;typedef resource="org/jetbrains/kotlin/ant/antlib.xml" classpath="${kotlin.lib}/kotlin-ant.jar"/&gt;
+
+    &lt;target name="build"&gt;
+        &lt;kotlinc output="hello.jar"&gt;
+            &lt;src path="root1"/&gt;
+            &lt;src path="root2"/&gt;
+        &lt;/kotlinc&gt;
+    &lt;/target&gt;
+&lt;/project&gt;
+</code></pre>
+<h3 id="面向-jvm-的有-kotlin-和-java-源文件" class="calibre16">面向 JVM 的有 kotlin 和 java 源文件</h3>
+<p class="calibre6">如果项目包含 java kotlin 代码，使用 kotlinc 是可以的，但建议使用 withKotlin 任务</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">&lt;project name="Ant Task Test" default="build"&gt;
+    &lt;typedef resource="org/jetbrains/kotlin/ant/antlib.xml" classpath="${kotlin.lib}/kotlin-ant.jar"/&gt;
+
+    &lt;target name="build"&gt;
+        &lt;delete dir="classes" failonerror="false"/&gt;
+        &lt;mkdir dir="classes"/&gt;
+        &lt;javac destdir="classes" includeAntRuntime="false" srcdir="src"&gt;
+            &lt;withKotlin/&gt;
+        &lt;/javac&gt;
+        &lt;jar destfile="hello.jar"&gt;
+            &lt;fileset dir="classes"/&gt;
+        &lt;/jar&gt;
+    &lt;/target&gt;
+&lt;/project&gt;
+</code></pre>
+<h3 id="面向-javascript-的只有一个源文件夹的" class="calibre16">面向 JavaScript 的只有一个源文件夹的</h3>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">&lt;project name="Ant Task Test" default="build"&gt;
+    &lt;typedef resource="org/jetbrains/kotlin/ant/antlib.xml" classpath="${kotlin.lib}/kotlin-ant.jar"/&gt;
+
+    &lt;target name="build"&gt;
+        &lt;kotlin2js src="root1" output="out.js"/&gt;
+    &lt;/target&gt;
+&lt;/project&gt;
+</code></pre>
+<h3 id="面向-javascript-有前缀，后缀以及-sourcemap-选项" class="calibre16">面向 JavaScript 有前缀，后缀以及 sourcemap 选项</h3>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">&lt;project name="Ant Task Test" default="build"&gt;
+    &lt;taskdef resource="org/jetbrains/kotlin/ant/antlib.xml" classpath="${kotlin.lib}/kotlin-ant.jar"/&gt;
+
+    &lt;target name="build"&gt;
+        &lt;kotlin2js src="root1" output="out.js" outputPrefix="prefix" outputPostfix="postfix" sourcemap="true"/&gt;
+    &lt;/target&gt;
+&lt;/project&gt;
+</code></pre>
+<h4 id="面向-javascript-只有一个源码文件夹并有元信息的选项" class="calibre34">##面向 JavaScript 只有一个源码文件夹并有元信息的选项</h4>
+<p class="calibre6">如果你想要描述 javaScript/Kotlin 库的转换结果，<code class="calibre19 pcalibre6 pcalibre5">mateInfo</code> 选项是很有用的。如果<code class="calibre19 pcalibre6 pcalibre5">mateInfo</code> 设置为 true 则编译附加 javaScript 文件时会创建二进制的元数据。这个文件会与转换结果一起发布</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">&lt;project name="Ant Task Test" default="build"&gt;
+    &lt;typedef resource="org/jetbrains/kotlin/ant/antlib.xml" classpath="${kotlin.lib}/kotlin-ant.jar"/&gt;
+
+    &lt;target name="build"&gt;
+        &lt;!-- out.meta.js will be created, which contains binary descriptors --&gt;
+        &lt;kotlin2js src="root1" output="out.js" metaInfo="true"/&gt;
+    &lt;/target&gt;
+&lt;/project&gt;
+</code></pre>
+<h2 id="参考" class="calibre10">参考</h2>
+<p class="calibre6">下面是所有的元素和属性</p>
+<h4 id="kotlinc-属性名字描述必须性默认值" class="calibre34">#kotlinc 属性<strong class="calibre32">名字</strong>|<strong class="calibre32">描述</strong>|<strong class="calibre32">必须性</strong>|<strong class="calibre32">默认值</strong></h4>
+<p class="calibre6">---|---|---|---|
+src|要编译的Kotlin 文件或者文件夹|yes|
+output|目标文件夹或 .jar 文件名 |yes|
+classpath|类的完整路径|no|
+classpathref|类的完整路径参考|no|
+stdlib|"Kotlin-runtime.jar" 的完整路径|no|”“
+includeRuntime|如果输出是 .jar 文件，是否 kotlin 运行时库是否包括在 jar 中|no|true</p>
+<h4 id="withkotlin-属性" class="calibre34">#withKotlin 属性</h4>
+<table class="calibre21">
+<thead class="calibre22">
+<tr class="calibre23">
+<th class="calibre24"><strong class="calibre25">名字</strong></th>
+<th class="calibre24"><strong class="calibre25">描述</strong></th>
+<th class="calibre24"><strong class="calibre25">必须性</strong></th>
+<th class="calibre24"><strong class="calibre25">默认值</strong></th>
+</tr>
+</thead>
+<tbody class="calibre27">
+<tr class="calibre23">
+<td class="calibre28">src</td>
+<td class="calibre28">要编译的Kotlin 文件或者文件夹</td>
+<td class="calibre28">yes</td>
+<td class="calibre28"/>
+</tr>
+<tr class="calibre30">
+<td class="calibre28">output</td>
+<td class="calibre28">目标文件夹</td>
+<td class="calibre28">yes</td>
+<td class="calibre28"/>
+</tr>
+<tr class="calibre23">
+<td class="calibre28">library</td>
+<td class="calibre28">库文件(kt,dir,jar)</td>
+<td class="calibre28">no</td>
+<td class="calibre28"/>
+</tr>
+<tr class="calibre30">
+<td class="calibre28">outputPrefix</td>
+<td class="calibre28">生成 javaScript 文件的前缀</td>
+<td class="calibre28">no</td>
+<td class="calibre28"/>
+</tr>
+<tr class="calibre23">
+<td class="calibre28">outputSufix</td>
+<td class="calibre28">生成 javaScript 文件的后缀</td>
+<td class="calibre28">no</td>
+<td class="calibre28"/>
+</tr>
+<tr class="calibre30">
+<td class="calibre28">sourcemap</td>
+<td class="calibre28">是否生成 sourcemap</td>
+<td class="calibre28">no</td>
+<td class="calibre28"/>
+</tr>
+<tr class="calibre23">
+<td class="calibre28">metaInfo</td>
+<td class="calibre28">是否生成二进制元数据文件描述</td>
+<td class="calibre28">no</td>
+<td class="calibre28"/>
+</tr>
+<tr class="calibre30">
+<td class="calibre28">main</td>
+<td class="calibre28">是否生成调用主函数</td>
+<td class="calibre28">no</td>
+<td class="calibre28"/>
+</tr>
+</tbody>
+</table>
+
+        </div>
+    
+</div>
+
+        
+    
+
+
+</body></html>

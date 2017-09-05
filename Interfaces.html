@@ -1,0 +1,87 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh" xml:lang="zh">
+  <head>
+    <title>接口</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta content="" name="description"/>
+    <meta content="GitBook 3.2.2" name="generator"/>
+    <meta content="huanglizhuo" name="author"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        
+<div class="page">
+    
+        <h1 class="book-chapter" id="calibre_toc_14">接口</h1>
+        <div class="section">
+            <h2 id="接口" class="calibre10">接口</h2>
+<p class="calibre6">Kotlin 的接口很像 java 8。它们都可以包含抽象方法，以及方法的实现。和抽象类不同的是，接口不能保存状态。可以有属性但必须是抽象的，或者提供访问器的实现。</p>
+<p class="calibre6">接口用关键字 interface 来定义：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">interface MyInterface {
+    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">bar</span><span class="hljs-params">()</span></span>
+    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">foo</span><span class="hljs-params">()</span> {</span>
+        <span class="hljs-comment">//函数体是可选的</span>
+    }
+}
+</code></pre>
+<h3 id="接口的实现" class="calibre16">接口的实现</h3>
+<p class="calibre6">一个类或对象可以实现一个或多个接口</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">Child</span> : <span class="hljs-type">MyInterface {</span></span>
+    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">bar</span> <span class="hljs-params">()</span> {</span>
+        <span class="hljs-comment">//函数体</span>
+    }
+}
+</code></pre>
+<h3 id="接口中的属性" class="calibre16">接口中的属性</h3>
+<p class="calibre6">可以在接口中申明属性。接口中的属性要么是抽象的，要么提供访问器的实现。接口属性不可以有后备字段。而且访问器不可以引用它们。</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">interface MyInterface {
+    <span class="hljs-variable"><span class="hljs-keyword">val</span> property</span>: <span class="hljs-keyword">Int</span> <span class="hljs-comment">// abstract</span>
+
+    <span class="hljs-variable"><span class="hljs-keyword">val</span> propertyWithImplementation</span>: String
+        <span class="hljs-keyword">get</span>() = <span class="hljs-string">"foo"</span>
+
+    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">foo</span><span class="hljs-params">()</span> { </span>
+        print(property)
+    } 
+}
+
+<span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">Child</span> : <span class="hljs-type">MyInterface { </span></span>
+    <span class="hljs-keyword">override</span> <span class="hljs-variable"><span class="hljs-keyword">val</span> property</span>: <span class="hljs-keyword">Int</span> = <span class="hljs-params">29</span>
+}
+</code></pre>
+<h3 id="解决重写冲突" class="calibre16">解决重写冲突</h3>
+<p class="calibre6">当我们在父类中声明了许多类型，有可能出现一个方法的多种实现。比如：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">interface A {
+    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">foo</span><span class="hljs-params">()</span> { <span class="hljs-comment">print</span><span class="hljs-params">("A")</span> }</span>
+    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">bar</span><span class="hljs-params">()</span></span>
+}
+
+interface B {
+    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">foo</span><span class="hljs-params">()</span> { <span class="hljs-comment">print</span><span class="hljs-params">("B")</span> }</span>
+    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">bar</span><span class="hljs-params">()</span> { <span class="hljs-comment">print</span><span class="hljs-params">("bar")</span> }</span>
+}
+
+<span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">C</span> : <span class="hljs-type">A {</span></span>
+    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">bar</span><span class="hljs-params">()</span> { <span class="hljs-comment">print</span><span class="hljs-params">("bar")</span> }</span>
+}
+
+<span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">D</span> : <span class="hljs-type">A</span>, <span class="hljs-type">B {</span></span>
+    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">foo</span><span class="hljs-params">()</span> {</span>
+        super<span class="hljs-type">&lt;A&gt;</span>.foo()
+        super<span class="hljs-type">&lt;B&gt;</span>.foo()
+    }
+}
+</code></pre>
+<p class="calibre6">A B 接口都有声明了 foo() bar() 函数。它们都实现了 foo() 方法，但只有 B 实现了 bar() ,bar() 在 A 中并没有声明它是抽象的，这是因为在接口中如果函数没有函数体，那么默认是抽像的。现在，如果我们从 A 中派生一个 C 实体类，显然我们需要重写 bar() ，并实现它。而我们从 A 和 B 派生一个 D ，我们不用重写 bar() 方法，因为我们的一个继承中有一个已经实现了它。但我们继承了两个 foo() 的实现，因此编译器不知道应该选哪个，并强制我们重写 foo() 并且明确指出我们想怎么实现。</p>
+
+        </div>
+    
+</div>
+
+        
+    
+
+
+</body></html>

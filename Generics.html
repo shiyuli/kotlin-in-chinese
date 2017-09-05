@@ -1,0 +1,70 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh" xml:lang="zh">
+  <head>
+    <title>泛型</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta content="" name="description"/>
+    <meta content="GitBook 3.2.2" name="generator"/>
+    <meta content="huanglizhuo" name="author"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        
+<div class="page">
+    
+        <h1 class="book-chapter" id="calibre_toc_18">泛型</h1>
+        <div class="section">
+            <h2 id="泛型" class="calibre10">泛型</h2>
+<p class="calibre6">像 java 一样，Kotlin 中可以拥有类型参数：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">Box</span>&lt;<span class="hljs-type">T</span>&gt;</span>(t: T){
+    <span class="hljs-variable"><span class="hljs-keyword">var</span> value</span> = t
+}
+</code></pre>
+<p class="calibre6">通常来说，创建一个这样类的实例，我们需要提供类型参数：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-variable"><span class="hljs-keyword">val</span> box</span>: Box<span class="hljs-type">&lt;Int&gt;</span> = Box<span class="hljs-type">&lt;Int&gt;</span>(<span class="hljs-params">1</span>)
+</code></pre>
+<p class="calibre6">但如果类型有可能是推断的，比如来自构造函数的参数或者通过其它的一些方式，一个可以忽略类型的参数：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">val box = Box(1)//1是 Int 型，因此编译器会推导出我们调用的是 Box&lt;Int&gt;
+</code></pre>
+<h3 id="变动" class="calibre16">变动</h3>
+<p class="calibre6">java 类型系统最狡猾的一部分就是通配符类型。但 kotlin 没有，代替它的是两种其它的东西：声明变化和类型预测(declaration-site variance and type projections)。</p>
+<p class="calibre6">首先，我们想想为什么 java 需要这些神秘的通配符。这个问题在<a href="http://www.oracle.com/technetwork/java/effectivejava-136174.html" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">Effective Java</a>,条目18中是这样解释的：使用界限通配符增加 API 的灵活性。首先 java 中的泛型是不变的，这就意味着 <code class="calibre19 pcalibre6 pcalibre5">List&lt;String&gt;</code> 不是 <code class="calibre19 pcalibre6 pcalibre5">List&lt;Object&gt;</code> 的子类型。为什么呢，如果 List 不是不变的，就会引发下面的问题：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-comment">// Java</span>
+List&lt;String&gt; strs = <span class="hljs-keyword">new</span> ArrayList&lt;String&gt;();
+List&lt;Object&gt; objs = strs; <span class="hljs-comment">// !!! The cause of the upcoming problem sits here. Java prohibits this!</span>
+objs.add(<span class="hljs-params">1</span>); <span class="hljs-comment">// Here we put an Integer into a list of Strings</span>
+String s = strs.get(<span class="hljs-params">0</span>); <span class="hljs-comment">// !!! ClassCastException: Cannot cast Integer to String</span>
+</code></pre>
+<p class="calibre6">因此 java 禁止了这样的事情来保证运行时安全。但这有些其它影响。比如，<code class="calibre19 pcalibre6 pcalibre5">Collection</code> 接口的 <code class="calibre19 pcalibre6 pcalibre5">addAll()</code> 方法。这个方法的签名在哪呢？直观来讲是这样的：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-comment">//java</span>
+<span class="hljs-type"><span class="hljs-keyword">interface</span> <span class="hljs-comment">Collection</span>&lt;<span class="hljs-comment">E</span>&gt; ... </span>{
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-comment">addAdd</span><span class="hljs-params">(Collection&lt;E&gt; items)</span></span>;
+}
+</code></pre>
+<p class="calibre6">但接下来我们就不能做下面这些简单事情了：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-comment">//java</span>
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-comment">copyAll</span><span class="hljs-params">(Collection&lt;Object&gt; to, Collection&lt;String&gt; from)</span></span>{
+    to.addAll(from);
+}
+</code></pre>
+<p class="calibre6">这就是为什么 <code class="calibre19 pcalibre6 pcalibre5">addAll()</code> 的签名是下面这样的：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-comment">//java</span>
+<span class="hljs-type"><span class="hljs-keyword">interface</span> <span class="hljs-comment">Collection</span>&lt;<span class="hljs-comment">E</span>&gt; ... </span>{
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-comment">addAll</span><span class="hljs-params">(Colletion&lt;? extend E&gt; items)</span></span>;
+}
+</code></pre>
+<p class="calibre6">这个通配符参数 <code class="calibre19 pcalibre6 pcalibre5">? extends T</code> 意味着这个方法接受一些 T 类型的子类而非 T 类型本身。这就是说我们可以安全的读 <code class="calibre19 pcalibre6 pcalibre5">T's</code>(这里表示 T 子类元素的集合)，但不能写，因为我们不知道 T 的子类究竟是什么样的，针对这样的限制，我们很想要这样的行为：<code class="calibre19 pcalibre6 pcalibre5">Collection&lt;String&gt;</code> 是 <code class="calibre19 pcalibre6 pcalibre5">Collection&lt;? extens Object&gt;</code>的子类。In “clever words”, the wildcard with an extends-bound (upper bound) makes the type covariant.</p>
+<p class="calibre6">The key to understanding why this trick works is rather simple: if you can only take items from a collection, then using a collection of Strings and reading Objects from it is fine. Conversely, if you can only put items into the collection, it’s OK to take a collection of Objects and put Strings into it: in Java we have List&lt;? super String&gt; a supertype of List</p>
+<p class="calibre6">未完</p>
+
+        </div>
+    
+</div>
+
+        
+    
+
+
+</body></html>

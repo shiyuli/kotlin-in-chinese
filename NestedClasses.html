@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh" xml:lang="zh">
+  <head>
+    <title>嵌套类</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta content="" name="description"/>
+    <meta content="GitBook 3.2.2" name="generator"/>
+    <meta content="huanglizhuo" name="author"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        
+<div class="page">
+    
+        <h1 class="book-chapter" id="calibre_toc_19">嵌套类</h1>
+        <div class="section">
+            <h2 id="嵌套类" class="calibre10">嵌套类</h2>
+<p class="calibre6">类可以嵌套在其他类中</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">Outer</span> </span>{
+    <span class="hljs-keyword">private</span> <span class="hljs-variable"><span class="hljs-keyword">val</span> bar</span>: <span class="hljs-keyword">Int</span> = <span class="hljs-params">1</span>
+    <span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">Nested</span> </span>{
+        <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">foo</span><span class="hljs-params">()</span> = 2</span>
+    }
+}
+
+<span class="hljs-variable"><span class="hljs-keyword">val</span> demo</span> = Outer.Nested().foo() <span class="hljs-comment">//==2</span>
+</code></pre>
+<h3 id="内部类" class="calibre16">内部类</h3>
+<p class="calibre6">类可以标记为 inner 这样就可以访问外部类的成员。内部类拥有外部类的一个对象引用：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">Outer</span> </span>{
+    <span class="hljs-keyword">private</span> <span class="hljs-variable"><span class="hljs-keyword">val</span> bar</span>: <span class="hljs-keyword">Int</span> = <span class="hljs-params">1</span>
+    inner <span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">Inner</span> </span>{
+        <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">foo</span><span class="hljs-params">()</span> = bar</span>
+    }
+}
+
+<span class="hljs-variable"><span class="hljs-keyword">val</span> demo</span> = Outer().Inner().foo() <span class="hljs-comment">//==1</span>
+</code></pre>
+<p class="calibre6">参看<a href="http://kotlinlang.org/docs/reference/this-expressions.html" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">这里</a>了解更多 this 在内部类的用法</p>
+<h3 id="匿名内部类" class="calibre16">匿名内部类</h3>
+<p class="calibre6">匿名内部类的实例是通过 <a href="ClassesAndObjects/ObjectExpressicAndDeclarations.md" class="calibre7 pcalibre2 pcalibre pcalibre1">对象表达式</a>  创建的：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">window.addMouseListener(<span class="hljs-keyword">object</span>: MouseAdapter() {
+    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">mouseClicked</span><span class="hljs-params">(e: <span class="hljs-type">MouseEvent</span>)</span> {</span>
+        <span class="hljs-comment">// ...</span>
+    }
+
+    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">mouseEntered</span><span class="hljs-params">(e: <span class="hljs-type">MouseEvent</span>)</span> {</span>
+        <span class="hljs-comment">// ...</span>
+    }
+})
+</code></pre>
+<p class="calibre6">如果对象是函数式的 java 接口的实例（比如只有一个抽象方法的 java 接口），你可以用一个带接口类型的 lambda 表达式创建它。</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">val listener = ActionListener { println("clicked") }
+</code></pre>
+
+        </div>
+    
+</div>
+
+        
+    
+
+
+</body></html>

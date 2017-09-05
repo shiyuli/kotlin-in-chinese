@@ -1,0 +1,210 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh" xml:lang="zh">
+  <head>
+    <title>基本类型</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta content="" name="description"/>
+    <meta content="GitBook 3.2.2" name="generator"/>
+    <meta content="huanglizhuo" name="author"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        
+<div class="page">
+    
+        <h1 class="book-chapter" id="calibre_toc_7">基本类型</h1>
+        <div class="section">
+            <h2 id="基本类型" class="calibre10">基本类型</h2>
+<p class="calibre6">在 Kotlin 中，所有变量的成员方法和属性都是一个对象。一些类型是内建的，它们的实现是优化过的，但对用户来说它们就像普通的类一样。在这节中，我们将会讲到大多数的类型：数值，字符，布尔，以及数组。</p>
+<h3 id="数值" class="calibre16">数值</h3>
+<p class="calibre6">Kotlin 处理数值的方法和 java 很相似，但不是完全一样。比如，不存在隐式转换数值的精度，并且在字面上有一些小小的不同。</p>
+<p class="calibre6">Kotlin 提供了如下内建数值类型(和 java 很相似)：</p>
+<table class="calibre21">
+<thead class="calibre22">
+<tr class="calibre23">
+<th class="calibre24"><strong class="calibre25">类型</strong></th>
+<th class="calibre26"><strong class="calibre25">字宽</strong></th>
+</tr>
+</thead>
+<tbody class="calibre27">
+<tr class="calibre23">
+<td class="calibre28">Double</td>
+<td class="calibre29">64</td>
+</tr>
+<tr class="calibre30">
+<td class="calibre28">Float</td>
+<td class="calibre29">32</td>
+</tr>
+<tr class="calibre23">
+<td class="calibre28">Long</td>
+<td class="calibre29">64</td>
+</tr>
+<tr class="calibre30">
+<td class="calibre28">Int</td>
+<td class="calibre29">32</td>
+</tr>
+<tr class="calibre23">
+<td class="calibre28">Short</td>
+<td class="calibre29">16</td>
+</tr>
+<tr class="calibre30">
+<td class="calibre28">Byte</td>
+<td class="calibre29">8</td>
+</tr>
+</tbody>
+</table>
+<p class="calibre6">注意字符在 Kotlin 中不是数值类型</p>
+<h3 id="字面值常量" class="calibre16">字面值常量</h3>
+<p class="calibre6">主要是以下几种字面值常量：</p>
+<blockquote class="calibre18">
+<p class="calibre6">--数型: <code class="calibre19 pcalibre6 pcalibre5">123</code>
+   --长整型要加大写 <code class="calibre19 pcalibre6 pcalibre5">L</code> : <code class="calibre19 pcalibre6 pcalibre5">123L</code>
+--16进制：<code class="calibre19 pcalibre6 pcalibre5">0x0f</code>
+--二进制：<code class="calibre19 pcalibre6 pcalibre5">0b00001011</code></p>
+</blockquote>
+<p class="calibre6">注意不支持８进制</p>
+<p class="calibre6">Kotlin 也支持传统的浮点数表示：</p>
+<blockquote class="calibre18">
+<p class="calibre6">-- 默认 Doubles : <code class="calibre19 pcalibre6 pcalibre5">123.5</code> , <code class="calibre19 pcalibre6 pcalibre5">123.5e10</code>
+-- Floats 要添加 <code class="calibre19 pcalibre6 pcalibre5">f</code> 或 <code class="calibre19 pcalibre6 pcalibre5">F</code> ：123.5f</p>
+</blockquote>
+<h3 id="表示" class="calibre16">表示</h3>
+<p class="calibre6">在 java 平台上，数值被 JVM 虚拟机以字节码的方式物理存储的，除非我们需要做可空标识(比如说 Int?) 或者涉及泛型。在后者中数值是装箱的。</p>
+<p class="calibre6">注意装箱过的数值是不保留特征的：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-variable"><span class="hljs-keyword">val</span> a</span>: <span class="hljs-keyword">Int</span> = <span class="hljs-params">10000</span>
+print (a === a ) <span class="hljs-comment">//打印 'true'</span>
+<span class="hljs-variable"><span class="hljs-keyword">val</span> boxedA</span>: <span class="hljs-keyword">Int</span>? =a
+<span class="hljs-variable"><span class="hljs-keyword">val</span> anotherBoxedA</span>: <span class="hljs-keyword">Int</span>? = a
+print (boxedA === anotherBoxedA ) <span class="hljs-comment">//注意这里打印的是 'false'</span>
+</code></pre>
+<p class="calibre6">另一方面，它们是值相等的：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-variable"><span class="hljs-keyword">val</span> a</span>: <span class="hljs-keyword">Int</span> = <span class="hljs-params">10000</span>
+print(a == a) <span class="hljs-comment">// Prints 'true'</span>
+<span class="hljs-variable"><span class="hljs-keyword">val</span> boxedA</span>: <span class="hljs-keyword">Int</span>? = a
+<span class="hljs-variable"><span class="hljs-keyword">val</span> anotherBoxedA</span>: <span class="hljs-keyword">Int</span>? = a
+print(boxedA == anotherBoxedA) <span class="hljs-comment">// Prints 'true'</span>
+</code></pre>
+<h3 id="显式转换" class="calibre16">显式转换</h3>
+<p class="calibre6">由于不同的表示，短类型不是长类型的子类型。如果是的话我们就会碰到下面这样的麻烦了</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-comment">//这是些伪代码，不能编译的</span>
+<span class="hljs-variable"><span class="hljs-keyword">val</span> a</span>: <span class="hljs-keyword">Int</span>? =<span class="hljs-params">1</span> <span class="hljs-comment">//一个装箱过的 Int (java.lang.Integer)</span>
+<span class="hljs-variable"><span class="hljs-keyword">val</span> b</span>: <span class="hljs-keyword">Long</span>? = a <span class="hljs-comment">// 一个隐式装箱的 Long (java.lang.Long)</span>
+print( a == b )<span class="hljs-comment">// 很惊讶吧　这次打印出的是 'false' 这是由于 Long 类型的 equals() 只有和 Long 比较才会相同</span>
+</code></pre>
+<p class="calibre6">因此不止是恒等，有时候连等于都会悄悄丢失。</p>
+<p class="calibre6">所以，短类型是不会隐式转换为长类型的。这意味着我们必须显式转换才能把 <code class="calibre19 pcalibre6 pcalibre5">Byte</code> 赋值给 <code class="calibre19 pcalibre6 pcalibre5">Int</code> </p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-variable"><span class="hljs-keyword">val</span> b</span>: <span class="hljs-keyword">Byte</span> = <span class="hljs-params">1</span> <span class="hljs-comment">// OK, literals are checked statically</span>
+<span class="hljs-variable"><span class="hljs-keyword">val</span> i</span>: <span class="hljs-keyword">Int</span> = b <span class="hljs-comment">//ERROR</span>
+</code></pre>
+<p class="calibre6">我们可以通过显式转换把数值类型提升</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-variable"><span class="hljs-keyword">val</span> i</span>: <span class="hljs-keyword">Int</span> = b.toInt() <span class="hljs-comment">// 显式转换</span>
+</code></pre>
+<p class="calibre6">每个数值类型都支持下面的转换：</p>
+<blockquote class="calibre18">
+<p class="calibre6"><code class="calibre19 pcalibre6 pcalibre5">toByte(): Byte</code></p>
+<p class="calibre6"> <code class="calibre19 pcalibre6 pcalibre5">toShort(): Short</code></p>
+<p class="calibre6"> <code class="calibre19 pcalibre6 pcalibre5">toInt(): Int</code></p>
+<p class="calibre6"><code class="calibre19 pcalibre6 pcalibre5">toLong(): Long</code></p>
+<p class="calibre6"><code class="calibre19 pcalibre6 pcalibre5">toFloat(): Float</code></p>
+<p class="calibre6"><code class="calibre19 pcalibre6 pcalibre5">toDouble(): Double</code></p>
+<p class="calibre6"><code class="calibre19 pcalibre6 pcalibre5">toChar(): Char</code></p>
+</blockquote>
+<p class="calibre6">隐式转换一般情况下是不容易被发觉的，因为我们可以使用上下文推断出类型，并且算术运算会为合适的转换进行重载，比如</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-variable"><span class="hljs-keyword">val</span> l</span> = <span class="hljs-params">1.</span>toLong + <span class="hljs-params">1</span> <span class="hljs-comment">//Long  + Int =&gt; Long</span>
+</code></pre>
+<h3 id="运算符" class="calibre16">运算符</h3>
+<p class="calibre6">Kotlin支持标准的算术运算表达式，这些运算符被声明为相应类的成员。参看<a href="http://kotlinlang.org/docs/reference/operator-overloading.html" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">运算符重载</a>。</p>
+<p class="calibre6">至于位运算，Kotlin 并没有提供特殊的操作符，只是提供了可以叫中缀形式的方法，比如：</p>
+<p class="calibre6">val x = (1 shl 2) and 0x000FF000</p>
+<p class="calibre6">下面是全部的位运算操作符(只可以用在 <code class="calibre19 pcalibre6 pcalibre5">Int</code> 和 <code class="calibre19 pcalibre6 pcalibre5">Long</code> 类型)：</p>
+<blockquote class="calibre18">
+<p class="calibre6"><code class="calibre19 pcalibre6 pcalibre5">shl(bits)</code> – 带符号左移 (相当于 Java’s <code class="calibre19 pcalibre6 pcalibre5">&lt;&lt;</code>)
+<code class="calibre19 pcalibre6 pcalibre5">shr(bits)</code> – 带符号右移 (相当于 Java’s <code class="calibre19 pcalibre6 pcalibre5">&gt;&gt;</code>)
+<code class="calibre19 pcalibre6 pcalibre5">ushr(bits)</code> – 无符号右移 (相当于 Java’s <code class="calibre19 pcalibre6 pcalibre5">&gt;&gt;&gt;</code>)
+<code class="calibre19 pcalibre6 pcalibre5">and(bits)</code> – 按位与
+<code class="calibre19 pcalibre6 pcalibre5">or(bits)</code> – 按位或
+<code class="calibre19 pcalibre6 pcalibre5">xor(bits)</code> – 按位异或
+<code class="calibre19 pcalibre6 pcalibre5">inv(bits)</code> – 按位翻转</p>
+</blockquote>
+<h3 id="字符" class="calibre16">字符</h3>
+<p class="calibre6">字符类型用 <code class="calibre19 pcalibre6 pcalibre5">Char</code> 表示。不能直接当做数值来使用</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">check</span><span class="hljs-params">(c: <span class="hljs-type">Char</span>)</span> {</span>
+    <span class="hljs-keyword">if</span> (c == <span class="hljs-params">1</span>) { <span class="hljs-comment">//ERROR: 类型不匹配</span>
+        <span class="hljs-comment">//...</span>
+    }
+}
+</code></pre>
+<p class="calibre6">字符是由单引号包裹的'1'，特殊的字符通过反斜杠\转义，下面的字符序列支持转义：\t,\b,\n,\r,\',\",\和$。编码任何其他字符，使用 Unicode 转义语法：\uFF00。</p>
+<p class="calibre6">我们可以将字符显示的转义为Int数字：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">decimalDigitValue</span><span class="hljs-params">(c: <span class="hljs-type">Char</span>)</span>: <span class="hljs-keyword">Int</span> {</span>
+    <span class="hljs-keyword">if</span> (c !<span class="hljs-keyword">in</span> '<span class="hljs-params">0</span>'..'<span class="hljs-params">9</span>') 
+        <span class="hljs-keyword">throw</span> IllegalArgumentException(<span class="hljs-string">"Out of range"</span>)
+    <span class="hljs-keyword">return</span> c.toInt() - '<span class="hljs-params">0</span>'.toInt() <span class="hljs-comment">//显示转换为数值类型</span>
+}
+</code></pre>
+<p class="calibre6">和数值类型一样，需要一个可空引用时，字符会被装箱。特性不会被装箱保留。</p>
+<h3 id="布尔值" class="calibre16">布尔值</h3>
+<p class="calibre6">布尔值只有 true 或者 false</p>
+<p class="calibre6">布尔值的内建操作包括</p>
+<blockquote class="calibre18">
+<p class="calibre6">|| – lazy disjunction
+&amp;&amp; – lazy conjunction</p>
+</blockquote>
+<h3 id="array" class="calibre16">Array</h3>
+<p class="calibre6">Arrays在 Kotlin 中由 <code class="calibre19 pcalibre6 pcalibre5">Array</code> 类表示，有 <code class="calibre19 pcalibre6 pcalibre5">get</code> 和 <code class="calibre19 pcalibre6 pcalibre5">set</code> 方法(通过运算符重载可以由[]调用)，以及 <code class="calibre19 pcalibre6 pcalibre5">size</code> 方法，以及一些常用的函数：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">Array</span>&lt;<span class="hljs-type">T</span>&gt; <span class="hljs-comment">private</span> </span>() {
+    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">size</span><span class="hljs-params">()</span>: <span class="hljs-keyword">Int</span></span>
+    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">get</span><span class="hljs-params">(index: <span class="hljs-type">Int</span>)</span>: T</span>
+    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">set</span><span class="hljs-params">(Index: <span class="hljs-type">Int, value: T</span>)</span>: Uint</span>
+    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">iterator</span><span class="hljs-params">()</span>: Iterator<span class="hljs-type">&lt;T&gt;</span></span>
+    <span class="hljs-comment">//...</span>
+}
+</code></pre>
+<p class="calibre6">我们可以给库函数 <code class="calibre19 pcalibre6 pcalibre5">arrayOf()</code> 传递每一项的值来创建Array，<code class="calibre19 pcalibre6 pcalibre5">arrayOf(1, 2, 3)</code> 创建了一个[1, 2, 3] 这样的数组。也可以使用库函数 <code class="calibre19 pcalibre6 pcalibre5">arrayOfNulls()</code> 创建一个指定大小的空Array。</p>
+<p class="calibre6">或者通过指定Array大小并提供一个迭代器</p>
+<p class="calibre6">(原文Another option is to use a factory function that takes the array size and the function that can return the initial value of each array element given its index)：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-comment">// 创建一个 Array&lt;String&gt;  内容为 ["0", "1", "4", "9", "16"]</span>
+<span class="hljs-variable"><span class="hljs-keyword">val</span> asc</span> = Array(<span class="hljs-params">5</span>, {i -&gt; (i * i).toString() })
+</code></pre>
+<p class="calibre6">像我们上面提到的，<code class="calibre19 pcalibre6 pcalibre5">[]</code> 操作符表示调用　<code class="calibre19 pcalibre6 pcalibre5">get()</code> <code class="calibre19 pcalibre6 pcalibre5">set()</code> 函数</p>
+<p class="calibre6">注意：和 java 不一样，arrays 在 kotlin 中是不可变的。这意味这 kotlin 不允许我们把 <code class="calibre19 pcalibre6 pcalibre5">Array&lt;String&gt;</code> 转为 <code class="calibre19 pcalibre6 pcalibre5">Array&lt;Any&gt;</code> ,这样就阻止了可能的运行时错误(但你可以使用 <code class="calibre19 pcalibre6 pcalibre5">Array&lt;outAny&gt;</code> , 参看 <a href="http://kotlinlang.org/docs/reference/generics.html#type-projections" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">Type Projections</a>)</p>
+<p class="calibre6">Kotlin 有专门的类来表示原始类型从而避免过度装箱： ByteArray, ShortArray, IntArray 等等。这些类与 Array 没有继承关系，但它们有一样的方法与属性。每个都有对应的库函数：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-variable"><span class="hljs-keyword">val</span> x</span>: IntArray = intArrayOf(<span class="hljs-params">1</span>, <span class="hljs-params">2</span>, <span class="hljs-params">3</span>)
+x[<span class="hljs-params">0</span>] = x[<span class="hljs-params">1</span>] + x[<span class="hljs-params">2</span>]
+</code></pre>
+<h3 id="字符串" class="calibre16">字符串</h3>
+<p class="calibre6">字符串是由 <code class="calibre19 pcalibre6 pcalibre5">String</code> 表示的。字符串是不变的。字符串的元素可以通过索引操作读取: <code class="calibre19 pcalibre6 pcalibre5">s[i]</code> 。字符串可以用 for 循环迭代：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">for</span> (c <span class="hljs-keyword">in</span> str) {
+    println(c)
+}
+</code></pre>
+<p class="calibre6">Kotlin 有两种类型的 string ：一种是可以带分割符的，一种是可以包含新行以及任意文本的。带分割符的 string 很像 java 的 string:</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-variable"><span class="hljs-keyword">val</span> s</span> = <span class="hljs-string">"Hello World!\n"</span>
+</code></pre>
+<p class="calibre6">整行String 是由三个引号包裹的("""),不可以包含分割符但可以包含其它字符：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">val text = """
+    for (c in "foo")
+        print(c)
+"""
+</code></pre>
+<h3 id="模板" class="calibre16">模板</h3>
+<p class="calibre6">字符串可以包含模板表达式。一个模板表达式由一个 $ 开始并包含另一个简单的名称：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-variable"><span class="hljs-keyword">val</span> i</span> = <span class="hljs-params">10</span>
+<span class="hljs-variable"><span class="hljs-keyword">val</span> s</span> = <span class="hljs-string">"i = $i"</span> <span class="hljs-comment">// 识别为 "i = 10"</span>
+</code></pre>
+<p class="calibre6">或者是一个带大括号的表达式：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-variable"><span class="hljs-keyword">val</span> s</span> = <span class="hljs-string">"abc"</span>
+<span class="hljs-variable"><span class="hljs-keyword">val</span> str</span> = <span class="hljs-string">"$s.length is ${s.length}"</span> <span class="hljs-comment">//识别为 "abc.length is 3"</span>
+</code></pre>
+
+        </div>
+    
+</div>
+
+        
+    
+
+
+</body></html>

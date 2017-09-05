@@ -1,0 +1,187 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh" xml:lang="zh">
+  <head>
+    <title>Ranges</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta content="" name="description"/>
+    <meta content="GitBook 3.2.2" name="generator"/>
+    <meta content="huanglizhuo" name="author"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        
+<div class="page">
+    
+        <h1 class="book-chapter" id="calibre_toc_31">Ranges</h1>
+        <div class="section">
+            <h2 id="ranges" class="calibre10">Ranges</h2>
+<p class="calibre6">range 表达式拥有 <code class="calibre19 pcalibre6 pcalibre5">rangeTo</code> 函数操作符是 <code class="calibre19 pcalibre6 pcalibre5">..</code>  。 Range 可以对任何可比较的类型做操作，但对很多原语是优化过的。下面是些例子：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">if</span> (i <span class="hljs-keyword">in</span> <span class="hljs-params">1.</span><span class="hljs-params">.10</span>) {
+    println(i)
+}
+
+<span class="hljs-keyword">if</span> (x !<span class="hljs-keyword">in</span> <span class="hljs-params">1.0</span>.<span class="hljs-params">.3</span><span class="hljs-params">.0</span>) println(x)
+
+<span class="hljs-keyword">if</span> (str <span class="hljs-keyword">in</span> <span class="hljs-string">"island"</span>..<span class="hljs-string">"isle"</span>) println(str)
+</code></pre>
+<p class="calibre6">数字的范围有个附加的特性：它们可以迭代。编译器会把它转成类似于 java 的 for 循环的形式，且不用担心越界：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">for</span> (i <span class="hljs-keyword">in</span> <span class="hljs-params">1.</span><span class="hljs-params">.4</span>) print(i) <span class="hljs-comment">// prints "1234"</span>
+
+<span class="hljs-keyword">for</span> (i <span class="hljs-keyword">in</span> <span class="hljs-params">4.</span><span class="hljs-params">.1</span>) print(i) <span class="hljs-comment">// prints nothing</span>
+
+<span class="hljs-keyword">for</span> (x <span class="hljs-keyword">in</span> <span class="hljs-params">1.0</span>.<span class="hljs-params">.2</span><span class="hljs-params">.0</span>) print(<span class="hljs-string">"$x "</span>) <span class="hljs-comment">// prints "1.0 2.0 "</span>
+</code></pre>
+<p class="calibre6">如果你想迭代数字并想反过来，这个相当简单，你可以使用 <code class="calibre19 pcalibre6 pcalibre5">downTo()</code> 函数</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">for</span> (i <span class="hljs-keyword">in</span> <span class="hljs-params">4</span> downTo <span class="hljs-params">1</span>) print(i)
+</code></pre>
+<p class="calibre6">也可以使用指定步数的迭代，这个用到 <code class="calibre19 pcalibre6 pcalibre5">step()</code> </p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">for</span> (i <span class="hljs-keyword">in</span> <span class="hljs-params">1.</span><span class="hljs-params">.4</span> step <span class="hljs-params">2</span>) print(i) <span class="hljs-comment">// prints "13"</span>
+
+<span class="hljs-keyword">for</span> (i <span class="hljs-keyword">in</span> <span class="hljs-params">4</span> downTo <span class="hljs-params">1</span> step <span class="hljs-params">2</span>) print(i) <span class="hljs-comment">// prints "42"</span>
+
+<span class="hljs-keyword">for</span> (i <span class="hljs-keyword">in</span> <span class="hljs-params">1.0</span>.<span class="hljs-params">.2</span><span class="hljs-params">.0</span> step <span class="hljs-params">0.3</span>) print(<span class="hljs-string">"$i "</span>) <span class="hljs-comment">// prints "1.0 1.3 1.6 1.9 "</span>
+</code></pre>
+<h3 id="工作原理" class="calibre16">工作原理</h3>
+<p class="calibre6">在标准库中有俩种接口：Range<t class="hljs-type"> 和 Progression<n class="hljs-type"/></t></p>
+<p class="calibre6">Range<t class="hljs-type"> 表示数学范围上的一个间隔。它有俩个端点：start 和 end 。主要的操作符是 contains 通常在 in/!in 操作符内：</t></p>
+<p class="calibre6">Progression<n class="hljs-type"> 表示一个算数级数。它有一个 start 和 end 以及一个非零 increment 。Progression<n class="hljs-type">　是Iterable<n class="hljs-type"> 的一个子类，因此可以使用在 for 循环中，或者 map filter 等等。第一个元素是 start 下一个元素都是前一个元素的 increment 。<code class="calibre19 pcalibre6 pcalibre5">Progression</code> 的迭代与 java/javaScript 的 for 循环相同：</n></n></n></p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-comment">// if increment &gt; 0</span>
+<span class="hljs-keyword">for</span> (int i = start; i <span class="hljs-type">&lt;= end; i += increment) {
+  // ...
+}
+// if increment &lt; 0
+for (int i = start; i &gt;</span>= end; i += increment) {
+  <span class="hljs-comment">// ...</span>
+}
+</code></pre>
+<h3 id="范围指标" class="calibre16">范围指标</h3>
+<p class="calibre6">使用例子：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-comment">// Checking if value of comparable is in range. Optimized for number primitives.</span>
+<span class="hljs-keyword">if</span> (i <span class="hljs-keyword">in</span> <span class="hljs-params">1.</span><span class="hljs-params">.10</span>) println(i)
+
+<span class="hljs-keyword">if</span> (x <span class="hljs-keyword">in</span> <span class="hljs-params">1.0</span>.<span class="hljs-params">.3</span><span class="hljs-params">.0</span>) println(x)
+
+<span class="hljs-keyword">if</span> (str <span class="hljs-keyword">in</span> <span class="hljs-string">"island"</span>..<span class="hljs-string">"isle"</span>) println(str)
+
+<span class="hljs-comment">// Iterating over arithmetical progression of numbers. Optimized for number primitives (as indexed for-loop in Java).</span>
+<span class="hljs-keyword">for</span> (i <span class="hljs-keyword">in</span> <span class="hljs-params">1.</span><span class="hljs-params">.4</span>) print(i) <span class="hljs-comment">// prints "1234"</span>
+
+<span class="hljs-keyword">for</span> (i <span class="hljs-keyword">in</span> <span class="hljs-params">4.</span><span class="hljs-params">.1</span>) print(i) <span class="hljs-comment">// prints nothing</span>
+
+<span class="hljs-keyword">for</span> (i <span class="hljs-keyword">in</span> <span class="hljs-params">4</span> downTo <span class="hljs-params">1</span>) print(i) <span class="hljs-comment">// prints "4321"</span>
+
+<span class="hljs-keyword">for</span> (i <span class="hljs-keyword">in</span> <span class="hljs-params">1.</span><span class="hljs-params">.4</span> step <span class="hljs-params">2</span>) print(i) <span class="hljs-comment">// prints "13"</span>
+
+<span class="hljs-keyword">for</span> (i <span class="hljs-keyword">in</span> (<span class="hljs-params">1.</span><span class="hljs-params">.4</span>).reversed()) print(i) <span class="hljs-comment">// prints "4321"</span>
+
+<span class="hljs-keyword">for</span> (i <span class="hljs-keyword">in</span> (<span class="hljs-params">1.</span><span class="hljs-params">.4</span>).reversed() step <span class="hljs-params">2</span>) print(i) <span class="hljs-comment">// prints "42"</span>
+
+<span class="hljs-keyword">for</span> (i <span class="hljs-keyword">in</span> <span class="hljs-params">4</span> downTo <span class="hljs-params">1</span> step <span class="hljs-params">2</span>) print(i) <span class="hljs-comment">// prints "42"</span>
+
+<span class="hljs-keyword">for</span> (x <span class="hljs-keyword">in</span> <span class="hljs-params">1.0</span>.<span class="hljs-params">.2</span><span class="hljs-params">.0</span>) print(<span class="hljs-string">"$x "</span>) <span class="hljs-comment">// prints "1.0 2.0 "</span>
+
+<span class="hljs-keyword">for</span> (x <span class="hljs-keyword">in</span> <span class="hljs-params">1.0</span>.<span class="hljs-params">.2</span><span class="hljs-params">.0</span> step <span class="hljs-params">0.3</span>) print(<span class="hljs-string">"$x "</span>) <span class="hljs-comment">// prints "1.0 1.3 1.6 1.9 "</span>
+
+<span class="hljs-keyword">for</span> (x <span class="hljs-keyword">in</span> <span class="hljs-params">2.0</span> downTo <span class="hljs-params">1.0</span> step <span class="hljs-params">0.3</span>) print(<span class="hljs-string">"$x "</span>) <span class="hljs-comment">// prints "2.0 1.7 1.4 1.1 "</span>
+
+<span class="hljs-keyword">for</span> (str <span class="hljs-keyword">in</span> <span class="hljs-string">"island"</span>..<span class="hljs-string">"isle"</span>) println(str) <span class="hljs-comment">// error: string range cannot be iterated over</span>
+</code></pre>
+<h3 id="常见的接口的定义" class="calibre16">常见的接口的定义</h3>
+<p class="calibre6">有俩种基本接口：<code class="calibre19 pcalibre6 pcalibre5">Range</code> <code class="calibre19 pcalibre6 pcalibre5">Progression</code></p>
+<p class="calibre6"><code class="calibre19 pcalibre6 pcalibre5">Range</code> 接口定义了一个范围，或者是数学意义上的一个间隔。</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">interface Range<span class="hljs-type">&lt;T : Comparable&lt;T&gt;</span>&gt; {
+    <span class="hljs-variable"><span class="hljs-keyword">val</span> start</span>: T
+    <span class="hljs-variable"><span class="hljs-keyword">val</span> end</span>: T
+    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">contains</span><span class="hljs-params">(Element : <span class="hljs-type">T</span>)</span>: <span class="hljs-keyword">Boolean</span></span>
+}
+</code></pre>
+<p class="calibre6"><code class="calibre19 pcalibre6 pcalibre5">Progression</code> 定义了数学上的级数。包括 start end increment 端点。最大的特点就是它可以迭代，因此它是 Iterable 的子类。end 不是必须的。</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">interface Progression<span class="hljs-type">&lt;N : Number&gt;</span> : Iterable<span class="hljs-type">&lt;N&gt;</span> {
+    <span class="hljs-variable"><span class="hljs-keyword">val</span> start</span> : N
+    <span class="hljs-variable"><span class="hljs-keyword">val</span> end</span> : N
+    <span class="hljs-variable"><span class="hljs-keyword">val</span> increment</span> : Number
+}
+</code></pre>
+<p class="calibre6">与 java 的 for 循环类似：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-comment">// if increment &gt; 0</span>
+<span class="hljs-keyword">for</span> (int i = start; i <span class="hljs-type">&lt;= end; i += increment) {
+  // ...
+}
+
+// if increment &lt; 0
+for (int i = start; i &gt;</span>= end; i += increment) {
+  <span class="hljs-comment">// ...</span>
+}
+</code></pre>
+<h3 id="类的实现" class="calibre16">类的实现</h3>
+<p class="calibre6">为避免不需要的重复，让我们先考虑一个数字类型　<code class="calibre19 pcalibre6 pcalibre5">Int</code> 。其它的数字类型也一样。注意这些类的实例需要用相应的构造函数来创建，使用 rangeTo() downTo() reversed() stop() 实用函数。</p>
+<p class="calibre6">IntProgression 类很直接也很简单：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">IntProgression</span></span>(<span class="hljs-keyword">override</span> <span class="hljs-variable"><span class="hljs-keyword">val</span> start</span>: <span class="hljs-keyword">Int</span>, <span class="hljs-keyword">override</span> <span class="hljs-variable"><span class="hljs-keyword">val</span> end</span>: <span class="hljs-keyword">Int</span>, <span class="hljs-keyword">override</span> <span class="hljs-variable"><span class="hljs-keyword">val</span> increment</span>: <span class="hljs-keyword">Int</span> ): Progression<span class="hljs-type">&lt;Int&gt;</span> {
+    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">iterator</span><span class="hljs-params">()</span>: Iterator<span class="hljs-type">&lt;Int&gt;</span> = <span class="hljs-comment">IntProgressionIteratorImpl</span><span class="hljs-params">(start, end, increment)</span></span>
+}
+</code></pre>
+<p class="calibre6"><code class="calibre19 pcalibre6 pcalibre5">IntRange</code> 有些狡猾：它实现了 <code class="calibre19 pcalibre6 pcalibre5">Progression&lt;Int&gt;</code> <code class="calibre19 pcalibre6 pcalibre5">Range&lt;Int&gt;</code> 接口，因为它天生以通过 range 迭代(默认增加值是 1 )：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">IntRange</span></span>(<span class="hljs-keyword">override</span> <span class="hljs-variable"><span class="hljs-keyword">val</span> start</span>: <span class="hljs-keyword">Int</span>, <span class="hljs-keyword">override</span> <span class="hljs-variable"><span class="hljs-keyword">val</span> end</span>: <span class="hljs-keyword">Int</span>): Range<span class="hljs-type">&lt;Int&gt;</span>, Progression<span class="hljs-type">&lt;Int&gt;</span> {
+  <span class="hljs-keyword">override</span> <span class="hljs-variable"><span class="hljs-keyword">val</span> increment</span>: <span class="hljs-keyword">Int</span>
+    <span class="hljs-keyword">get</span>() = <span class="hljs-params">1</span>
+  <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">contains</span><span class="hljs-params">(element: <span class="hljs-type">Int</span>)</span>: <span class="hljs-keyword">Boolean</span> = start <span class="hljs-type">&lt;= element &amp;&amp; element &lt;= end
+  override fun iterator(): Iterator&lt;Int&gt;</span> = <span class="hljs-comment">IntProgressionIteratorImpl</span><span class="hljs-params">(start, end, increment)</span></span>
+}
+</code></pre>
+<p class="calibre6"><code class="calibre19 pcalibre6 pcalibre5">ComparableRange</code> 也很简单：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">ComparableRange</span>&lt;<span class="hljs-type">T : Comparable&lt;T</span>&gt;&gt;</span>(<span class="hljs-keyword">override</span> <span class="hljs-variable"><span class="hljs-keyword">val</span> start</span>: T, <span class="hljs-keyword">override</span> <span class="hljs-variable"><span class="hljs-keyword">val</span> end</span>: T): Range<span class="hljs-type">&lt;T&gt;</span> {
+  <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">contains</span><span class="hljs-params">(element: <span class="hljs-type">T</span>)</span>: <span class="hljs-keyword">Boolean</span> = start <span class="hljs-type">&lt;= element &amp;&amp; element &lt;= end
+}
+</span></span></code></pre>
+<h3 id="一些实用的函数" class="calibre16">一些实用的函数</h3>
+<p class="calibre6"><strong class="calibre25">rangeTo()</strong></p>
+<p class="calibre6"><code class="calibre19 pcalibre6 pcalibre5">rangeTo()</code> 函数仅仅是调用 *Range 的构造函数，比如：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">Int</span> </span>{
+    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">rangeTo</span><span class="hljs-params">(other: <span class="hljs-type">Byte</span>)</span>: IntRange = <span class="hljs-comment">IntRange</span><span class="hljs-params">(this, Other)</span></span>
+    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">rangeTo</span><span class="hljs-params">(other: <span class="hljs-type">Int</span>)</span>: IntRange = <span class="hljs-comment">IntRange</span><span class="hljs-params">(this, other)</span></span>
+}
+</code></pre>
+<p class="calibre6"><strong class="calibre25">downTo()</strong></p>
+<p class="calibre6"><code class="calibre19 pcalibre6 pcalibre5">downTo()</code> 扩展函数可以为任何数字类型定义，这里有俩个例子：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-keyword">Long</span>.<span class="hljs-comment">downTo</span><span class="hljs-params">(other: <span class="hljs-type">Double</span>)</span>: DoubleProgression {</span>
+    <span class="hljs-keyword">return</span> DoubleProgression(this, other, <span class="hljs-params">-1.0</span>)
+}
+
+<span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-keyword">Byte</span>.<span class="hljs-comment">downTo</span><span class="hljs-params">(other: <span class="hljs-type">Int</span>)</span>: IntProgression {</span>
+    <span class="hljs-keyword">return</span> IntProgression(this, other, <span class="hljs-params">-1</span>)
+}
+</code></pre>
+<p class="calibre6"><strong class="calibre25">reversed()</strong></p>
+<p class="calibre6"><code class="calibre19 pcalibre6 pcalibre5">reversed()</code> 扩展函数是给所有的 <code class="calibre19 pcalibre6 pcalibre5">*Range</code>和<code class="calibre19 pcalibre6 pcalibre5">*Progression</code> 类定义的，并且它们都返回反向的级数。</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> IntProgression.<span class="hljs-comment">reversed</span><span class="hljs-params">()</span>: IntProgression {</span>
+    <span class="hljs-keyword">return</span> IntProgression(end, start, -increment)
+}
+
+<span class="hljs-function"><span class="hljs-keyword">fun</span> IntRange.<span class="hljs-comment">reversed</span><span class="hljs-params">()</span>: IntProgression {</span>
+    <span class="hljs-keyword">return</span> IntProgression(end, start, <span class="hljs-params">-1</span>)
+}
+</code></pre>
+<p class="calibre6"><strong class="calibre25">step()</strong></p>
+<p class="calibre6"><code class="calibre19 pcalibre6 pcalibre5">step()</code> 扩展函数是给所有的 <code class="calibre19 pcalibre6 pcalibre5">*Range</code>和<code class="calibre19 pcalibre6 pcalibre5">*Progression</code> 类定义的，所有的返回级数都修改了 setp 值。注意 step 值总是正的，否则函数不会改变迭代的方向。</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> IntProgression.<span class="hljs-comment">step</span><span class="hljs-params">(step: <span class="hljs-type">Int</span>)</span>: IntProgression {</span>
+  <span class="hljs-keyword">if</span> (step <span class="hljs-type">&lt;= 0) throw IllegalArgumentException("Step must be positive, was: $step")
+  return IntProgression(start, end, if (increment &gt;</span> <span class="hljs-params">0</span>) step <span class="hljs-keyword">else</span> -step)
+}
+
+<span class="hljs-function"><span class="hljs-keyword">fun</span> IntRange.<span class="hljs-comment">step</span><span class="hljs-params">(step: <span class="hljs-type">Int</span>)</span>: IntProgression {</span>
+  <span class="hljs-keyword">if</span> (step <span class="hljs-type">&lt;= 0) throw IllegalArgumentException("Step must be positive, was: $step")
+  return IntProgression(start, end, step)
+}
+</span></code></pre>
+
+        </div>
+    
+</div>
+
+        
+    
+
+
+</body></html>

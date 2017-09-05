@@ -1,0 +1,142 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh" xml:lang="zh">
+  <head>
+    <title>属性和字段</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta content="" name="description"/>
+    <meta content="GitBook 3.2.2" name="generator"/>
+    <meta content="huanglizhuo" name="author"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        
+<div class="page">
+    
+        <h1 class="book-chapter" id="calibre_toc_13">属性和字段</h1>
+        <div class="section">
+            <h2 id="属性和字段" class="calibre10">属性和字段</h2>
+<h3 id="属性声明" class="calibre16">属性声明</h3>
+<p class="calibre6">在 Kotlin 中类可以有属性，我们可以使用 var 关键字声明可变属性，或者用 val 关键字声明只读属性。</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">public</span> <span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">Address</span> </span>{     
+    <span class="hljs-keyword">public</span> <span class="hljs-variable"><span class="hljs-keyword">var</span> name</span>: String = ...
+      <span class="hljs-keyword">public</span> <span class="hljs-variable"><span class="hljs-keyword">var</span> street</span>: String = ...
+    <span class="hljs-keyword">public</span> <span class="hljs-variable"><span class="hljs-keyword">var</span> city</span>: String = ...
+      <span class="hljs-keyword">public</span> <span class="hljs-variable"><span class="hljs-keyword">var</span> state</span>: String? = ...
+    <span class="hljs-keyword">public</span> <span class="hljs-variable"><span class="hljs-keyword">var</span> zip</span>: String = ...
+}
+</code></pre>
+<p class="calibre6">我们可以像使用 java 中的字段那样,通过名字直接使用一个属性：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">copyAddress</span><span class="hljs-params">(address: <span class="hljs-type">Address</span>)</span> : Address {</span>
+    <span class="hljs-variable"><span class="hljs-keyword">val</span> result</span> = Address() <span class="hljs-comment">//在 kotlin 中没有 new 关键字</span>
+    result.name = address.name <span class="hljs-comment">//accessors are called</span>
+    result.street = address.street
+}
+</code></pre>
+<h3 id="getter-和-setter" class="calibre16">Getter 和 Setter</h3>
+<p class="calibre6">声明一个属性的完整语法如下：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-variable"><span class="hljs-keyword">var</span> &lt;propertyName&gt;</span>: <span class="hljs-type">&lt;PropertyType&gt;</span> [ = <span class="hljs-type">&lt;property_initializer&gt;</span> ]
+    <span class="hljs-type">&lt;getter&gt;</span>
+    <span class="hljs-type">&lt;setter&gt;</span>
+</code></pre>
+<p class="calibre6">语法中的初始化语句，getter 和 setter 都是可选的。如果属性类型可以从初始化语句或者类的成员函数中推断出来,那么他的类型也是忽略的。</p>
+<p class="calibre6">例子：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-variable"><span class="hljs-keyword">var</span> allByDefault</span>: <span class="hljs-keyword">Int</span>? <span class="hljs-comment">// 错误: 需要一个初始化语句, 默认实现了 getter 和 setter 方法</span>
+<span class="hljs-variable"><span class="hljs-keyword">var</span> initialized</span> = <span class="hljs-params">1</span> <span class="hljs-comment">// 类型为 Int, 默认实现了 getter 和 setter</span>
+</code></pre>
+<p class="calibre6">只读属性的声明语法和可变属性的声明语法相比有两点不同: 它以 val 而不是 var 开头，不允许 setter 函数：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-variable"><span class="hljs-keyword">val</span> simple</span>: <span class="hljs-keyword">Int</span>? <span class="hljs-comment">// 类型为 Int ，默认实现 getter ，但必须在构造函数中初始化</span>
+
+<span class="hljs-variable"><span class="hljs-keyword">val</span> inferredType</span> = <span class="hljs-params">1</span> <span class="hljs-comment">// 类型为 Int 类型,默认实现 getter</span>
+</code></pre>
+<p class="calibre6">我们可以像写普通函数那样在属性声明中自定义的访问器，下面是一个自定义的 getter 的例子:</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-variable"><span class="hljs-keyword">var</span> isEmpty</span>: <span class="hljs-keyword">Boolean</span>
+    <span class="hljs-keyword">get</span>() = this.size == <span class="hljs-params">0</span>
+</code></pre>
+<p class="calibre6">下面是一个自定义的setter:</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-variable"><span class="hljs-keyword">var</span> stringRepresentation</span>: String
+    <span class="hljs-keyword">get</span>() = this.toString()
+    <span class="hljs-keyword">set</span> (value) {
+        setDataFormString(value) <span class="hljs-comment">// 格式化字符串,并且将值重新赋值给其他元素</span>
+}
+</code></pre>
+<p class="calibre6">为了方便起见,setter 方法的参数名是value,你也可以自己任选一个自己喜欢的名称.</p>
+<p class="calibre6">如果你需要改变一个访问器的可见性或者给它添加注解，但又不想改变默认的实现，那么你可以定义一个不带函数体的访问器:</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-variable"><span class="hljs-keyword">var</span> settVisibilite</span>: String = <span class="hljs-string">"abc"</span><span class="hljs-comment">//非空类型必须初始化</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">set</span> <span class="hljs-comment">// setter 是私有的并且有默认的实现</span>
+<span class="hljs-variable"><span class="hljs-keyword">var</span> setterVithAnnotation</span>: Any?
+    @Inject <span class="hljs-keyword">set</span> <span class="hljs-comment">// 用 Inject 注解 setter</span>
+</code></pre>
+<h3 id="备用字段" class="calibre16">备用字段</h3>
+<p class="calibre6">在 kotlin 中类不可以有字段。然而当使用自定义的访问器时有时候需要备用字段。出于这些原因 kotlin 使用 <code class="calibre19 pcalibre6 pcalibre5">field</code> 关键词提供了自动备用字段，</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">var counter = 0 //初始化值会直接写入备用字段
+    set(value) {
+        if (value &gt;= 0)
+            field  = value
+    }
+</code></pre>
+<p class="calibre6"><code class="calibre19 pcalibre6 pcalibre5">field</code> 关键词只能用于属性的访问器.</p>
+<p class="calibre6">编译器会检查访问器的代码,如果使用了备用字段(或者访问器是默认的实现逻辑)，就会自动生成备用字段,否则就不会.</p>
+<p class="calibre6">比如下面的例子中就不会有备用字段：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-variable"><span class="hljs-keyword">val</span> isEmpty</span>: <span class="hljs-keyword">Boolean</span>
+    <span class="hljs-keyword">get</span>() = this.size == <span class="hljs-params">0</span>
+</code></pre>
+<h3 id="备用属性" class="calibre16">备用属性</h3>
+<p class="calibre6">如果你想要做一些事情但不适合这种 "隐含备用字段" 方案，你可以试着用备用属性的方式：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">private</span> <span class="hljs-variable"><span class="hljs-keyword">var</span> _table</span>: Map<span class="hljs-type">&lt;String, Int&gt;</span>? = <span class="hljs-params">null</span>
+<span class="hljs-keyword">public</span> <span class="hljs-variable"><span class="hljs-keyword">val</span> table</span>: Map<span class="hljs-type">&lt;String, Int&gt;</span>
+    <span class="hljs-keyword">get</span>() {
+    <span class="hljs-keyword">if</span> (_table == <span class="hljs-params">null</span>)
+        _table = HashMap() <span class="hljs-comment">//参数类型是推导出来的</span>
+        <span class="hljs-keyword">return</span> _table ?: <span class="hljs-keyword">throw</span> AssertionError(<span class="hljs-string">"Set to null by another thread"</span>)
+    }
+</code></pre>
+<p class="calibre6">综合来讲，这些和 java 很相似，可以避免函数访问私有属性而破坏它的结构</p>
+<h3 id="编译时常量" class="calibre16">编译时常量</h3>
+<p class="calibre6">那些在编译时就能知道具体值的属性可以使用 <code class="calibre19 pcalibre6 pcalibre5">const</code> 修饰符标记为 <em class="calibre31">编译时常量</em>. 这种属性需要同时满足以下条件:</p>
+<ul class="calibre11">
+<li class="calibre12"><p class="calibre6">Top-level or member of an object   //宝宝不会翻 :( :( :( </p>
+</li>
+<li class="calibre12"><p class="calibre6">以<code class="calibre19 pcalibre6 pcalibre5">String</code>或基本类型进行初始化</p>
+</li>
+<li class="calibre12"><p class="calibre6">没有自定义getter</p>
+</li>
+</ul>
+<p class="calibre6">这种属性可以被当做注解使用:</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">const <span class="hljs-variable"><span class="hljs-keyword">val</span> SUBSYSTEM_DEPRECATED</span>: String = <span class="hljs-string">"This subsystem is deprecated"</span>
+@Deprected(SUBSYSTEM_DEPRECATED) <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">foo</span><span class="hljs-params">()</span> { ... }</span>
+</code></pre>
+<h3 id="延迟初始化属性" class="calibre16">延迟初始化属性</h3>
+<p class="calibre6">通常,那些被定义为拥有非空类型的属性,都需要在构造器中初始化.但有时候这并没有那么方便.例如在单元测试中,属性应该通过依赖注入进行初始化,
+或者通过一个 setup 方法进行初始化.在这种条件下,你不能在构造器中提供一个非空的初始化语句,但是你仍然希望在访问这个属性的时候,避免非空检查.</p>
+<p class="calibre6">为了处理这种情况,你可以为这个属性加上 <code class="calibre19 pcalibre6 pcalibre5">lateinit</code> 修饰符</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">public</span> <span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">MyTest</span> </span>{
+    lateinit <span class="hljs-variable"><span class="hljs-keyword">var</span> subject</span>: TestSubject
+
+    @SetUp <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">setup</span><span class="hljs-params">()</span> {</span>
+        subject = TestSubject()
+    }
+
+    @Test <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">test</span><span class="hljs-params">()</span> {</span>
+        subject.method() 
+    }
+}
+</code></pre>
+<p class="calibre6">这个修饰符只能够被用在类的 var 类型的可变属性定义中,不能用在构造方法中.并且属性不能有自定义的 getter 和 setter访问器.这个属性的类型必须是非空的,同样也不能为一个基本类型.</p>
+<p class="calibre6">在一个延迟初始化的属性初始化前访问他,会导致一个特定异常,告诉你访问的时候值还没有初始化.</p>
+<h3 id="复写属性" class="calibre16">复写属性</h3>
+<p class="calibre6">参看<a href="http://kotlinlang.org/docs/reference/classes.html#overriding-members" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">复写成员</a></p>
+<h3 id="代理属性" class="calibre16">代理属性</h3>
+<p class="calibre6">最常见的属性就是从备用属性中读（或者写）。另一方面，自定义的 getter 和 setter 可以实现属性的任何操作。有些像懒值( lazy values )，根据给定的关键字从 map 中读出，读取数据库，通知一个监听者等等，像这些操作介于 getter setter 模式之间。</p>
+<p class="calibre6">像这样常用操作可以通过代理属性作为库来实现。更多请参看<a href="http://kotlinlang.org/docs/reference/delegated-properties.html" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">这里</a>。</p>
+
+        </div>
+    
+</div>
+
+        
+    
+
+
+</body></html>

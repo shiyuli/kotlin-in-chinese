@@ -1,0 +1,75 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh" xml:lang="zh">
+  <head>
+    <title>多重申明</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta content="" name="description"/>
+    <meta content="GitBook 3.2.2" name="generator"/>
+    <meta content="huanglizhuo" name="author"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        
+<div class="page">
+    
+        <h1 class="book-chapter" id="calibre_toc_30">多重申明</h1>
+        <div class="section">
+            <h2 id="多重声明" class="calibre10">多重声明</h2>
+<p class="calibre6">有时候可以通过给对象插入多个成员函数做区别是很方便的，比如：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-variable"><span class="hljs-keyword">val</span> (name, age)</span> = person
+</code></pre>
+<p class="calibre6">这种语法叫多重声明。多重声明一次创建了多个变量。我们声明了俩个新变量：<code class="calibre19 pcalibre6 pcalibre5">name</code> <code class="calibre19 pcalibre6 pcalibre5">age</code> 并且可以独立使用：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">println(name)
+println(age)
+</code></pre>
+<p class="calibre6">多重声明被编译成下面的代码：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-variable"><span class="hljs-keyword">val</span> name</span> = persion.component1()
+<span class="hljs-variable"><span class="hljs-keyword">val</span> age</span> = persion.component2()
+</code></pre>
+<p class="calibre6"><code class="calibre19 pcalibre6 pcalibre5">component1()</code> <code class="calibre19 pcalibre6 pcalibre5">component2()</code>是另一个转换原则的例子。任何类型都可以在多重分配的右边。当然了，也可以有 <code class="calibre19 pcalibre6 pcalibre5">component3()</code> <code class="calibre19 pcalibre6 pcalibre5">component4()</code> 等等</p>
+<p class="calibre6">多重声明也可以在 for 循环中用</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">for</span> ((a, b) <span class="hljs-keyword">in</span> collection) { ... }
+</code></pre>
+<p class="calibre6">参数 <code class="calibre19 pcalibre6 pcalibre5">a</code> 和 <code class="calibre19 pcalibre6 pcalibre5">b</code> 是 <code class="calibre19 pcalibre6 pcalibre5">component1()</code>　<code class="calibre19 pcalibre6 pcalibre5">component2()</code> 的返回值</p>
+<h3 id="例子：一个函数返回俩个值" class="calibre16">例子：一个函数返回俩个值</h3>
+<p class="calibre6">要是一个函数想返回俩个值。比如，一个对象结果，一个是排序的状态。在 Kotlin 中的一个紧凑的方案是声明 <a href="http://kotlinlang.org/docs/reference/data-classes.html" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">data</a> 类并返回实例：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">data <span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">Result</span></span>(<span class="hljs-variable"><span class="hljs-keyword">val</span> result</span>: <span class="hljs-keyword">Int</span>, <span class="hljs-variable"><span class="hljs-keyword">val</span> status</span>: Status)
+
+<span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">function</span><span class="hljs-params">(...)</span>: Result {</span>
+    <span class="hljs-comment">//...</span>
+    <span class="hljs-keyword">return</span> Result(result, status)
+}
+
+<span class="hljs-variable"><span class="hljs-keyword">val</span> (result, status)</span> = function(...)
+</code></pre>
+<p class="calibre6">数据类自动声明 <code class="calibre19 pcalibre6 pcalibre5">componentN()</code> 函数</p>
+<p class="calibre6">注意：也可以使用标准类 <code class="calibre19 pcalibre6 pcalibre5">Pair</code> 并让函数返回 'Pair<int staus="" U0002C="" class="hljs-type">'，但可读性不是很强</int></p>
+<h3 id="例子：多重声明和-map" class="calibre16">例子：多重声明和 Map</h3>
+<p class="calibre6">转换 map 的最好办法可能是下面这样：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">for</span> ((key, value) <span class="hljs-keyword">in</span> map) {
+
+}
+</code></pre>
+<p class="calibre6">为了让这个可以工作，我们需要</p>
+<blockquote class="calibre18">
+<p class="calibre6">通过提供 <code class="calibre19 pcalibre6 pcalibre5">iterator()</code> 函数序列化呈现 map
+通过 <code class="calibre19 pcalibre6 pcalibre5">component1()</code>和 <code class="calibre19 pcalibre6 pcalibre5">component1()</code> 函数是把元素成对呈现</p>
+</blockquote>
+<p class="calibre6">事实上，标准库提供了这样的扩展：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-type">&lt;K, V&gt;</span> Map<span class="hljs-type">&lt;K, V&gt;</span>.<span class="hljs-comment">iterator</span><span class="hljs-params">()</span>: Iterator<span class="hljs-type">&lt;Map.Entry&lt;K, V&gt;</span>&gt; = <span class="hljs-comment">entrySet</span><span class="hljs-params">()</span>.<span class="hljs-comment">iterator</span><span class="hljs-params">()</span></span>
+<span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-type">&lt;K, V&gt;</span> Map.Entry<span class="hljs-type">&lt;K, V&gt;</span>.<span class="hljs-comment">component1</span><span class="hljs-params">()</span> = <span class="hljs-comment">getKey</span><span class="hljs-params">()</span></span>
+<span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-type">&lt;K, V&gt;</span> Map.Entry<span class="hljs-type">&lt;K, V&gt;</span>.<span class="hljs-comment">component2</span><span class="hljs-params">()</span> = <span class="hljs-comment">getValue</span><span class="hljs-params">()</span></span>
+</code></pre>
+<p class="calibre6">因此你可以用 for 循环方便的读取 map (或者其它数据集合)</p>
+
+        </div>
+    
+</div>
+
+        
+    
+
+
+</body></html>

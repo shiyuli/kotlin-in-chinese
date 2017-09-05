@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh" xml:lang="zh">
+  <head>
+    <title>包</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta content="" name="description"/>
+    <meta content="GitBook 3.2.2" name="generator"/>
+    <meta content="huanglizhuo" name="author"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        
+<div class="page">
+    
+        <h1 class="book-chapter" id="calibre_toc_8">包</h1>
+        <div class="section">
+            <h2 id="包" class="calibre10">包</h2>
+<p class="calibre6">一个源文件以包声明开始：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">package</span> foo.bar
+
+<span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">bza</span><span class="hljs-params">()</span> {}</span>
+
+<span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">Goo</span> </span>{}
+
+<span class="hljs-comment">//...</span>
+</code></pre>
+<p class="calibre6">源文件的所有内容(比如类和函数)都被包声明包括。因此在上面的例子中， <code class="calibre19 pcalibre6 pcalibre5">bza()</code> 的全名应该是 <code class="calibre19 pcalibre6 pcalibre5">foo.bar.bza</code> ，<code class="calibre19 pcalibre6 pcalibre5">Goo</code> 的全名是 <code class="calibre19 pcalibre6 pcalibre5">foo.bar.Goo</code>。</p>
+<p class="calibre6">如果没有指定包名，那这个文件的内容就从属于没有名字的 "default" 包。</p>
+<h3 id="imports" class="calibre16">Imports</h3>
+<p class="calibre6">除了模块中默认导入的包，每个文件都可以有它自己的导入指令。导入语法的声明在<a href="http://kotlinlang.org/docs/reference/grammar.html#imports" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">grammar</a>中描述。</p>
+<p class="calibre6">我们可以导入一个单独的名字，比如下面这样：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">import</span> foo.Bar <span class="hljs-comment">//Bar 现在可以不用条件就可以使用</span>
+</code></pre>
+<p class="calibre6">或者范围内的所有可用的内容 (包，类，对象，等等):</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">import</span> foo.*/ /foo 中的所有都可以使用
+</code></pre>
+<p class="calibre6">如果命名有冲突，我们可以使用 <code class="calibre19 pcalibre6 pcalibre5">as</code> 关键字局部重命名解决冲突</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">import</span> foo.Bar <span class="hljs-comment">// Bar 可以使用</span>
+<span class="hljs-keyword">import</span> bar.Bar <span class="hljs-keyword">as</span> bBar <span class="hljs-comment">// bBar 代表 'bar.Bar'</span>
+</code></pre>
+<h3 id="可见性和包嵌套" class="calibre16">可见性和包嵌套</h3>
+<p class="calibre6">如果最顶的声明标注为 private , 那么它是自己对应包私有 (参看<a href="http://kotlinlang.org/docs/reference/visibility-modifiers.html" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1"> Visibility Modifiers</a>)。如果包内有私有的属性或方法，那它对所有的子包是可见的。</p>
+<p class="calibre6">注意包外的的成员是默认不导入的，比如在导入 <code class="calibre19 pcalibre6 pcalibre5">foo.bar</code> 后我们不能获得 <code class="calibre19 pcalibre6 pcalibre5">foo</code> 的成员</p>
+
+        </div>
+    
+</div>
+
+        
+    
+
+
+</body></html>

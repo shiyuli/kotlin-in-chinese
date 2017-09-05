@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh" xml:lang="zh">
+  <head>
+    <title>This表达式</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta content="" name="description"/>
+    <meta content="GitBook 3.2.2" name="generator"/>
+    <meta content="huanglizhuo" name="author"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        
+<div class="page">
+    
+        <h1 class="book-chapter" id="calibre_toc_33">This表达式</h1>
+        <div class="section">
+            <h2 id="this-表达式" class="calibre10">This 表达式</h2>
+<p class="calibre6">为了记录下当前接受者，我们使用 this 表达式：</p>
+<blockquote class="calibre18">
+<p class="calibre6">在类的成员中，this 表示当前类的对象</p>
+<p class="calibre6">在<a href="http://kotlinlang.org/docs/reference/extensions.html" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">扩展函数</a>或<a href="http://kotlinlang.org/docs/reference/lambdas.html#function-literals" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">扩展字面函数</a>中，this 表示 . 左边接收者参数</p>
+</blockquote>
+<p class="calibre6">如果 this 没有应用者，则指向的是最内层的闭合范围。为了在其它范围中返回 this ，需要使用标签</p>
+<h3 id="this使用范围" class="calibre16">this使用范围</h3>
+<p class="calibre6">为了在范围外部(一个类，或者表达式函数，或者带标签的扩展字面函数)访问 this ，我们需要在使用 <code class="calibre19 pcalibre6 pcalibre5">this@lable</code> 作为 lable</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">A</span> </span>{ <span class="hljs-comment">// implicit label @A</span>
+  inner <span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">B</span> </span>{ <span class="hljs-comment">// implicit label @B</span>
+    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-keyword">Int</span>.<span class="hljs-comment">foo</span><span class="hljs-params">()</span> { <span class="hljs-comment">// implicit label @foo</span></span>
+      <span class="hljs-variable"><span class="hljs-keyword">val</span> a</span> = this@A <span class="hljs-comment">// A's this</span>
+      <span class="hljs-variable"><span class="hljs-keyword">val</span> b</span> = this@B <span class="hljs-comment">// B's this</span>
+
+      <span class="hljs-variable"><span class="hljs-keyword">val</span> c</span> = this <span class="hljs-comment">// foo()'s receiver, an Int</span>
+      <span class="hljs-variable"><span class="hljs-keyword">val</span> c1</span> = this@foo <span class="hljs-comment">// foo()'s receiver, an Int</span>
+
+      <span class="hljs-variable"><span class="hljs-keyword">val</span> funLit</span> = @lambda {String.() -&gt;
+        <span class="hljs-variable"><span class="hljs-keyword">val</span> d</span> = this <span class="hljs-comment">// funLit's receiver</span>
+        <span class="hljs-variable"><span class="hljs-keyword">val</span> d1</span> = this@lambda <span class="hljs-comment">// funLit's receiver</span>
+      }
+
+
+      <span class="hljs-variable"><span class="hljs-keyword">val</span> funLit2</span> = { (s: String) -&gt;
+        <span class="hljs-comment">// foo()'s receiver, since enclosing function literal </span>
+        <span class="hljs-comment">// doesn't have any receiver</span>
+        <span class="hljs-variable"><span class="hljs-keyword">val</span> d1</span> = this 
+      }
+    }
+  }
+}
+</code></pre>
+
+        </div>
+    
+</div>
+
+        
+    
+
+
+</body></html>

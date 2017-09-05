@@ -1,0 +1,82 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh" xml:lang="zh">
+  <head>
+    <title>类型检查和自动转换</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta content="" name="description"/>
+    <meta content="GitBook 3.2.2" name="generator"/>
+    <meta content="huanglizhuo" name="author"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        
+<div class="page">
+    
+        <h1 class="book-chapter" id="calibre_toc_32">类型检查和自动转换</h1>
+        <div class="section">
+            <h2 id="类型检查和转换" class="calibre10">类型检查和转换</h2>
+<h2 id="is-is-表达式" class="calibre15">is !is 表达式</h2>
+<p class="calibre6">我们可以在运行是通过上面俩个操作符检查一个对象是否是某个特定类：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">if</span> (obj <span class="hljs-keyword">is</span> String) {
+    print(obj.length)
+}
+
+<span class="hljs-keyword">if</span> (obj !<span class="hljs-keyword">is</span> String) { <span class="hljs-comment">// same as !(obj is String)</span>
+    print(<span class="hljs-string">"Not a String"</span>)
+}
+<span class="hljs-keyword">else</span> {
+    print(obj.length)
+}
+</code></pre>
+<h3 id="智能转换" class="calibre16">智能转换</h3>
+<p class="calibre6">在很多情形中，需要使用非明确的类型，因为编译器会跟踪 <code class="calibre19 pcalibre6 pcalibre5">is</code> 检查静态变量，并在需要的时候自动插入安全转换：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">demo</span><span class="hljs-params">(x: <span class="hljs-type">Any</span>)</span> {</span>
+    <span class="hljs-keyword">if</span> (x <span class="hljs-keyword">is</span> String) {
+        print(x.length) <span class="hljs-comment">// x is automatically cast to String</span>
+    }
+}
+</code></pre>
+<p class="calibre6">编译器足够智能如何转换是安全的，如果不安全将会返回：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">if</span> (x !<span class="hljs-keyword">is</span> String) <span class="hljs-keyword">return</span>
+print(x.length) <span class="hljs-comment">//x 自动转换为 String</span>
+</code></pre>
+<p class="calibre6">或者在 <code class="calibre19 pcalibre6 pcalibre5">||</code> <code class="calibre19 pcalibre6 pcalibre5">&amp;&amp;</code> 操作符的右边的值</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"> <span class="hljs-comment">// x is automatically cast to string on the right-hand side of `||`</span>
+  <span class="hljs-keyword">if</span> (x !<span class="hljs-keyword">is</span> String || x.length == <span class="hljs-params">0</span>) <span class="hljs-keyword">return</span>
+
+  <span class="hljs-comment">// x is automatically cast to string on the right-hand side of `&amp;&amp;`</span>
+  <span class="hljs-keyword">if</span> (x <span class="hljs-keyword">is</span> String &amp;&amp; x.length &gt; <span class="hljs-params">0</span>)
+      print(x.length) <span class="hljs-comment">// x is automatically cast to String</span>
+</code></pre>
+<p class="calibre6">这样的转换在 when 表达式和 whie 循环中也会发生</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">when</span> (x) {
+    <span class="hljs-keyword">is</span> <span class="hljs-keyword">Int</span> -&gt; print(x + <span class="hljs-params">1</span>)
+    <span class="hljs-keyword">is</span> String -&gt; print(x.length + <span class="hljs-params">1</span>)
+    <span class="hljs-keyword">is</span> Array<span class="hljs-type">&lt;Int&gt;</span> -&gt; print(x.sum())
+}
+</code></pre>
+<h3 id="不安全的转换符和" class="calibre16">“不安全”的转换符和</h3>
+<p class="calibre6">如果转换是不被允许的那么转换符就会抛出一个异常。因此我们称之为不安全的。在kotlin 中　我们用前缀 as 操作符</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-variable"><span class="hljs-keyword">val</span> x</span>: String = y <span class="hljs-keyword">as</span> String
+</code></pre>
+<p class="calibre6">注意 null 不能被转换为 <code class="calibre19 pcalibre6 pcalibre5">String</code> 因为它不是 <a href="http://kotlinlang.org/docs/reference/null-safety.html" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1"><code class="calibre19 pcalibre6 pcalibre5">nullable</code></a>，也就是说如果 <code class="calibre19 pcalibre6 pcalibre5">y</code> 是空的，则上面的代码会抛出空异常。</p>
+<p class="calibre6">为了 java 的转换语句匹配我们得像下面这样：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-variable"><span class="hljs-keyword">val</span> x</span>: String?= y <span class="hljs-keyword">as</span> String?
+</code></pre>
+<h3 id="安全转换符" class="calibre16">"安全"转换符</h3>
+<p class="calibre6">为了避免抛出异常，可以用 as? 这个安全转换符，这样失败就会返回 null　：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-variable"><span class="hljs-keyword">val</span> x</span>: String ?= y <span class="hljs-keyword">as</span>? String
+</code></pre>
+<p class="calibre6">不管 as? 右边的是不是一个非空 <code class="calibre19 pcalibre6 pcalibre5">String</code> 结果都会转换为可空的。</p>
+
+        </div>
+    
+</div>
+
+        
+    
+
+
+</body></html>

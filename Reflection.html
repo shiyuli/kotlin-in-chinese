@@ -1,0 +1,111 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh" xml:lang="zh">
+  <head>
+    <title>反射</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta content="" name="description"/>
+    <meta content="GitBook 3.2.2" name="generator"/>
+    <meta content="huanglizhuo" name="author"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        
+<div class="page">
+    
+        <h1 class="book-chapter" id="calibre_toc_39">反射</h1>
+        <div class="section">
+            <h2 id="反射" class="calibre10">反射</h2>
+<p class="calibre6">反射是一系列语言和库的特性，允许在运行是获取你代码结构。 Kotlin 把函数和属性作为语言的头等类，而且反射它们和使用函数式编程或反应是编程风格很像。</p>
+<blockquote class="calibre18">
+<p class="calibre6">On the Java platform, the runtime component required for using the reflection features is distributed as a separate JAR file (kotlin-reflect.jar). This is done to reduce the required size of the runtime library for applications that do not use reflection features. If you do use reflection, please make sure that the .jar file is added to the classpath of your project.</p>
+</blockquote>
+<h3 id="类引用" class="calibre16">类引用</h3>
+<p class="calibre6">最基本的反射特性就是得到运行时的类引用。要获取引用并使之成为静态类可以使用字面类语法：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-variable"><span class="hljs-keyword">val</span> c</span> = MyClass::<span class="hljs-type"><span class="hljs-keyword">class</span></span>
+</code></pre>
+<p class="calibre6">引用是一种 <a href="http://kotlinlang.org/api/latest/jvm/stdlib/kotlin.reflect/-k-class/index.html" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">KClass</a>类型的值。你可以使用 <code class="calibre19 pcalibre6 pcalibre5">KClass.properties</code> 和 <code class="calibre19 pcalibre6 pcalibre5">KClass.extensionProperties</code> 获取类和父类的所有属性引用的列表。</p>
+<p class="calibre6">注意这与 java 类的引用是不一样的。参看 <a href="http://kotlinlang.org/docs/reference/java-interop.html#object-methods" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">java interop section</a></p>
+<h3 id="函数引用" class="calibre16">函数引用</h3>
+<p class="calibre6">当有一个像下面这样的函数声明时：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">isOdd</span><span class="hljs-params">(x: <span class="hljs-type">Int</span>)</span> =x % 2 !=0</span>
+</code></pre>
+<p class="calibre6">我们可以通过 <code class="calibre19 pcalibre6 pcalibre5">isOdd(5)</code> 轻松调用，同样我们也可以把它作为一个值传递给其它函数。我们可以使用 <code class="calibre19 pcalibre6 pcalibre5">::</code> 操作符</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-variable"><span class="hljs-keyword">val</span> numbers</span> = listOf(<span class="hljs-params">1</span>, <span class="hljs-params">2</span>, <span class="hljs-params">3</span>)
+println(numbers.filter( ::isOdd) ) <span class="hljs-comment">//prints [1, 3]</span>
+</code></pre>
+<p class="calibre6">这里 <code class="calibre19 pcalibre6 pcalibre5">::isOdd</code> 是是一个函数类型的值 <code class="calibre19 pcalibre6 pcalibre5">(Int) -&gt; Boolean</code></p>
+<p class="calibre6">注意现在 <code class="calibre19 pcalibre6 pcalibre5">::</code> 操作符右边不能用语重载函数。将来，我们计划提供一个语法明确参数类型这样就可以使用明确的重载函数了。</p>
+<p class="calibre6">如果需要使用一系列类，或者扩展函数，必须是需合格的，并且结果是扩展函数类型，比如。<code class="calibre19 pcalibre6 pcalibre5">String::toCharArray</code> 就带来一个 <code class="calibre19 pcalibre6 pcalibre5">String: String.() -&gt; CharArray</code> 类型的扩展函数。</p>
+<h3 id="例子：函数组合" class="calibre16">例子：函数组合</h3>
+<p class="calibre6">考虑一下下面的函数：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> compose<span class="hljs-type">&lt;A, B, C&gt;</span><span class="hljs-params">(f: <span class="hljs-type">(B</span>)</span> -&gt; C, g: <span class="hljs-params">(A)</span> -&gt; B): <span class="hljs-params">(A)</span> -&gt; C {</span>
+    <span class="hljs-keyword">return</span> {x -&gt; f(g(x))}
+}
+</code></pre>
+<p class="calibre6">它返回一个由俩个传递进去的函数的组合。现在你可以把它用在可调用的引用上了：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">length</span><span class="hljs-params">(s: <span class="hljs-type">String</span>)</span> = s.size</span>
+<span class="hljs-variable"><span class="hljs-keyword">val</span> oddLength</span> = compose(::isOdd, ::length)
+<span class="hljs-variable"><span class="hljs-keyword">val</span> strings</span> = listOf(<span class="hljs-string">"a"</span>, <span class="hljs-string">"ab"</span>, <span class="hljs-string">"abc"</span>)
+
+println(strings.filter(oddLength)) <span class="hljs-comment">// Prints "[a, abc]"</span>
+</code></pre>
+<h3 id="属性引用" class="calibre16">属性引用</h3>
+<p class="calibre6">在 kotlin 中访问顶级类的属性，我们也可以使用 <code class="calibre19 pcalibre6 pcalibre5">::</code> 操作符：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-variable"><span class="hljs-keyword">var</span> x</span> = <span class="hljs-params">1</span>
+<span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">main</span><span class="hljs-params">(args: <span class="hljs-type">Array&lt;String&gt;</span>)</span> {</span>
+    println(::x.<span class="hljs-keyword">get</span>())
+    ::x.<span class="hljs-keyword">set</span>(<span class="hljs-params">2</span>)
+    println(x)
+}
+</code></pre>
+<p class="calibre6"><code class="calibre19 pcalibre6 pcalibre5">::x</code> 表达式评估为 <code class="calibre19 pcalibre6 pcalibre5">KProperty&lt;Int&gt;</code> 类型的属性，它允许我们使用 <code class="calibre19 pcalibre6 pcalibre5">get()</code> 读它的值或者使用名字取回它的属性。更多请参看<a href="http://kotlinlang.org/api/latest/jvm/stdlib/kotlin.reflect/-k-property.html" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">docs on the KProperty class</a></p>
+<p class="calibre6">对于可变的属性比如 <code class="calibre19 pcalibre6 pcalibre5">var y =1</code>,<code class="calibre19 pcalibre6 pcalibre5">::y</code>返回类型为 <code class="calibre19 pcalibre6 pcalibre5">[KMutableProperty&lt;Int&gt;](http://kotlinlang.org/api/latest/jvm/stdlib/kotlin.reflect/-k-mutable-property.html)</code>，它有 <code class="calibre19 pcalibre6 pcalibre5">set()</code> 方法</p>
+<p class="calibre6">访问一个类的属性成员，我们这样修饰：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">A</span></span>(<span class="hljs-variable"><span class="hljs-keyword">val</span> p</span>: <span class="hljs-keyword">Int</span>)
+
+<span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">main</span><span class="hljs-params">(args: <span class="hljs-type">Array&lt;String&gt;</span>)</span> {</span>
+    <span class="hljs-variable"><span class="hljs-keyword">val</span> prop</span> = A::p
+    println(prop.<span class="hljs-keyword">get</span>(A(<span class="hljs-params">1</span>))) <span class="hljs-comment">// prints "1"</span>
+}
+</code></pre>
+<p class="calibre6">对于扩展属性：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-variable"><span class="hljs-keyword">val</span> String.lastChar</span>: <span class="hljs-keyword">Char</span>
+  <span class="hljs-keyword">get</span>() = this[size - <span class="hljs-params">1</span>]
+
+<span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">main</span><span class="hljs-params">(args: <span class="hljs-type">Array&lt;String&gt;</span>)</span> {</span>
+  println(String::lastChar.<span class="hljs-keyword">get</span>(<span class="hljs-string">"abc"</span>)) <span class="hljs-comment">// prints "c"</span>
+}
+</code></pre>
+<h3 id="与-java-反射调用" class="calibre16">与 java 反射调用</h3>
+<p class="calibre6">在 java 平台上，标准库包括反射类的扩展，提供了到 java 反射对象的映射(参看 kotlin.reflect.jvm 包)。比如，想找到一个备用字段或者 java getter 方法，你可以这样写：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">import</span> kotlin.reflect.jvm.*
+
+<span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">A</span></span>(<span class="hljs-variable"><span class="hljs-keyword">val</span> p</span>: <span class="hljs-keyword">Int</span>)
+
+<span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">main</span><span class="hljs-params">(args: <span class="hljs-type">Array&lt;String&gt;</span>)</span> {</span>
+    println(A::p.javaGetter) <span class="hljs-comment">// prints "public final int A.getP()"</span>
+    println(A::p.javaField)  <span class="hljs-comment">// prints "private final int A.p"</span>
+}
+</code></pre>
+<h3 id="构造函数引用" class="calibre16">构造函数引用</h3>
+<p class="calibre6">构造函数可以像方法或属性那样引用。只需要使用 <code class="calibre19 pcalibre6 pcalibre5">::</code> 操作符并加上类名。下面的函数是一个没有参数并且返回类型是 <code class="calibre19 pcalibre6 pcalibre5">Foo</code>:</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">calss Foo
+<span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">function</span><span class="hljs-params">(factory : <span class="hljs-type">(</span>)</span> -&gt; Foo) {</span>
+    <span class="hljs-variable"><span class="hljs-keyword">val</span> x</span>: Foo = factory()
+}
+</code></pre>
+<p class="calibre6">我们可以像下面这样使用：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">function(:: Foo)
+</code></pre>
+
+        </div>
+    
+</div>
+
+        
+    
+
+
+</body></html>

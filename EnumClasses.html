@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh" xml:lang="zh">
+  <head>
+    <title>枚举类</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta content="" name="description"/>
+    <meta content="GitBook 3.2.2" name="generator"/>
+    <meta content="huanglizhuo" name="author"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        
+<div class="page">
+    
+        <h1 class="book-chapter" id="calibre_toc_20">枚举类</h1>
+        <div class="section">
+            <h2 id="枚举类" class="calibre10">枚举类</h2>
+<p class="calibre6">枚举类最基本的用法就是实现类型安全的枚举</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">enum</span> <span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">Direction</span> </span>{
+    NORTH,SOUTH,WEST
+}
+</code></pre>
+<p class="calibre6">每个自举常量都是一个对象。枚举常量通过逗号分开。</p>
+<h3 id="初始化" class="calibre16">初始化</h3>
+<p class="calibre6">因为每个枚举都是枚举类的一个实例，它们是可以初始化的。</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">enum</span> <span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">Color</span></span>(<span class="hljs-variable"><span class="hljs-keyword">val</span> rgb</span>: <span class="hljs-keyword">Int</span>) {
+    RED(<span class="hljs-params">0xFF0000</span>),
+    GREEN(<span class="hljs-params">0x00FF00</span>),
+    BLUE(<span class="hljs-params">0x0000FF</span>)
+}
+</code></pre>
+<h3 id="匿名类" class="calibre16">匿名类</h3>
+<p class="calibre6">枚举实例也可以声明它们自己的匿名类</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">enum</span> <span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">ProtocolState</span> </span>{
+    WAITING {
+        <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">signal</span><span class="hljs-params">()</span> = Taking</span>
+    },
+    Taking{
+        <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">signal</span><span class="hljs-params">()</span> = WAITING</span>
+    };
+    abstract <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">signal</span><span class="hljs-params">()</span>: ProtocolState</span>
+}
+</code></pre>
+<p class="calibre6">可以有对应的方法，以及复写基本方法。注意如果枚举定义了任何成员，你需要像在 java 中那样用分号 ; 把枚举常量定义和成员定义分开。</p>
+<h3 id="使用枚举常量" class="calibre16">使用枚举常量</h3>
+<p class="calibre6">像 java 一样，Kotlin 中的枚举类有合成方法允许列出枚举常量的定义并且通过名字获得枚举常量。这些方法的签名就在下面列了出来(假设枚举类名字是 EnumClass)：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">EnumClass.valueOf(value: String): EnumClass
+EnumClass.values(): Array<span class="hljs-type">&lt;EnumClass&gt;</span>
+</code></pre>
+<p class="calibre6">如果指定的名字在枚举类中没有任何匹配，那么<code class="calibre19 pcalibre6 pcalibre5">valueOf()</code>方法将会抛出参数异常。</p>
+<p class="calibre6">每个枚举常量都有获取在枚举类中声明的名字和位置的方法：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">name(): Sting
+ordinal(): <span class="hljs-keyword">Int</span>
+</code></pre>
+<p class="calibre6">枚举类也实现了 <a href="http://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparable/index.html" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">Comparable</a> 接口，比较时使用的是它们在枚举类定义的自然顺序。</p>
+
+        </div>
+    
+</div>
+
+        
+    
+
+
+</body></html>

@@ -1,0 +1,135 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh" xml:lang="zh">
+  <head>
+    <title>对象表达式和声明</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta content="" name="description"/>
+    <meta content="GitBook 3.2.2" name="generator"/>
+    <meta content="huanglizhuo" name="author"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        
+<div class="page">
+    
+        <h1 class="book-chapter" id="calibre_toc_21">对象表达式和声明</h1>
+        <div class="section">
+            <h2 id="对象表达式和声明" class="calibre10">对象表达式和声明</h2>
+<p class="calibre6">有时候我们想要创建一个对当前类有一点小修改的对象，但不想重新声明一个子类。java 用匿名内部类的概念解决这个问题。Kotlin 用对象表达式和对象声明巧妙的实现了这一概念。</p>
+<h3 id="对象表达式" class="calibre16">对象表达式</h3>
+<p class="calibre6">通过下面的方式可以创建继承自某种(或某些)匿名类的对象：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">window.addMouseListener(<span class="hljs-keyword">object</span>: MouseAdapter () {
+    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">mouseClicked</span><span class="hljs-params">(e: <span class="hljs-type">MouseEvent</span>)</span> {</span>
+        <span class="hljs-comment">//...</span>
+    }
+})
+</code></pre>
+<p class="calibre6">如果父类有构造函数，则必须传递相应的构造参数。多个父类可以用逗号隔开，跟在冒号后面：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">open</span> <span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">A</span></span>(x: <span class="hljs-keyword">Int</span>) {
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">open</span> <span class="hljs-variable"><span class="hljs-keyword">val</span> y</span>: <span class="hljs-keyword">Int</span> = x
+}
+
+interface B { ... }
+
+<span class="hljs-variable"><span class="hljs-keyword">val</span> ab</span> = <span class="hljs-keyword">object</span> : A(<span class="hljs-params">1</span>), B {
+    <span class="hljs-keyword">override</span> <span class="hljs-variable"><span class="hljs-keyword">val</span> y</span> = <span class="hljs-params">14</span>
+}
+</code></pre>
+<p class="calibre6">有时候我们只是需要一个没有父类的对象，我们可以这样写：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-variable"><span class="hljs-keyword">val</span> adHoc</span> = <span class="hljs-keyword">object</span> {
+    <span class="hljs-variable"><span class="hljs-keyword">var</span> x</span>: <span class="hljs-keyword">Int</span> = <span class="hljs-params">0</span>
+    <span class="hljs-variable"><span class="hljs-keyword">var</span> y</span>: <span class="hljs-keyword">Int</span> = <span class="hljs-params">0</span>
+}
+
+print(adHoc.x + adHoc.y)
+</code></pre>
+<p class="calibre6">像 java 的匿名内部类一样，对象表达式可以访问闭合范围内的变量 (和 java 不一样的是，这些变量不用是 final 修饰的)</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">countClicks</span><span class="hljs-params">(windows: <span class="hljs-type">JComponent</span>)</span> {</span>
+    <span class="hljs-variable"><span class="hljs-keyword">var</span> clickCount</span> = <span class="hljs-params">0</span>
+    <span class="hljs-variable"><span class="hljs-keyword">var</span> enterCount</span> = <span class="hljs-params">0</span>
+    window.addMouseListener(<span class="hljs-keyword">object</span> : MouseAdapter() {
+        <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">mouseClicked</span><span class="hljs-params">(e: <span class="hljs-type">MouseEvent</span>)</span> {</span>
+            clickCount++
+        }
+        <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">mouseEntered</span><span class="hljs-params">(e: <span class="hljs-type">MouseEvent</span>)</span>{</span>
+            enterCount++
+        }
+    })
+}
+</code></pre>
+<h3 id="对象声明" class="calibre16">对象声明</h3>
+<p class="calibre6"><a href="http://en.wikipedia.org/wiki/Singleton_pattern" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">单例模式</a>是一种很有用的模式，Kotln 中声明它很方便：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">object</span> DataProviderManager {
+    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">registerDataProvider</span><span class="hljs-params">(provider: <span class="hljs-type">DataProvider</span>)</span> {</span>
+        <span class="hljs-comment">// ...</span>
+    }
+
+    <span class="hljs-variable"><span class="hljs-keyword">val</span> allDataProviders</span>: Collection<span class="hljs-type">&lt;DataProvider&gt;</span>
+        <span class="hljs-keyword">get</span>() = <span class="hljs-comment">// ...</span>
+}
+</code></pre>
+<p class="calibre6">这叫做对象声明，跟在 object 关键字后面是对象名。和变量声明一样，对象声明并不是表达式，而且不能作为右值用在赋值语句。</p>
+<p class="calibre6">想要访问这个类，直接通过名字来使用这个类：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">DataProviderManager.registerDataProvider(...)
+</code></pre>
+<p class="calibre6">这样类型的对象可以有父类型：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">object</span> DefaultListener : MouseAdapter() {
+    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">mouseClicked</span><span class="hljs-params">(e: <span class="hljs-type">MouseEvent</span>)</span> {</span>
+        <span class="hljs-comment">// ...</span>
+    }
+
+    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">mouseEntered</span><span class="hljs-params">(e: <span class="hljs-type">MouseEvent</span>)</span> {</span>
+        <span class="hljs-comment">// ...</span>
+    }
+}
+</code></pre>
+<p class="calibre6"><strong class="calibre25">注意</strong>：对象声明不可以是局部的(比如不可以直接在函数内部声明)，但可以在其它对象的声明或非内部类中进行内嵌入</p>
+<h3 id="伴随对象" class="calibre16">伴随对象</h3>
+<p class="calibre6">在类声明内部可以用 companion 关键字标记对象声明：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">class MyClass {
+    companion object Factory {
+        fun create(): MyClass = MyClass()
+    }
+}
+</code></pre>
+<p class="calibre6">伴随对象的成员可以通过类名做限定词直接使用：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-variable"><span class="hljs-keyword">val</span> instance</span> = MyClass.create()
+</code></pre>
+<p class="calibre6">在使用了 <code class="calibre19 pcalibre6 pcalibre5">companion</code> 关键字时，伴随对象的名字可以省略：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">MyClass</span> </span>{
+    <span class="hljs-keyword">companion</span> <span class="hljs-keyword">object</span> {
+
+    }
+}
+</code></pre>
+<p class="calibre6">注意，尽管伴随对象的成员很像其它语言中的静态成员，但在运行时它们任然是真正对象的成员实例，比如可以实现接口：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">inerface Factory<span class="hljs-type">&lt;T&gt;</span> {
+    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">create</span><span class="hljs-params">()</span>: T</span>
+}
+
+<span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">MyClass</span> </span>{
+    <span class="hljs-keyword">companion</span> <span class="hljs-keyword">object</span> : Factory<span class="hljs-type">&lt;MyClass&gt;</span> {
+        <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">create</span><span class="hljs-params">()</span>: MyClass = <span class="hljs-comment">MyClass</span><span class="hljs-params">()</span></span>
+    }
+}
+</code></pre>
+<p class="calibre6">如果你在 JVM 上使用 <code class="calibre19 pcalibre6 pcalibre5">@JvmStatic</code> 注解，你可以有多个伴随对象生成为真实的静态方法和属性。参看 <a href="https://kotlinlang.org/docs/reference/java-interop.html#static-methods-and-fields" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">java interoperabillity</a>。</p>
+<h3 id="对象表达式和声明的区别" class="calibre16">对象表达式和声明的区别</h3>
+<p class="calibre6">他俩之间只有一个特别重要的区别：</p>
+<blockquote class="calibre20">
+<p class="calibre6">　对象表达式在我们使用的地方立即初始化并执行的</p>
+<p class="calibre6">　对象声明是懒加载的，是在我们第一次访问时初始化的。</p>
+<p class="calibre6">    伴随对象是在对应的类加载时初始化的，和 Java 的静态初始是对应的。</p>
+</blockquote>
+
+        </div>
+    
+</div>
+
+        
+    
+
+
+</body></html>

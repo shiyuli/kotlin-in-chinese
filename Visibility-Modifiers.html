@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh" xml:lang="zh">
+  <head>
+    <title>可见性修饰词</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta content="" name="description"/>
+    <meta content="GitBook 3.2.2" name="generator"/>
+    <meta content="huanglizhuo" name="author"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        
+<div class="page">
+    
+        <h1 class="book-chapter" id="calibre_toc_15">可见性修饰词</h1>
+        <div class="section">
+            <h2 id="可见性修饰词" class="calibre10">可见性修饰词</h2>
+<p class="calibre6">类，对象，接口，构造函数，属性以及它们的 setter 方法都可以有可见性修饰词。( getter 方法作为属性时都是可见性)。在 Kotlin 中有四种修饰词：<code class="calibre19 pcalibre6 pcalibre5">private</code>,<code class="calibre19 pcalibre6 pcalibre5">protected</code>,<code class="calibre19 pcalibre6 pcalibre5">internal</code>,以及 <code class="calibre19 pcalibre6 pcalibre5">public</code> 。默认的修饰符是 <code class="calibre19 pcalibre6 pcalibre5">public</code>。
+下面将解释不同类型的声明作用域。</p>
+<h3 id="包" class="calibre16">包</h3>
+<p class="calibre6">函数，属性和类，对象和接口可以在 "top-level" 声明：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">package</span> foo
+<span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">baz</span><span class="hljs-params">()</span> {}</span>
+<span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">bar</span> </span>{}
+</code></pre>
+<blockquote class="calibre18">
+<p class="calibre6">如果没有指明任何可见性修饰词，默认使用 <code class="calibre19 pcalibre6 pcalibre5">public</code> ,这意味着你的声明在任何地方都可见；</p>
+<p class="calibre6">如果你声明为 <code class="calibre19 pcalibre6 pcalibre5">private</code> ，则只在包含声明的文件中可见；</p>
+<p class="calibre6">如果用 <code class="calibre19 pcalibre6 pcalibre5">internal</code> 声明，则在同一模块中的任何地方可见；</p>
+<p class="calibre6"><code class="calibre19 pcalibre6 pcalibre5">protected</code> 在 "top-level" 中不可以使用</p>
+</blockquote>
+<p class="calibre6">例子：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">package</span> foo
+
+<span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">foo</span><span class="hljs-params">()</span> {} <span class="hljs-comment">// visible inside example.kt</span></span>
+
+<span class="hljs-keyword">public</span> <span class="hljs-variable"><span class="hljs-keyword">var</span> bar</span>: <span class="hljs-keyword">Int</span> = <span class="hljs-params">5</span> <span class="hljs-comment">// property is visible everywhere </span>
+
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">set</span> <span class="hljs-comment">// setter is visible only in example.kt</span>
+
+internal <span class="hljs-variable"><span class="hljs-keyword">val</span> baz</span> = <span class="hljs-params">6</span> <span class="hljs-comment">// visible inside the same module</span>
+</code></pre>
+<h3 id="类和接口" class="calibre16">类和接口</h3>
+<p class="calibre6">当在类中声明时：</p>
+<blockquote class="calibre18">
+<p class="calibre6"><code class="calibre19 pcalibre6 pcalibre5">private</code> 只在该类(以及它的成员)中可见</p>
+<p class="calibre6"><code class="calibre19 pcalibre6 pcalibre5">protected</code> 和 <code class="calibre19 pcalibre6 pcalibre5">private</code> 一样但在子类中也可见</p>
+<p class="calibre6"><code class="calibre19 pcalibre6 pcalibre5">internal</code> 在本模块的所有可以访问到声明区域的均可以访问该类的所有 <code class="calibre19 pcalibre6 pcalibre5">internal</code> 成员 ( internal — any client inside this module who sees the declaring class sees its internal members;)</p>
+<p class="calibre6"><code class="calibre19 pcalibre6 pcalibre5">public</code> 任何地方可见 (public — any client who sees the declaring class sees its public members.)</p>
+</blockquote>
+<p class="calibre6">java 使用者注意：外部类不可以访问内部类的 private 成员。</p>
+<p class="calibre6">例子：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">open</span> <span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">Outer</span> </span>{
+    <span class="hljs-keyword">private</span> <span class="hljs-variable"><span class="hljs-keyword">val</span> a</span> = <span class="hljs-params">1</span>
+    <span class="hljs-keyword">protected</span> <span class="hljs-variable"><span class="hljs-keyword">val</span> b</span> = <span class="hljs-params">2</span>
+    internal <span class="hljs-variable"><span class="hljs-keyword">val</span> c</span> = <span class="hljs-params">3</span>
+    <span class="hljs-variable"><span class="hljs-keyword">val</span> d</span> = <span class="hljs-params">4</span> <span class="hljs-comment">// public by default</span>
+    <span class="hljs-keyword">protected</span> <span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">Nested</span> </span>{ 
+        <span class="hljs-keyword">public</span> <span class="hljs-variable"><span class="hljs-keyword">val</span> e</span>: <span class="hljs-keyword">Int</span> = <span class="hljs-params">5</span>
+    } 
+}
+<span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">Subclass</span> : <span class="hljs-type">Outer</span></span>() {
+    <span class="hljs-comment">// a is not visible</span>
+    <span class="hljs-comment">// b, c and d are visible // Nested and e are visible</span>
+}
+<span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">Unrelated</span></span>(o: Outer) {
+    <span class="hljs-comment">// o.a, o.b are not visible</span>
+    <span class="hljs-comment">// o.c and o.d are visible (same module)</span>
+    <span class="hljs-comment">// Outer.Nested is not visible, and Nested::e is not visible either</span>
+}
+</code></pre>
+<h3 id="构造函数" class="calibre16">构造函数</h3>
+<p class="calibre6">通过下面的语法来指定主构造函数(必须显示的使用 constructor 关键字)的可见性：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">C</span> <span class="hljs-comment">private</span> <span class="hljs-comment">constructor</span></span>(a: <span class="hljs-keyword">Int</span>) { ... }
+</code></pre>
+<p class="calibre6">这里构造函数是 private 。所有的构造函数默认是 <code class="calibre19 pcalibre6 pcalibre5">public</code> ,实际上只要类是可见的它们就是可见的
+(注意 <code class="calibre19 pcalibre6 pcalibre5">internal</code> 类型的类中的 public 属性只能在同一个模块内才可以访问)</p>
+<h3 id="局部声明" class="calibre16">局部声明</h3>
+<p class="calibre6">局部变量，函数和类是不允许使用修饰词的</p>
+<h3 id="模块" class="calibre16">模块</h3>
+<p class="calibre6"><code class="calibre19 pcalibre6 pcalibre5">internal</code> 修饰符是指成员的可见性是只在同一个模块中才可见的。模块在 Kotlin 中就是一系列的 Kotlin 文件编译在一起：</p>
+<p class="calibre6">— an IntelliJ IDEA module;</p>
+<p class="calibre6">— a Maven or Gradle project;</p>
+<p class="calibre6">— a set of files compiled with one invocation of the Ant task.</p>
+
+        </div>
+    
+</div>
+
+        
+    
+
+
+</body></html>

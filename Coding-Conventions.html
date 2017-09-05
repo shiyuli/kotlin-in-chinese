@@ -1,0 +1,88 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh" xml:lang="zh">
+  <head>
+    <title>编码风格</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta content="" name="description"/>
+    <meta content="GitBook 3.2.2" name="generator"/>
+    <meta content="huanglizhuo" name="author"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        
+<div class="page">
+    
+        <h1 class="book-chapter" id="calibre_toc_5">编码风格</h1>
+        <div class="section">
+            <h2 id="代码风格" class="calibre10">代码风格</h2>
+<p class="calibre6">本页包含了当前 kotlin 语言的代码风格。</p>
+<h3 id="命名风格" class="calibre16">命名风格</h3>
+<p class="calibre6">如有疑惑，默认为Java编码约定，比如：</p>
+<blockquote class="calibre18">
+<p class="calibre6">--使用骆驼命名法(在命名中避免下划线)</p>
+<p class="calibre6">--类型名称首字母大写</p>
+<p class="calibre6">--方法和属性首字母小写</p>
+<p class="calibre6">--缩进用四个空格</p>
+<p class="calibre6">--public 方法要写说明文档，这样它就可以出现在 Kotllin Doc 中</p>
+</blockquote>
+<h3 id="冒号" class="calibre16">冒号</h3>
+<p class="calibre6">在冒号区分类型和父类型中要有空格，在实例和类型之间是没有空格的：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">interface Foo<span class="hljs-type">&lt;out T : Any&gt;</span> : Bar {
+    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">foo</span><span class="hljs-params">(a: <span class="hljs-type">Int</span>)</span>: T</span>
+}
+</code></pre>
+<h3 id="lambdas" class="calibre16">Lambdas</h3>
+<p class="calibre6">在 Lambdas 表达式中，大括号与表达式间要有空格，箭头与参数和函数体间要有空格。尽可能的把 lambda 放在括号外面传入</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">list.filter { it &gt; <span class="hljs-params">10</span> }.map { element -&gt; element * <span class="hljs-params">2</span> }
+</code></pre>
+<p class="calibre6">在使用简短而非嵌套的lambda中，建议使用<code class="calibre19 pcalibre6 pcalibre5">it</code>而不是显式地声明参数。在使用参数的嵌套lambda中，参数应该总是显式声明</p>
+<h3 id="类声明格式" class="calibre16">类声明格式</h3>
+<p class="calibre6">参数比较少的类可以用一行表示：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">Person</span></span>(id: <span class="hljs-keyword">Int</span>, name: String)
+</code></pre>
+<p class="calibre6">具有较多的参数的类应该格式化成每个构造函数的参数都位于与缩进的单独行中。此外，结束括号应该在新行上。如果我们使用继承，那么超类构造函数调用或实现的接口列表应该位于与括号相同的行中</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">Person</span></span>(
+    id: <span class="hljs-keyword">Int</span>,
+    name: String,
+    surname: String
+) : Human(id, name) {
+    <span class="hljs-comment">// ...</span>
+}
+</code></pre>
+<p class="calibre6">对于多个接口，应该首先定位超类构造函数调用，然后每个接口应该位于不同的行中</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-type"><span class="hljs-keyword">class</span> <span class="hljs-comment">Person</span></span>(
+    id: <span class="hljs-keyword">Int</span>,
+    name: String,
+    surname: String
+) : Human(id, name),
+    KotlinMaker {
+    <span class="hljs-comment">// ...</span>
+}
+</code></pre>
+<p class="calibre6">构造函数参数可以使用常规缩进或连续缩进(双倍正常缩进)。</p>
+<h3 id="unit" class="calibre16">Unit</h3>
+<p class="calibre6">如果函数返回 Unit ，返回类型应该省略：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">foo</span><span class="hljs-params">()</span> { <span class="hljs-comment">// ": Unit"被省略了</span></span>
+}
+</code></pre>
+<h3 id="函数-vs-属性" class="calibre16">函数 vs 属性</h3>
+<p class="calibre6">在某些情况下，没有参数的函数可以与只读属性互换。尽管语义是相似的，但是有一些风格上的约定在什么时候更偏向于另一个。</p>
+<p class="calibre6">在下面的情况下，更偏向于属性而不是一个函数:</p>
+<blockquote class="calibre20">
+<p class="calibre6">-- 不需要抛出异常
+-- 拥有O(1)复杂度
+-- 低消耗的计算(或首次运行结果会被缓存)
+-- 返回与调用相同的结果</p>
+</blockquote>
+
+        </div>
+    
+</div>
+
+        
+    
+
+
+</body></html>

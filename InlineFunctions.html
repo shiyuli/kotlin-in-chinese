@@ -1,0 +1,118 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh" xml:lang="zh">
+  <head>
+    <title>内联函数</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta content="" name="description"/>
+    <meta content="GitBook 3.2.2" name="generator"/>
+    <meta content="huanglizhuo" name="author"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        
+<div class="page">
+    
+        <h1 class="book-chapter" id="calibre_toc_27">内联函数</h1>
+        <div class="section">
+            <h2 id="内联函数" class="calibre10">内联函数</h2>
+<p class="calibre6">使用<a href="http://kotlinlang.org/docs/reference/lambdas.html" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">高阶函数</a>带来了相应的运行时麻烦：每个函数都是一个对象，它捕获闭包，即这些变量可以在函数体内被访问。内存的分配，虚拟调用的运行都会带来开销</p>
+<p class="calibre6">但在大多数这种开销是可以通过内联文本函数避免。下面就是一个很好的例子。<code class="calibre19 pcalibre6 pcalibre5">lock()</code> 函数可以很容易的在内联点调用。思考一下下面的例子：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">lock(i) { foo() }
+</code></pre>
+<p class="calibre6">(Instead of creating a function object for the parameter and generating a call)，编译器可以忽略下面的代码：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">lock.lock()
+<span class="hljs-keyword">try</span> {
+    foo()
+}
+<span class="hljs-keyword">finally</span> {
+    lock.lock()
+}
+</code></pre>
+<p class="calibre6">这好像不是我们开始想要的</p>
+<p class="calibre6">想要让编译器不这样做的话，我们需要用 <code class="calibre19 pcalibre6 pcalibre5">inline</code> 标记 <code class="calibre19 pcalibre6 pcalibre5">lock()</code> 函数：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">inline</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> lock<span class="hljs-type">&lt;T&gt;</span><span class="hljs-params">(lock: <span class="hljs-type">Lock,body: (</span>)</span>-&gt; T): T {</span>
+    <span class="hljs-comment">//...</span>
+}
+</code></pre>
+<p class="calibre6"><code class="calibre19 pcalibre6 pcalibre5">inline</code> 标记即影响函数本身也影响传递进来的 lambda 函数：所有的这些都将被关联到调用点。</p>
+<p class="calibre6">内联可能会引起生成代码增长，但我们可以合理的解决它(不要内联太大的函数)</p>
+<h3 id="noinline" class="calibre16">@noinline</h3>
+<p class="calibre6">为了你想要一些 lambda 表达式传递给内联函数时是内联的，你可以给你的一些函数参数标记 <code class="calibre19 pcalibre6 pcalibre5">@noinline</code> 注解：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">inline</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">foo</span><span class="hljs-params">(inlined: <span class="hljs-type">(</span>)</span> -&gt; Uint, @noinline notInlined: <span class="hljs-params">()</span> -&gt; <span class="hljs-keyword">Unit</span>) {</span>
+    <span class="hljs-comment">//...</span>
+}
+</code></pre>
+<p class="calibre6">内联的 lambda 只能在内联函数中调用，或者作为内联参数，但 <code class="calibre19 pcalibre6 pcalibre5">@noinline</code> 标记的可以通过任何我们喜欢的方式操控：存储在字段，( passed around etc)</p>
+<p class="calibre6">注意如果内联函数没有内联的函数参数并且没有具体类型的参数，编译器会报警告，这样内联函数就没有什么优点的(如果你认为内联是必须的你可以忽略警告)</p>
+<h3 id="返回到非局部" class="calibre16">返回到非局部</h3>
+<p class="calibre6">在 kotlin 中，我们可以不加条件的使用 <code class="calibre19 pcalibre6 pcalibre5">return</code> 去退出一个命名函数或表达式函数。这意味这退出一个 lambda 函数，我们不得不使用<a href="http://kotlinlang.org/docs/reference/returns.html#return-at-labels" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">标签</a>，而且空白的 <code class="calibre19 pcalibre6 pcalibre5">return</code> 在 lambda 函数中是禁止的，因为 lambda 函数不可以造一个闭合函数返回：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">foo</span><span class="hljs-params">()</span> {</span>
+    ordinaryFunction {
+        <span class="hljs-keyword">return</span> <span class="hljs-comment">// 错误　不可以在这返回</span>
+    }
+}
+</code></pre>
+<p class="calibre6">但如果 lambda 函数是内联传递的，则返回也是可以内联的，因此允许下面这样：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">foo</span><span class="hljs-params">()</span> {</span>
+    inlineFunction {
+        <span class="hljs-keyword">return</span> <span class="hljs-comment">//</span>
+    ]
+}
+</code></pre>
+<p class="calibre6">注意有些内联函数可以调用传递进来的 lambda 函数，但不是在函数体，而是在另一个执行的上下文中，比如局部对象或者一个嵌套函数。在这样的情形中，非局部的控制流也不允许在lambda 函数中。为了表明，lambda 参数需要有 <code class="calibre19 pcalibre6 pcalibre5">InlineOptions.ONLY_LOCAL_RETURN</code> 注解：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">inline</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">f</span><span class="hljs-params">(inlineOptions(InlineOption.ONLY_LOCAL_RETURN)</span> body: <span class="hljs-params">()</span> -&gt; <span class="hljs-keyword">Unit</span>) {</span>
+    <span class="hljs-variable"><span class="hljs-keyword">val</span> f</span> = <span class="hljs-keyword">object</span>: Runnable {
+        <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">run</span><span class="hljs-params">()</span> = <span class="hljs-comment">body</span><span class="hljs-params">()</span></span>
+    }
+    <span class="hljs-comment">// ...</span>
+}
+</code></pre>
+<p class="calibre6">内联 lambda 不允许用 break 或 continue ，但在以后的版本可能会支持。</p>
+<h3 id="实例化参数类型" class="calibre16">实例化参数类型</h3>
+<p class="calibre6">有时候我们需要访问传递过来的类型作为参数：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-type">&lt;T&gt;</span> TreeNode.<span class="hljs-comment">findParentOfType</span><span class="hljs-params">(clazz: <span class="hljs-type">Class&lt;T&gt;</span>)</span>: T? {</span>
+    <span class="hljs-variable"><span class="hljs-keyword">var</span> p</span> = parent
+    <span class="hljs-keyword">while</span> (p != <span class="hljs-params">null</span> &amp;&amp; !clazz.isInstance(p)) {
+        p = p?.parent
+    }
+    @suppress(<span class="hljs-string">"UNCHECKED_CAST"</span>)
+    <span class="hljs-keyword">return</span> p <span class="hljs-keyword">as</span> T
+}
+</code></pre>
+<p class="calibre6">现在，我们创立了一颗树，并用反射检查它是否是某个特定类型。一切看起来很好，但调用点就很繁琐了：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">myTree.findParentOfType(javaClass<span class="hljs-type">&lt;MyTreeNodeType&gt;</span>() )
+</code></pre>
+<p class="calibre6">我们想要的仅仅是给这个函数传递一个类型，即像下面这样：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3">myTree.findParentOfType<span class="hljs-type">&lt;MyTreeNodeType&gt;</span>()
+</code></pre>
+<p class="calibre6">为了达到这个目的，内联函数支持具体化的类型参数，因此我们可以写成这样：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">inline</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-type">&lt;<span class="hljs-keyword">reified</span> T&gt;</span> TreeNode.<span class="hljs-comment">findParentOfType</span><span class="hljs-params">()</span>: T? {</span>
+    <span class="hljs-variable"><span class="hljs-keyword">var</span> p</span> = parent
+    <span class="hljs-keyword">while</span> (p != <span class="hljs-params">null</span> &amp;&amp; p !<span class="hljs-keyword">is</span> T) {
+        p = p?.parent
+    }
+    <span class="hljs-keyword">return</span> p <span class="hljs-keyword">as</span> T
+}
+</code></pre>
+<p class="calibre6">我们用 refied 修饰符检查类型参数，既然它可以在函数内部访问了，也就基本上接近普通函数了。因为函数是内联的，所以不许要反射，像 <code class="calibre19 pcalibre6 pcalibre5">!is</code> ｀as｀这样的操作都可以使用。同时，我们也可以像上面那样调用它了 <code class="calibre19 pcalibre6 pcalibre5">myTree.findParentOfType&lt;MyTreeNodeType&gt;()</code></p>
+<p class="calibre6">尽管在很多情况下会使用反射，我们仍然可以使用实例化的类型参数 <code class="calibre19 pcalibre6 pcalibre5">javaClass()</code> 来访问它：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">inline</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> methodsOf<span class="hljs-type">&lt;<span class="hljs-keyword">reified</span> T&gt;</span><span class="hljs-params">()</span> = javaClass<span class="hljs-type">&lt;T&gt;</span><span class="hljs-params">()</span>.<span class="hljs-comment">getMethods</span><span class="hljs-params">()</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">main</span><span class="hljs-params">(s: <span class="hljs-type">Array&lt;String&gt;</span>)</span> {</span>
+    println(methodsOf<span class="hljs-type">&lt;String&gt;</span>().joinToString('\n'))
+}
+</code></pre>
+<p class="calibre6">普通的函数(没有标记为内联的)不能有实例化参数。</p>
+<p class="calibre6">更底层的解释请看<a href="https://github.com/JetBrains/kotlin/blob/master/spec-docs/reified-type-parameters.md" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">spec document</a></p>
+
+        </div>
+    
+</div>
+
+        
+    
+
+
+</body></html>

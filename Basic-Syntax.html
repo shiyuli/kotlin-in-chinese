@@ -1,0 +1,371 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh" xml:lang="zh">
+  <head>
+    <title>基本语法</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta content="" name="description"/>
+    <meta content="GitBook 3.2.2" name="generator"/>
+    <meta content="huanglizhuo" name="author"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+  <body class="calibre">
+        
+<div class="page">
+    
+        <h1 class="book-chapter" id="calibre_toc_3">基本语法</h1>
+        <div class="section">
+            <p class="calibre6"><a href="http://kotlinlang.org/docs/reference/basic-syntax.html" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">原文</a></p>
+<h1 id="准备开始" class="calibre14">准备开始</h1>
+<h2 id="基本语法" class="calibre15">基本语法</h2>
+<h3 id="定义包名" class="calibre16">定义包名</h3>
+<p class="calibre6">在源文件的开头定义包名：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-keyword">package</span> my.demo
+<span class="hljs-keyword">import</span> java.util.*
+<span class="hljs-comment">//...</span>
+</code></pre>
+<p class="calibre6">包名不必和文件夹路径一致：源文件可以放在任意位置。</p>
+<p class="calibre6">更多请参看 <a href="Packages.html" class="calibre7 pcalibre2 pcalibre pcalibre1">包(package)</a></p>
+<h3 id="定义函数" class="calibre16">定义函数</h3>
+<p class="calibre6">定义一个函数接受两个 int 型参数，返回值为 int ：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">sum</span><span class="hljs-params">(a: <span class="hljs-type">Int , b: Int</span>)</span> : <span class="hljs-keyword">Int</span>{</span>
+    <span class="hljs-keyword">return</span> a + b
+}
+
+<span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">main</span><span class="hljs-params">(args: <span class="hljs-type">Array&lt;String&gt;</span>)</span> {</span>
+  print(<span class="hljs-string">"sum of 3 and 5 is "</span>)
+  println(sum(<span class="hljs-params">3</span>, <span class="hljs-params">5</span>))
+}
+</code></pre>
+<p class="calibre6">该函数只有一个表达式函数体以及一个自推导型的返回值：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">sum</span><span class="hljs-params">(a: <span class="hljs-type">Int, b: Int</span>)</span> = a + b</span>
+
+<span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">main</span><span class="hljs-params">(args: <span class="hljs-type">Array&lt;String&gt;</span>)</span> {</span>
+  println(<span class="hljs-string">"sum of 19 and 23 is ${sum(19, 23)}"</span>)
+}
+</code></pre>
+<p class="calibre6">返回一个没有意义的值：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">printSum</span><span class="hljs-params">(a: <span class="hljs-type">Int, b: Int</span>)</span>: <span class="hljs-keyword">Unit</span> {</span>
+  println(<span class="hljs-string">"sum of $a and $b is ${a + b}"</span>)
+}
+
+<span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">main</span><span class="hljs-params">(args: <span class="hljs-type">Array&lt;String&gt;</span>)</span> {</span>
+  printSum(<span class="hljs-params">-1</span>, <span class="hljs-params">8</span>)
+}
+</code></pre>
+<p class="calibre6">Unit 的返回类型可以省略：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">printSum</span><span class="hljs-params">(a: <span class="hljs-type">Int, b: Int</span>)</span> {</span>
+  println(<span class="hljs-string">"sum of $a and $b is ${a + b}"</span>)
+}
+
+<span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">main</span><span class="hljs-params">(args: <span class="hljs-type">Array&lt;String&gt;</span>)</span> {</span>
+  printSum(<span class="hljs-params">-1</span>, <span class="hljs-params">8</span>)
+}
+</code></pre>
+<p class="calibre6">更多请参看<a href="Functions.html" class="calibre7 pcalibre2 pcalibre pcalibre1">函数</a></p>
+<h3 id="定义局部变量" class="calibre16">定义局部变量</h3>
+<p class="calibre6">声明常量：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">main</span><span class="hljs-params">(args: <span class="hljs-type">Array&lt;String&gt;</span>)</span> {</span>
+  <span class="hljs-variable"><span class="hljs-keyword">val</span> a</span>: <span class="hljs-keyword">Int</span> = <span class="hljs-params">1</span>  <span class="hljs-comment">// 立即初始化</span>
+  <span class="hljs-variable"><span class="hljs-keyword">val</span> b</span> = <span class="hljs-params">2</span>   <span class="hljs-comment">// 推导出Int型</span>
+  <span class="hljs-variable"><span class="hljs-keyword">val</span> c</span>: <span class="hljs-keyword">Int</span>  <span class="hljs-comment">// 当没有初始化值时必须声明类型</span>
+  c = <span class="hljs-params">3</span>       <span class="hljs-comment">// 赋值</span>
+  println(<span class="hljs-string">"a = $a, b = $b, c = $c"</span>)
+}
+</code></pre>
+<p class="calibre6">变量：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">main</span><span class="hljs-params">(args: <span class="hljs-type">Array&lt;String&gt;</span>)</span> {</span>
+  <span class="hljs-variable"><span class="hljs-keyword">var</span> x</span> = <span class="hljs-params">5</span> <span class="hljs-comment">// 推导出Int类型</span>
+  x += <span class="hljs-params">1</span>
+  println(<span class="hljs-string">"x = $x"</span>)
+}
+</code></pre>
+<p class="calibre6">更多请参看<a href="Properties-and-Filds.html" class="calibre7 pcalibre2 pcalibre pcalibre1">属性和字段</a></p>
+<h3 id="注释" class="calibre16">注释</h3>
+<p class="calibre6">与 java 和 javaScript 一样，Kotlin 支持单行注释和块注释。</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-comment">// 单行注释</span>
+
+<span class="hljs-comment">/*  哈哈哈哈
+    这是块注释 */</span>
+</code></pre>
+<p class="calibre6">与 java 不同的是 Kotlin 的 块注释可以级联。</p>
+<p class="calibre6">参看<a href="http://kotlinlang.org/docs/reference/kotlin-doc.html" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">文档化 Kotlin 代码</a>学习更多关于文档化注释的语法。</p>
+<h3 id="使用字符串模板" class="calibre16">使用字符串模板</h3>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">main</span><span class="hljs-params">(args: <span class="hljs-type">Array&lt;String&gt;</span>)</span> {</span>
+  <span class="hljs-variable"><span class="hljs-keyword">var</span> a</span> = <span class="hljs-params">1</span>
+  <span class="hljs-comment">// 使用变量名作为模板:</span>
+  <span class="hljs-variable"><span class="hljs-keyword">val</span> s1</span> = <span class="hljs-string">"a is $a"</span>
+
+  a = <span class="hljs-params">2</span>
+  <span class="hljs-comment">// 使用表达式作为模板:</span>
+  <span class="hljs-variable"><span class="hljs-keyword">val</span> s2</span> = <span class="hljs-string">"${s1.replace("</span><span class="hljs-keyword">is</span><span class="hljs-string">", "</span>was<span class="hljs-string">")}, but now is $a"</span>
+  println(s2)
+}
+</code></pre>
+<p class="calibre6">更多请参看<a href="Basic-Types.html" class="calibre7 pcalibre2 pcalibre pcalibre1">字符串模板</a></p>
+<h3 id="使用条件表达式" class="calibre16">使用条件表达式</h3>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">maxOf</span><span class="hljs-params">(a: <span class="hljs-type">Int, b: Int</span>)</span>: <span class="hljs-keyword">Int</span> {</span>
+    <span class="hljs-keyword">if</span> (a &gt; b) {
+        <span class="hljs-keyword">return</span> a
+    } <span class="hljs-keyword">else</span> {
+        <span class="hljs-keyword">return</span> b
+    }
+}
+
+<span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">main</span><span class="hljs-params">(args: <span class="hljs-type">Array&lt;String&gt;</span>)</span> {</span>
+    println(<span class="hljs-string">"max of 0 and 42 is ${maxOf(0, 42)}"</span>)
+}
+</code></pre>
+<p class="calibre6">把if当表达式：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">maxOf</span><span class="hljs-params">(a: <span class="hljs-type">Int, b: Int</span>)</span> = <span class="hljs-comment">if</span> <span class="hljs-params">(a &gt; b)</span> a <span class="hljs-keyword">else</span> b</span>
+
+<span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">main</span><span class="hljs-params">(args: <span class="hljs-type">Array&lt;String&gt;</span>)</span> {</span>
+    println(<span class="hljs-string">"max of 0 and 42 is ${maxOf(0, 42)}"</span>)
+}
+</code></pre>
+<p class="calibre6">更多请参看<a href="Control-Flow.html" class="calibre7 pcalibre2 pcalibre pcalibre1">if表达式</a></p>
+<h3 id="使用可空变量以及空值检查" class="calibre16">使用可空变量以及空值检查</h3>
+<p class="calibre6">当空值可能出现时应该明确指出该引用可空。</p>
+<p class="calibre6">下面的函数是当 str 中不包含整数时返回空:</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">parseInt</span><span class="hljs-params">(str : <span class="hljs-type">String</span>)</span>: <span class="hljs-keyword">Int</span>?{</span>
+    <span class="hljs-comment">//...</span>
+}
+</code></pre>
+<p class="calibre6">使用一个返回可空值的函数：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">parseInt</span><span class="hljs-params">(str: <span class="hljs-type">String</span>)</span>: <span class="hljs-keyword">Int</span>? {</span>
+  <span class="hljs-keyword">return</span> str.toIntOrNull()
+}
+
+<span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">printProduct</span><span class="hljs-params">(arg1: <span class="hljs-type">String, arg2: String</span>)</span> {</span>
+  <span class="hljs-variable"><span class="hljs-keyword">val</span> x</span> = parseInt(arg1)
+  <span class="hljs-variable"><span class="hljs-keyword">val</span> y</span> = parseInt(arg2)
+
+  <span class="hljs-comment">// 直接使用 x*y 会产生错误因为它们中有可能会有空值</span>
+  <span class="hljs-keyword">if</span> (x != <span class="hljs-params">null</span> &amp;&amp; y != <span class="hljs-params">null</span>) {
+    <span class="hljs-comment">// x 和 y 将会在空值检测后自动转换为非空值</span>
+    println(x * y)
+  }
+  <span class="hljs-keyword">else</span> {
+    println(<span class="hljs-string">"either '$arg1' or '$arg2' is not a number"</span>)
+  }    
+}
+
+
+<span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">main</span><span class="hljs-params">(args: <span class="hljs-type">Array&lt;String&gt;</span>)</span> {</span>
+  printProduct(<span class="hljs-string">"6"</span>, <span class="hljs-string">"7"</span>)
+  printProduct(<span class="hljs-string">"a"</span>, <span class="hljs-string">"7"</span>)
+  printProduct(<span class="hljs-string">"a"</span>, <span class="hljs-string">"b"</span>)
+}
+</code></pre>
+<p class="calibre6">或者这样</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">parseInt</span><span class="hljs-params">(str: <span class="hljs-type">String</span>)</span>: <span class="hljs-keyword">Int</span>? {</span>
+  <span class="hljs-keyword">return</span> str.toIntOrNull()
+}
+
+<span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">printProduct</span><span class="hljs-params">(arg1: <span class="hljs-type">String, arg2: String</span>)</span> {</span>
+  <span class="hljs-variable"><span class="hljs-keyword">val</span> x</span> = parseInt(arg1)
+  <span class="hljs-variable"><span class="hljs-keyword">val</span> y</span> = parseInt(arg2)
+
+  <span class="hljs-comment">// ...</span>
+  <span class="hljs-keyword">if</span> (x == <span class="hljs-params">null</span>) {
+    println(<span class="hljs-string">"Wrong number format in arg1: '${arg1}'"</span>)
+    <span class="hljs-keyword">return</span>
+  }
+  <span class="hljs-keyword">if</span> (y == <span class="hljs-params">null</span>) {
+    println(<span class="hljs-string">"Wrong number format in arg2: '${arg2}'"</span>)
+    <span class="hljs-keyword">return</span>
+  }
+
+  <span class="hljs-comment">// x 和 y 将会在空值检测后自动转换为非空值</span>
+  println(x * y)
+}
+</code></pre>
+<p class="calibre6">更多请参看<a href="Null-Safety.html" class="calibre7 pcalibre2 pcalibre pcalibre1">空安全</a></p>
+<h3 id="使用值检查并自动转换" class="calibre16">使用值检查并自动转换</h3>
+<p class="calibre6">使用 is 操作符检查一个表达式是否是某个类型的实例。如果对不可变的局部变量或属性进行过了类型检查，就没有必要明确转换：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">getStringLength</span><span class="hljs-params">(obj: <span class="hljs-type">Any</span>)</span>: <span class="hljs-keyword">Int</span>? {</span>
+  <span class="hljs-keyword">if</span> (obj <span class="hljs-keyword">is</span> String) {
+    <span class="hljs-comment">// obj 将会在这个分支中自动转换为 String 类型</span>
+    <span class="hljs-keyword">return</span> obj.length
+  }
+
+  <span class="hljs-comment">// obj 在种类检查外仍然是 Any 类型</span>
+  <span class="hljs-keyword">return</span> <span class="hljs-params">null</span>
+}
+
+
+<span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">main</span><span class="hljs-params">(args: <span class="hljs-type">Array&lt;String&gt;</span>)</span> {</span>
+  <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">printLength</span><span class="hljs-params">(obj: <span class="hljs-type">Any</span>)</span> {</span>
+    println(<span class="hljs-string">"'$obj' string length is ${getStringLength(obj) ?: "</span>... err, not a string<span class="hljs-string">"} "</span>)
+  }
+  printLength(<span class="hljs-string">"Incomprehensibilities"</span>)
+  printLength(<span class="hljs-params">1000</span>)
+  printLength(listOf(Any()))
+}
+</code></pre>
+<p class="calibre6">或者这样</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">getStringLength</span><span class="hljs-params">(obj: <span class="hljs-type">Any</span>)</span>: <span class="hljs-keyword">Int</span>? {</span>
+  <span class="hljs-keyword">if</span> (obj !<span class="hljs-keyword">is</span> String) <span class="hljs-keyword">return</span> <span class="hljs-params">null</span>
+
+  <span class="hljs-comment">// obj 将会在这个分支中自动转换为 String 类型</span>
+  <span class="hljs-keyword">return</span> obj.length
+}
+
+
+<span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">main</span><span class="hljs-params">(args: <span class="hljs-type">Array&lt;String&gt;</span>)</span> {</span>
+  <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">printLength</span><span class="hljs-params">(obj: <span class="hljs-type">Any</span>)</span> {</span>
+    println(<span class="hljs-string">"'$obj' string length is ${getStringLength(obj) ?: "</span>... err, not a string<span class="hljs-string">"} "</span>)
+  }
+  printLength(<span class="hljs-string">"Incomprehensibilities"</span>)
+  printLength(<span class="hljs-params">1000</span>)
+  printLength(listOf(Any()))
+}
+</code></pre>
+<p class="calibre6">甚至可以这样</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">getStringLength</span><span class="hljs-params">(obj: <span class="hljs-type">Any</span>)</span>: <span class="hljs-keyword">Int</span>? {</span>
+    <span class="hljs-comment">// obj 将会在&amp;&amp;右边自动转换为 String 类型</span>
+  <span class="hljs-keyword">if</span> (obj <span class="hljs-keyword">is</span> String &amp;&amp; obj.length &gt; <span class="hljs-params">0</span>) {
+    <span class="hljs-keyword">return</span> obj.length
+  }
+
+  <span class="hljs-keyword">return</span> <span class="hljs-params">null</span>
+}
+
+
+<span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">main</span><span class="hljs-params">(args: <span class="hljs-type">Array&lt;String&gt;</span>)</span> {</span>
+  <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">printLength</span><span class="hljs-params">(obj: <span class="hljs-type">Any</span>)</span> {</span>
+    println(<span class="hljs-string">"'$obj' string length is ${getStringLength(obj) ?: "</span>... err, <span class="hljs-keyword">is</span> empty or not a string at all<span class="hljs-string">"} "</span>)
+  }
+  printLength(<span class="hljs-string">"Incomprehensibilities"</span>)
+  printLength(<span class="hljs-string">""</span>)
+  printLength(<span class="hljs-params">1000</span>)
+}
+</code></pre>
+<p class="calibre6">更多请参看 <a href="Classes-and-Inheritance.html" class="calibre7 pcalibre2 pcalibre pcalibre1">类</a> 和 <a href="Type-Checks-and-Casts.html" class="calibre7 pcalibre2 pcalibre pcalibre1">类型转换</a></p>
+<h3 id="使用循环" class="calibre16">使用循环</h3>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">main</span><span class="hljs-params">(args: <span class="hljs-type">Array&lt;String&gt;</span>)</span> {</span>
+  <span class="hljs-variable"><span class="hljs-keyword">val</span> items</span> = listOf(<span class="hljs-string">"apple"</span>, <span class="hljs-string">"banana"</span>, <span class="hljs-string">"kiwi"</span>)
+  <span class="hljs-keyword">for</span> (item <span class="hljs-keyword">in</span> items) {
+    println(item)
+  }
+}
+</code></pre>
+<p class="calibre6">或者</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">main</span><span class="hljs-params">(args: <span class="hljs-type">Array&lt;String&gt;</span>)</span> {</span>
+  <span class="hljs-variable"><span class="hljs-keyword">val</span> items</span> = listOf(<span class="hljs-string">"apple"</span>, <span class="hljs-string">"banana"</span>, <span class="hljs-string">"kiwi"</span>)
+  <span class="hljs-keyword">for</span> (index <span class="hljs-keyword">in</span> items.indices) {
+    println(<span class="hljs-string">"item at $index is ${items[index]}"</span>)
+  }
+}
+</code></pre>
+<p class="calibre6">参看<a href="http://kotlinlang.org/docs/reference/control-flow.html#for-loops" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">for循环</a></p>
+<h3 id="使用-while-循环" class="calibre16">使用 while 循环</h3>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">main</span><span class="hljs-params">(args: <span class="hljs-type">Array&lt;String&gt;</span>)</span> {</span>
+  <span class="hljs-variable"><span class="hljs-keyword">val</span> items</span> = listOf(<span class="hljs-string">"apple"</span>, <span class="hljs-string">"banana"</span>, <span class="hljs-string">"kiwi"</span>)
+  <span class="hljs-variable"><span class="hljs-keyword">var</span> index</span> = <span class="hljs-params">0</span>
+  <span class="hljs-keyword">while</span> (index <span class="hljs-type">&lt; items.size) {
+    println("item at $index is ${items[index]}")
+    index++
+  }
+}
+</span></code></pre>
+<p class="calibre6">参看<a href="http://kotlinlang.org/docs/reference/control-flow.html#while-loops" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">while循环</a></p>
+<h3 id="使用-when-表达式" class="calibre16">使用 when 表达式</h3>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">describe</span><span class="hljs-params">(obj: <span class="hljs-type">Any</span>)</span>: String =</span>
+<span class="hljs-keyword">when</span> (obj) {
+  <span class="hljs-params">1</span>          -&gt; <span class="hljs-string">"One"</span>
+  <span class="hljs-string">"Hello"</span>    -&gt; <span class="hljs-string">"Greeting"</span>
+  <span class="hljs-keyword">is</span> <span class="hljs-keyword">Long</span>    -&gt; <span class="hljs-string">"Long"</span>
+  !<span class="hljs-keyword">is</span> String -&gt; <span class="hljs-string">"Not a string"</span>
+  <span class="hljs-keyword">else</span>       -&gt; <span class="hljs-string">"Unknown"</span>
+}
+
+<span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">main</span><span class="hljs-params">(args: <span class="hljs-type">Array&lt;String&gt;</span>)</span> {</span>
+  println(describe(<span class="hljs-params">1</span>))
+  println(describe(<span class="hljs-string">"Hello"</span>))
+  println(describe(<span class="hljs-params">1000</span>L))
+  println(describe(<span class="hljs-params">2</span>))
+  println(describe(<span class="hljs-string">"other"</span>))
+}
+</code></pre>
+<p class="calibre6">参看<a href="http://kotlinlang.org/docs/reference/control-flow.html#when-expression" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">when表达式</a></p>
+<h3 id="使用ranges" class="calibre16">使用ranges</h3>
+<p class="calibre6">检查 in 操作符检查数值是否在某个范围内：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">main</span><span class="hljs-params">(args: <span class="hljs-type">Array&lt;String&gt;</span>)</span> {</span>
+  <span class="hljs-variable"><span class="hljs-keyword">val</span> x</span> = <span class="hljs-params">10</span>
+  <span class="hljs-variable"><span class="hljs-keyword">val</span> y</span> = <span class="hljs-params">9</span>
+  <span class="hljs-keyword">if</span> (x <span class="hljs-keyword">in</span> <span class="hljs-params">1.</span>.y+<span class="hljs-params">1</span>) {
+      println(<span class="hljs-string">"fits in range"</span>)
+  }
+}
+</code></pre>
+<p class="calibre6">检查数值是否在范围外：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">main</span><span class="hljs-params">(args: <span class="hljs-type">Array&lt;String&gt;</span>)</span> {</span>
+  <span class="hljs-variable"><span class="hljs-keyword">val</span> list</span> = listOf(<span class="hljs-string">"a"</span>, <span class="hljs-string">"b"</span>, <span class="hljs-string">"c"</span>)
+
+  <span class="hljs-keyword">if</span> (<span class="hljs-params">-1</span> !<span class="hljs-keyword">in</span> <span class="hljs-params">0.</span>.list.lastIndex) {
+    println(<span class="hljs-string">"-1 is out of range"</span>)
+  }
+  <span class="hljs-keyword">if</span> (list.size !<span class="hljs-keyword">in</span> list.indices) {
+    println(<span class="hljs-string">"list size is out of valid list indices range too"</span>)
+  }
+}
+</code></pre>
+<p class="calibre6">在范围内迭代：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">main</span><span class="hljs-params">(args: <span class="hljs-type">Array&lt;String&gt;</span>)</span> {</span>
+  <span class="hljs-keyword">for</span> (x <span class="hljs-keyword">in</span> <span class="hljs-params">1.</span><span class="hljs-params">.5</span>) {
+    print(x)
+  }
+}
+</code></pre>
+<p class="calibre6">或者使用步进：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">main</span><span class="hljs-params">(args: <span class="hljs-type">Array&lt;String&gt;</span>)</span> {</span>
+  <span class="hljs-keyword">for</span> (x <span class="hljs-keyword">in</span> <span class="hljs-params">1.</span><span class="hljs-params">.10</span> step <span class="hljs-params">2</span>) {
+    print(x)
+  }
+  <span class="hljs-keyword">for</span> (x <span class="hljs-keyword">in</span> <span class="hljs-params">9</span> downTo <span class="hljs-params">0</span> step <span class="hljs-params">3</span>) {
+    print(x)
+  }
+}
+</code></pre>
+<p class="calibre6">参看<a href="http://kotlinlang.org/docs/reference/ranges.html" target="_blank" class="calibre7 pcalibre2 pcalibre pcalibre1">Ranges</a></p>
+<h3 id="使用集合" class="calibre16">使用集合</h3>
+<p class="calibre6">对一个集合进行迭代：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">main</span><span class="hljs-params">(args: <span class="hljs-type">Array&lt;String&gt;</span>)</span> {</span>
+  <span class="hljs-variable"><span class="hljs-keyword">val</span> items</span> = listOf(<span class="hljs-string">"apple"</span>, <span class="hljs-string">"banana"</span>, <span class="hljs-string">"kiwi"</span>)
+  <span class="hljs-keyword">for</span> (item <span class="hljs-keyword">in</span> items) {
+    println(item)
+  }
+}
+</code></pre>
+<p class="calibre6">使用 in 操作符检查集合中是否包含某个对象</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">main</span><span class="hljs-params">(args: <span class="hljs-type">Array&lt;String&gt;</span>)</span> {</span>
+  <span class="hljs-variable"><span class="hljs-keyword">val</span> items</span> = setOf(<span class="hljs-string">"apple"</span>, <span class="hljs-string">"banana"</span>, <span class="hljs-string">"kiwi"</span>)
+  <span class="hljs-keyword">when</span> {
+    <span class="hljs-string">"orange"</span> <span class="hljs-keyword">in</span> items -&gt; println(<span class="hljs-string">"juicy"</span>)
+    <span class="hljs-string">"apple"</span> <span class="hljs-keyword">in</span> items -&gt; println(<span class="hljs-string">"apple is fine too"</span>)
+  }
+}
+</code></pre>
+<p class="calibre6">使用lambda表达式过滤和映射集合：</p>
+<pre class="calibre17"><code class="lang-kotlin pcalibre4 pcalibre3"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-comment">main</span><span class="hljs-params">(args: <span class="hljs-type">Array&lt;String&gt;</span>)</span> {</span>
+  <span class="hljs-variable"><span class="hljs-keyword">val</span> fruits</span> = listOf(<span class="hljs-string">"banana"</span>, <span class="hljs-string">"avocado"</span>, <span class="hljs-string">"apple"</span>, <span class="hljs-string">"kiwi"</span>)
+  fruits
+    .filter { it.startsWith(<span class="hljs-string">"a"</span>) }
+    .sortedBy { it }
+    .map { it.toUpperCase() }
+    .forEach { println(it) }
+}
+</code></pre>
+<p class="calibre6">参看<a href="Higher-OrderFunctionsAndLambdas.html" class="calibre7 pcalibre2 pcalibre pcalibre1">高阶函数和lambda表达式</a></p>
+
+        </div>
+    
+</div>
+
+        
+    
+
+
+</body></html>
